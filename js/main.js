@@ -16,7 +16,7 @@ $(document).ready(function(){
         });
     });
     
-
+    /* БЛОК ПЕРЕМЕННЫЕ*/
     // глобальные переменные для вычситывания индекса добавляемого модуля
     numberIdObjecy = 0;
     idObject = "appended-modul" + numberIdObjecy;
@@ -29,6 +29,22 @@ $(document).ready(function(){
     // высчитываем глобальные координаты нижнего правого угла области рисования
     $containerDX = $containerTX + 1200;
     $containerDY = $containerTY + 700;
+
+    // коллекции объектов
+
+    // коллекция скомпонованных объектов (главная ветка)
+    const groupMain = new Map();
+    // коллекция скомпонованных объектов (побочная ветка)
+    const subMain = new Map();
+    // массив размещенных объектов
+    
+    var appendedObj = [];
+
+    //arr.set('key5','value5');
+    //console.log(arr);
+
+
+    /* БЛОК ПЕРЕМЕННЫЕ*/
 
     //// вспомогательные функции /////
     /// создаем html код модуля
@@ -106,19 +122,30 @@ $(document).ready(function(){
 
             }).click(function (e) {
                 // запускаем логику если кнопка отжата
-                if(e.pageY < $containerDY-$deltaY && e.pageY > $containerTY+$deltaY && e.pageX < $containerDX-$deltaX && e.pageX > $containerTX+$deltaX){//   && e.pageX < $containerTX){
-                    console.log(true);
-                    
+                // проверяем что размещаемый объект находится в рабочей области
+                if(e.pageY < $containerDY-$deltaY && e.pageY > $containerTY+$deltaY && e.pageX < $containerDX-$deltaX && e.pageX > $containerTX+$deltaX){                    
                     // условие создание объекта если на доске ничего нет.
-                    if(true){
+                    if(groupMain.size == 0){
+                        // открепляем событие на клик от текущего модуля
+                        $(this).unbind("click");
+                        // основная логика
+                        // добавляем объект высчитывем координаты его углов
+                        let objAdd = document.getElementById(idObject);
+                        var topY = objAdd.getBoundingClientRect().top;
+                        var topX = objAdd.getBoundingClientRect().left;
+                        var dovnY = topY + $('#'+idObject).height();
+                        var dovnX = topX + $('#'+idObject).width();
+                        // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
+                        groupMain.set(idObject,[topX,topY,dovnX,dovnY]);
+                        // добавляем в массив размещенных обхектов id размещенного модуля
+                        appendedObj.push(idObject);
                         // генерируем новый id для следующего модуля
                         numberIdObjecy = numberIdObjecy + 1;
                         idObject = "appended-modul" + numberIdObjecy;
-                        // открипляем событие на клик от текущего модуля
-                        $(this).unbind("click");
                     }
                     // если на доске что-то есть.
                     else{
+                    
 
                     }
                 }

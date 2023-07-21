@@ -30,6 +30,7 @@ $(document).ready(function(){
     $containerDX = $containerTX + 1200;
     $containerDY = $containerTY + 700;
 
+    $idFinedObjOLD = "appended-modul0";
     // коллекции объектов
 
     // коллекция скомпонованных объектов (главная ветка)
@@ -37,8 +38,7 @@ $(document).ready(function(){
     // коллекция скомпонованных объектов (побочная ветка)
     const subMain = new Map();
     // массив размещенных объектов
-    
-    var appendedObj = [];
+    var appendedObj = new Map();
 
     //arr.set('key5','value5');
     //console.log(arr);
@@ -49,7 +49,6 @@ $(document).ready(function(){
     //// вспомогательные функции /////
     /// создаем html код модуля
     $creatModul = function(id,$number){
-        console.log(id);
         if ($number == 1){
             modul  = '<div id = "'+id+'" class = "appended-modul modul B"><div class="modul-nameAppendB B-name">Б</div></div>';
             return modul;
@@ -118,36 +117,113 @@ $(document).ready(function(){
                 // пока клавиша зажата и мышь движется меняем динамично смещение модуля
                 $moovblModul.offset({top: e.pageY-$deltaY, left: e.pageX-$deltaX});
                 /*так же здесь мы будем реализовывать вычисление ближайшего модуля*/
+                
 
 
             }).click(function (e) {
-                // test
                 // запускаем логику если кнопка отжата
                 // проверяем что размещаемый объект находится в рабочей области
                 if(e.pageY < $containerDY-$deltaY && e.pageY > $containerTY+$deltaY && e.pageX < $containerDX-$deltaX && e.pageX > $containerTX+$deltaX){                    
+                    // вычисляем координаты
+                    objAdd = document.getElementById(idObject);
+                    topY = objAdd.getBoundingClientRect().top;
+                    topX = objAdd.getBoundingClientRect().left;
+                    dovnY = topY + $('#'+idObject).height();
+                    dovnX = topX + $('#'+idObject).width();
+
                     // условие создание объекта если на доске ничего нет.
                     if(groupMain.size == 0){
-                        // открепляем событие на клик от текущего модуля
-                        $(this).unbind("click");
+                        console.log(groupMain.size);
+                        
                         // основная логика
                         // добавляем объект высчитывем координаты его углов
-                        let objAdd = document.getElementById(idObject);
-                        var topY = objAdd.getBoundingClientRect().top;
-                        var topX = objAdd.getBoundingClientRect().left;
-                        var dovnY = topY + $('#'+idObject).height();
-                        var dovnX = topX + $('#'+idObject).width();
+                        
                         // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
                         groupMain.set(idObject,[topX,topY,dovnX,dovnY]);
                         // добавляем в массив размещенных обхектов id размещенного модуля
-                        appendedObj.push(idObject);
+                        appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
                         // генерируем новый id для следующего модуля
                         numberIdObjecy = numberIdObjecy + 1;
                         idObject = "appended-modul" + numberIdObjecy;
+                        // открепляем событие на клик от текущего модуля
+                        $(this).unbind("click");
                     }
                     // если на доске что-то есть.
                     else{
-                    
+                        //console.log(appendedObj);
+                        /*ну а теперь самое сложно... наверное :D*/
+                        // вычисление расстояний и поиск минимального
+                        // основная логика
+                        /*как найти расстояние до объекта с id*/
+                        $lenght = 99999;
 
+                        // var x = -25;
+                        // x = Math.abs(x);
+                        // 
+                        //
+                        //
+                        
+                        $idFinedObjNew = "appended-modul0";
+                        $resultDistanse = 9999;
+                        //console.log($resultDistanse);
+                        for (let key of appendedObj.keys()) {
+                            //console.log(key);
+                            $lCordX = appendedObj.get(key)[0];
+                            $rCordX = appendedObj.get(key)[2];
+
+                            $tCordY = appendedObj.get(key)[1];
+                            $bCordY = appendedObj.get(key)[3];
+
+                            // если размещаемый объект ниже
+                            if(topY < ($tCordY + ($bCordY -$tCordY)/2)){
+                                $distanseY = Math.min(Math.abs($tCordY - topY),Math.abs($bCordY-dovnY));
+                                //console.log($distanseY);
+                            }
+                            // если размещаемый объект ниже
+                            else{
+                                $distanseY = Math.min(Math.abs(topY - $bCordY),Math.abs(dovnY - $tCordY));
+                                //console.log($distanseY);
+                            }
+                            // если размещаемый объект правее
+                            if(topX > ($lCordX + ($rCordX -$lCordX)/2)){
+                                $distanseX = Math.min(Math.abs(topX-$rCordX),Math.abs(dovnX-$lCordX));
+                                //console.log($distanseX);
+                            }
+                            // если левее
+                            else{
+                                $distanseX = Math.min(Math.abs(topX-$lCordX),Math.abs(dovnX-$rCordX));
+                                //console.log($distanseX);
+                            }
+                            $distanse = Math.sqrt($distanseX*$distanseX+$distanseY*$distanseY);
+                            if($distanse < $resultDistanse){
+                                $resultDistanse = $distanse;
+                                if(appendedObj.size == 1){
+                                    $idFinedObjOLD = key;
+                                }
+                                else{
+                                    $idFinedObjNew = key;
+                                }
+                            }
+                        }
+                        $('#'+$idFinedObjOLD).css({
+                            'background-color': '#B9B9BA'
+                        });
+                        $idFinedObjOLD=$idFinedObjNew;
+                        $('#'+$idFinedObjOLD).css({
+                            'background-color': '#FFF'
+                        });
+                        console.log($idFinedObjOLD);
+
+                        // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
+                        groupMain.set(idObject,[topX,topY,dovnX,dovnY]);
+                        // добавляем в массив размещенных обхектов id размещенного модуля
+                        appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
+
+                        // увеличиваем индекс
+                        numberIdObjecy = numberIdObjecy + 1;
+                        idObject = "appended-modul" + numberIdObjecy;
+                        // открепляем событие на клик от текущего модуля
+                        $(this).unbind("click");
                     }
                 }
                 else{

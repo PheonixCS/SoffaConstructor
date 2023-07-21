@@ -121,6 +121,7 @@ $(document).ready(function(){
 
 
             }).click(function (e) {
+                // test
                 // запускаем логику если кнопка отжата
                 // проверяем что размещаемый объект находится в рабочей области
                 if(e.pageY < $containerDY-$deltaY && e.pageY > $containerTY+$deltaY && e.pageX < $containerDX-$deltaX && e.pageX > $containerTX+$deltaX){                    

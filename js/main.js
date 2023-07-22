@@ -87,10 +87,10 @@ $(document).ready(function(){
             // считываем координаты блока на который нажали
             $elemCordX = e.currentTarget.getBoundingClientRect().left;
             $elemCordY = e.currentTarget.getBoundingClientRect().top;
+
             // вычиляем смещение от позиции мыши для генерации нового объекта
             $deltaX = $mouseD_x-$elemCordX;
             $deltaY = $mouseD_y-$elemCordY;
-            
             // получаем html код модуля
             $moovObj = $creatModul(id,$numberObj);
             // добавляем на страницу(он скрыт)
@@ -134,8 +134,6 @@ $(document).ready(function(){
 
                     // условие создание объекта если на доске ничего нет.
                     if(groupMain.size == 0){
-                        console.log(groupMain.size);
-                        
                         // основная логика
                         // добавляем объект высчитывем координаты его углов
                         
@@ -151,12 +149,10 @@ $(document).ready(function(){
                     }
                     // если на доске что-то есть.
                     else{
-                        //console.log(appendedObj);
                         /*ну а теперь самое сложно... наверное :D*/
                         // вычисление расстояний и поиск минимального
                         // основная логика
                         /*как найти расстояние до объекта с id*/
-                        $lenght = 99999;
 
                         // var x = -25;
                         // x = Math.abs(x);
@@ -166,6 +162,7 @@ $(document).ready(function(){
                         
                         $idFinedObjNew = "appended-modul0";
                         $resultDistanse = 9999;
+
                         //console.log($resultDistanse);
                         for (let key of appendedObj.keys()) {
                             //console.log(key);
@@ -177,43 +174,112 @@ $(document).ready(function(){
 
                             // если размещаемый объект ниже
                             if(topY < ($tCordY + ($bCordY -$tCordY)/2)){
-                                $distanseY = Math.min(Math.abs($tCordY - topY),Math.abs($bCordY-dovnY));
+                                $distanseY = Math.min($tCordY - topY,$bCordY-dovnY);
+                                $topPositions = true;
                                 //console.log($distanseY);
                             }
                             // если размещаемый объект ниже
                             else{
-                                $distanseY = Math.min(Math.abs(topY - $bCordY),Math.abs(dovnY - $tCordY));
+                                $distanseY = Math.min(topY - $bCordY,dovnY - $tCordY);
+                                $topPositions = false;
                                 //console.log($distanseY);
                             }
                             // если размещаемый объект правее
                             if(topX > ($lCordX + ($rCordX -$lCordX)/2)){
-                                $distanseX = Math.min(Math.abs(topX-$rCordX),Math.abs(dovnX-$lCordX));
+                                $rightPositions = true;
+                                $distanseX = Math.min(topX-$rCordX,dovnX-$lCordX);
                                 //console.log($distanseX);
                             }
                             // если левее
                             else{
-                                $distanseX = Math.min(Math.abs(topX-$lCordX),Math.abs(dovnX-$rCordX));
+                                $distanseX = Math.min(topX-$lCordX,dovnX-$rCordX);
+    
                                 //console.log($distanseX);
                             }
+                            // высчитываем дистанцию
                             $distanse = Math.sqrt($distanseX*$distanseX+$distanseY*$distanseY);
                             if($distanse < $resultDistanse){
                                 $resultDistanse = $distanse;
+                                // перезависывем переменные
                                 if(appendedObj.size == 1){
                                     $idFinedObjOLD = key;
+                                    $idFinedObjNew = key;
                                 }
                                 else{
+                                    $idFinedObjOLD = $idFinedObjNew;
                                     $idFinedObjNew = key;
                                 }
                             }
                         }
+
+
+                        // "клеим"
+                        //element = this;
+                        //var rect = element.getBoundingClientRect();
+                        //console.log(rect.top, rect.right, rect.bottom, rect.left);
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        
+                        // здесь нужно проверить, можно ли клеить элементы
+                        // что делать если нельзя ?
+                        // идея.при клейке добавлять id приклееных блоков в список списков с позицей l r b t это поможет сделать смещение
+                        // болле правильным образом
+                        // пока работаем на склейкой двух элементов.
+
+                        element1 = document.getElementById($idFinedObjNew);  
+                        var rect1 = element1.getBoundingClientRect();
+
+                        element2 = element1 = document.getElementById(idObject); 
+                        var rect2 = element2.getBoundingClientRect();
+                        
+                        // $distans1Vert - расстояние от нижней границы обж1 до нижней границы обж2
+                        // $distans2Vert - расстояние от нижней границы обж1 до верхней границы обж2
+                        // $distans3Vert - расстояние от верхней границы обж1 до нижней границы обж2
+                        // $distans4Vert - расстояние от верхней границы обж1 до верхней границы обж2
+                        $distans1Vert = rect1.bottom - rect2.bottom;
+                        $distans2Vert = rect1.bottom -    rect2.top;
+                        $distans3Vert = rect1.top    - rect2.bottom;
+                        $distans4Vert = rect1.top    -    rect2.top;
+                        $attachPosVert = 0;
+                        // находим минимальное смещение по модулю по вертикали
+                        $minDistans = Math.min(Math.abs($distans1Vert),Math.abs($distans2Vert),Math.abs($distans3Vert),Math.abs($distans4Vert));
+                        // вычисляем позицию атача.
+                        if($minDistans == Math.abs($distans1Vert)){
+                            $attachPosVert = 1;
+                        }
+                        if($minDistans == Math.abs($distans2Vert)){
+                            $attachPosVert = 2;
+                        }
+                        if($minDistans == Math.abs($distans3Vert)){
+                            $attachPosVert = 3;
+                        }
+                        if($minDistans == Math.abs($distans4Vert)){
+                            $attachPosVert = 4;
+                        }
+                        // $distans1 - расстояние от нижней границы обж1 до нижней границы обж2
+                        // $distans2 - расстояние от нижней границы обж1 до верхней границы обж2
+                        // $distans3 - расстояние от верхней границы обж1 до нижней границы обж2
+                        // $distans4 - расстояние от верхней границы обж1 до верхней границы обж2
+                        $distans1Horis = rect1.bottom - rect2.bottom;
+                        $distans2Horis = rect1.bottom -    rect2.top;
+                        $distans3Horis = rect1.top    - rect2.bottom;
+                        $distans4Horis = rect1.top    -    rect2.top;
+                        $attachPosHoris = 0;
+
+                        if(rect2.left > (rect1.right-rect1.width/2) && ($attachPosVert == 3 || $attachPosVert == 4)){
+                            console.log(element1.offsetHeight/2 , rect1.bottom - rect2.bottom);
+                            $('#'+idObject).offset({top: rect2.top+(rect1.top - rect2.top), left: rect2.left - (rect2.left-rect1.right)+1});
+                        }
+                        if(rect2.left > (rect1.right-rect1.width/2) && ($attachPosVert == 1 || $attachPosVert == 2)){
+                            console.log(element1.offsetHeight/2 , rect1.bottom - rect2.bottom);
+                            $('#'+idObject).offset({top: rect2.top+(rect1.bottom - rect2.bottom), left: rect2.left - (rect2.left-rect1.right)+1});
+                        }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                         $('#'+$idFinedObjOLD).css({
                             'background-color': '#B9B9BA'
                         });
-                        $idFinedObjOLD=$idFinedObjNew;
-                        $('#'+$idFinedObjOLD).css({
+                        $('#'+$idFinedObjNew).css({
                             'background-color': '#FFF'
                         });
-                        console.log($idFinedObjOLD);
 
                         // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
                         groupMain.set(idObject,[topX,topY,dovnX,dovnY]);
@@ -229,6 +295,7 @@ $(document).ready(function(){
                 }
                 else{
                     $moovblModul.remove();
+                    $(this).unbind("click");
                 }
                 // условия создания объекта если на доске что-то есть.
                 $(this).unbind("mousemove");

@@ -16,6 +16,7 @@ $(document).ready(function(){
         });
     });
     
+    
     /* БЛОК ПЕРЕМЕННЫЕ*/
     // глобальные переменные для вычситывания индекса добавляемого модуля
     numberIdObjecy = 0;
@@ -27,7 +28,7 @@ $(document).ready(function(){
     $containerTX = objContainer.getBoundingClientRect().left;
     $containerTY = objContainer.getBoundingClientRect().top;
     // высчитываем глобальные координаты нижнего правого угла области рисования
-    $containerDX = $containerTX + 1200;
+    $containerDX = $containerTX + 1050;
     $containerDY = $containerTY + 700;
 
     $idFinedObjOLD = "appended-modul0";

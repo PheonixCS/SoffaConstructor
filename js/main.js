@@ -16,93 +16,93 @@ $(document).ready(function(){
         });
     });
     
-    /* Р‘Р›РћРљ РџР•Р Р•РњР•РќРќР«Р•*/
-    // РіР»РѕР±Р°Р»СЊРЅС‹Рµ РїРµСЂРµРјРµРЅРЅС‹Рµ РґР»СЏ РІС‹С‡СЃРёС‚С‹РІР°РЅРёСЏ РёРЅРґРµРєСЃР° РґРѕР±Р°РІР»СЏРµРјРѕРіРѕ РјРѕРґСѓР»СЏ
+    /* БЛОК ПЕРЕМЕННЫЕ*/
+    // глобальные переменные для вычситывания индекса добавляемого модуля
     numberIdObjecy = 0;
     idObject = "appended-modul" + numberIdObjecy;
 
-    // СЌС‚Рѕ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‡С‚РѕР±С‹ РјС‹ РЅРµ РІС‹С…РѕРґРёР»Рё Р·Р° РіСЂР°РЅРёС†С‹ СЂР°Р±РѕС‡РµР№ РѕР±Р»Р°СЃС‚Рё
-    // РїРѕР»СѓС‡Р°РµРј РіР»РѕР±Р°Р»СЊРЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ РІРµСЂС…РЅРµРіРѕ Р»РµРІРѕРіРѕ СѓРіР»Р° РѕР±Р»Р°СЃС‚Рё СЂРёСЃРѕРІР°РЅРёСЏ
+    // это используется чтобы мы не выходили за границы рабочей области
+    // получаем глобальные координаты верхнего левого угла области рисования
     let objContainer = document.getElementById('container');
     $containerTX = objContainer.getBoundingClientRect().left;
     $containerTY = objContainer.getBoundingClientRect().top;
-    // РІС‹СЃС‡РёС‚С‹РІР°РµРј РіР»РѕР±Р°Р»СЊРЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ РЅРёР¶РЅРµРіРѕ РїСЂР°РІРѕРіРѕ СѓРіР»Р° РѕР±Р»Р°СЃС‚Рё СЂРёСЃРѕРІР°РЅРёСЏ
+    // высчитываем глобальные координаты нижнего правого угла области рисования
     $containerDX = $containerTX + 1200;
     $containerDY = $containerTY + 700;
 
     $idFinedObjOLD = "appended-modul0";
-    // РєРѕР»Р»РµРєС†РёРё РѕР±СЉРµРєС‚РѕРІ
+    // коллекции объектов
 
-    // РєРѕР»Р»РµРєС†РёСЏ СЃРєРѕРјРїРѕРЅРѕРІР°РЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ (РіР»Р°РІРЅР°СЏ РІРµС‚РєР°)
+    // коллекция скомпонованных объектов (главная ветка)
     const groupMain = new Map();
-    // РєРѕР»Р»РµРєС†РёСЏ СЃРєРѕРјРїРѕРЅРѕРІР°РЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ (РїРѕР±РѕС‡РЅР°СЏ РІРµС‚РєР°)
+    // коллекция скомпонованных объектов (побочная ветка)
     const subMain = new Map();
-    // РјР°СЃСЃРёРІ СЂР°Р·РјРµС‰РµРЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ
+    // массив размещенных объектов
     var appendedObj = new Map();
 
     //arr.set('key5','value5');
     //console.log(arr);
 
 
-    /* Р‘Р›РћРљ РџР•Р Р•РњР•РќРќР«Р•*/
+    /* БЛОК ПЕРЕМЕННЫЕ*/
 
-    //// РІСЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ С„СѓРЅРєС†РёРё /////
-    /// СЃРѕР·РґР°РµРј html РєРѕРґ РјРѕРґСѓР»СЏ
+    //// вспомогательные функции /////
+    /// создаем html код модуля
     $creatModul = function(id,$number){
         if ($number == 1){
-            modul  = '<div id = "'+id+'" class = "appended-modul modul B"><div class="modul-nameAppendB B-name">Р‘</div></div>';
+            modul  = '<div id = "'+id+'" class = "appended-modul modul B"><div class="modul-nameAppendB B-name">Б</div></div>';
             return modul;
         }
         if ($number == 2){
-            modul = '<div id = "'+id+'" class = "appended-modul modul BM"><div class="modul-nameAppendBM BM-name">Р‘Рњ</div></div>';
+            modul = '<div id = "'+id+'" class = "appended-modul modul BM"><div class="modul-nameAppendBM BM-name">БМ</div></div>';
             return modul;
         }
         if ($number == 3){
-            modul  = '<div id = "'+id+'" class = "appended-modul modul C"><div class="modul-nameAppendC C-name">РЎ</div></div>';
+            modul  = '<div id = "'+id+'" class = "appended-modul modul C"><div class="modul-nameAppendC C-name">С</div></div>';
             return modul;
         }
         if ($number == 4){
-            modul = '<div id = "'+id+'" class = "appended-modul modul CM"><div class="modul-nameAppendCM CM-name">РЎM</div></div>';
+            modul = '<div id = "'+id+'" class = "appended-modul modul CM"><div class="modul-nameAppendCM CM-name">СM</div></div>';
             return modul;
         }
         if ($number == 5){
-            modul = '<div id = "'+id+'" class = "appended-modul modul CB"><div class="modul-nameAppendCB CB-name">РЎР‘</div></div>';
+            modul = '<div id = "'+id+'" class = "appended-modul modul CB"><div class="modul-nameAppendCB CB-name">СБ</div></div>';
             return modul;
         }
         return -1;
     }
-    /// РґРѕР±Р°РІР»СЏРµРј РјРѕРґСѓР»СЊ РЅР° С…РѕР»СЃС‚
+    /// добавляем модуль на холст
     $append = function(tar,elem)
     {
         tar.append(elem);
     }
-    /// РћСЃРЅРѕРІРЅР°СЏ С„СѓРЅРєС†РёСЏ
+    /// Основная функция
     $moovFunc = function($numberObj,id,e){
         if (e.which == 1){
 
-            // СЃС‡РёС‚С‹РІР°РµРј РєРѕРѕСЂРґРёРЅР°С‚С‹ РјС‹С€Рё
+            // считываем координаты мыши
             $mouseD_x = e.pageX;
             $mouseD_y = e.pageY;
-            // СЃС‡РёС‚С‹РІР°РµРј РєРѕРѕСЂРґРёРЅР°С‚С‹ Р±Р»РѕРєР° РЅР° РєРѕС‚РѕСЂС‹Р№ РЅР°Р¶Р°Р»Рё
+            // считываем координаты блока на который нажали
             $elemCordX = e.currentTarget.getBoundingClientRect().left;
             $elemCordY = e.currentTarget.getBoundingClientRect().top;
-            // РІС‹С‡РёР»СЏРµРј СЃРјРµС‰РµРЅРёРµ РѕС‚ РїРѕР·РёС†РёРё РјС‹С€Рё РґР»СЏ РіРµРЅРµСЂР°С†РёРё РЅРѕРІРѕРіРѕ РѕР±СЉРµРєС‚Р°
+            // вычиляем смещение от позиции мыши для генерации нового объекта
             $deltaX = $mouseD_x-$elemCordX;
             $deltaY = $mouseD_y-$elemCordY;
             
-            // РїРѕР»СѓС‡Р°РµРј html РєРѕРґ РјРѕРґСѓР»СЏ
+            // получаем html код модуля
             $moovObj = $creatModul(id,$numberObj);
-            // РґРѕР±Р°РІР»СЏРµРј РЅР° СЃС‚СЂР°РЅРёС†Сѓ(РѕРЅ СЃРєСЂС‹С‚)
+            // добавляем на страницу(он скрыт)
             $append($('body'),$moovObj)
 
-            // РїРѕР»СѓС‡Р°РµРј РґРѕР±Р°РІР»РµРЅРЅС‹Р№ РјРѕРґСѓР»СЊ
+            // получаем добавленный модуль
             $moovblModul = $('#'+id);
             $moovblModul.css({
                 'cursor': 'grabbing'
             });
-            // СЃРјРµС‰Р°РµРј РµРіРѕ С‚Р°Рє, С‡С‚РѕР±С‹ РѕРЅ Р±С‹Р» СЂРѕРІРЅРѕ РїРѕРІРµСЂС… РјРѕРґСѓР»СЏ РЅРѕ РєРѕС‚РѕСЂС‹Р№ РЅР°Р¶Р°Р»Рё
+            // смещаем его так, чтобы он был ровно поверх модуля но который нажали
             $moovblModul.offset({top: e.pageY-$deltaY, left: e.pageX-$deltaX});
-            // РѕС‚РѕР±СЂР°Р¶Р°РµРј РјРѕРґСѓР»СЊ
+            // отображаем модуль
             $moovblModul.show();
             
             $('body').css({
@@ -112,49 +112,49 @@ $(document).ready(function(){
                 'pointer-events':'auto'
             });
 
-            // Р·Р°РїСѓСЃРєР°РµРј Р»РѕРіРёРєСѓ РµСЃР»Рё РјС‹С€СЊ РЅР°С‡Р°Р»Р° РґРІРёР¶РµРЅРёРµ
+            // запускаем логику если мышь начала движение
             $(document).mousemove(function (e) {
-                // РїРѕРєР° РєР»Р°РІРёС€Р° Р·Р°Р¶Р°С‚Р° Рё РјС‹С€СЊ РґРІРёР¶РµС‚СЃСЏ РјРµРЅСЏРµРј РґРёРЅР°РјРёС‡РЅРѕ СЃРјРµС‰РµРЅРёРµ РјРѕРґСѓР»СЏ
+                // пока клавиша зажата и мышь движется меняем динамично смещение модуля
                 $moovblModul.offset({top: e.pageY-$deltaY, left: e.pageX-$deltaX});
-                /*С‚Р°Рє Р¶Рµ Р·РґРµСЃСЊ РјС‹ Р±СѓРґРµРј СЂРµР°Р»РёР·РѕРІС‹РІР°С‚СЊ РІС‹С‡РёСЃР»РµРЅРёРµ Р±Р»РёР¶Р°Р№С€РµРіРѕ РјРѕРґСѓР»СЏ*/
+                /*так же здесь мы будем реализовывать вычисление ближайшего модуля*/
                 
 
 
             }).click(function (e) {
-                // Р·Р°РїСѓСЃРєР°РµРј Р»РѕРіРёРєСѓ РµСЃР»Рё РєРЅРѕРїРєР° РѕС‚Р¶Р°С‚Р°
-                // РїСЂРѕРІРµСЂСЏРµРј С‡С‚Рѕ СЂР°Р·РјРµС‰Р°РµРјС‹Р№ РѕР±СЉРµРєС‚ РЅР°С…РѕРґРёС‚СЃСЏ РІ СЂР°Р±РѕС‡РµР№ РѕР±Р»Р°СЃС‚Рё
+                // запускаем логику если кнопка отжата
+                // проверяем что размещаемый объект находится в рабочей области
                 if(e.pageY < $containerDY-$deltaY && e.pageY > $containerTY+$deltaY && e.pageX < $containerDX-$deltaX && e.pageX > $containerTX+$deltaX){                    
-                    // РІС‹С‡РёСЃР»СЏРµРј РєРѕРѕСЂРґРёРЅР°С‚С‹
+                    // вычисляем координаты
                     objAdd = document.getElementById(idObject);
                     topY = objAdd.getBoundingClientRect().top;
                     topX = objAdd.getBoundingClientRect().left;
                     dovnY = topY + $('#'+idObject).height();
                     dovnX = topX + $('#'+idObject).width();
 
-                    // СѓСЃР»РѕРІРёРµ СЃРѕР·РґР°РЅРёРµ РѕР±СЉРµРєС‚Р° РµСЃР»Рё РЅР° РґРѕСЃРєРµ РЅРёС‡РµРіРѕ РЅРµС‚.
+                    // условие создание объекта если на доске ничего нет.
                     if(groupMain.size == 0){
                         console.log(groupMain.size);
                         
-                        // РѕСЃРЅРѕРІРЅР°СЏ Р»РѕРіРёРєР°
-                        // РґРѕР±Р°РІР»СЏРµРј РѕР±СЉРµРєС‚ РІС‹СЃС‡РёС‚С‹РІРµРј РєРѕРѕСЂРґРёРЅР°С‚С‹ РµРіРѕ СѓРіР»РѕРІ
+                        // основная логика
+                        // добавляем объект высчитывем координаты его углов
                         
-                        // РґРѕР±Р°РІР»СЏРµРј id РѕР±СЉРµРєС‚Р° РІ РєРѕР»Р»РµРєС†РёСЋ РІ РєР°С‡РµСЃС‚РІРµ РєР»СЋС‡Р° Рё РґРѕР±Р°РІР»СЏРµРј РїРѕ РєР»СЋС‡Сѓ РєРѕРѕСЂРґРёРЅР°С‚С‹ РІРµСЂС€РёРЅ РѕР±СЉРµРєС‚Р°
+                        // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
                         groupMain.set(idObject,[topX,topY,dovnX,dovnY]);
-                        // РґРѕР±Р°РІР»СЏРµРј РІ РјР°СЃСЃРёРІ СЂР°Р·РјРµС‰РµРЅРЅС‹С… РѕР±С…РµРєС‚РѕРІ id СЂР°Р·РјРµС‰РµРЅРЅРѕРіРѕ РјРѕРґСѓР»СЏ
+                        // добавляем в массив размещенных обхектов id размещенного модуля
                         appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
-                        // РіРµРЅРµСЂРёСЂСѓРµРј РЅРѕРІС‹Р№ id РґР»СЏ СЃР»РµРґСѓСЋС‰РµРіРѕ РјРѕРґСѓР»СЏ
+                        // генерируем новый id для следующего модуля
                         numberIdObjecy = numberIdObjecy + 1;
                         idObject = "appended-modul" + numberIdObjecy;
-                        // РѕС‚РєСЂРµРїР»СЏРµРј СЃРѕР±С‹С‚РёРµ РЅР° РєР»РёРє РѕС‚ С‚РµРєСѓС‰РµРіРѕ РјРѕРґСѓР»СЏ
+                        // открепляем событие на клик от текущего модуля
                         $(this).unbind("click");
                     }
-                    // РµСЃР»Рё РЅР° РґРѕСЃРєРµ С‡С‚Рѕ-С‚Рѕ РµСЃС‚СЊ.
+                    // если на доске что-то есть.
                     else{
                         //console.log(appendedObj);
-                        /*РЅСѓ Р° С‚РµРїРµСЂСЊ СЃР°РјРѕРµ СЃР»РѕР¶РЅРѕ... РЅР°РІРµСЂРЅРѕРµ :D*/
-                        // РІС‹С‡РёСЃР»РµРЅРёРµ СЂР°СЃСЃС‚РѕСЏРЅРёР№ Рё РїРѕРёСЃРє РјРёРЅРёРјР°Р»СЊРЅРѕРіРѕ
-                        // РѕСЃРЅРѕРІРЅР°СЏ Р»РѕРіРёРєР°
-                        /*РєР°Рє РЅР°Р№С‚Рё СЂР°СЃСЃС‚РѕСЏРЅРёРµ РґРѕ РѕР±СЉРµРєС‚Р° СЃ id*/
+                        /*ну а теперь самое сложно... наверное :D*/
+                        // вычисление расстояний и поиск минимального
+                        // основная логика
+                        /*как найти расстояние до объекта с id*/
                         $lenght = 99999;
 
                         // var x = -25;
@@ -174,22 +174,22 @@ $(document).ready(function(){
                             $tCordY = appendedObj.get(key)[1];
                             $bCordY = appendedObj.get(key)[3];
 
-                            // РµСЃР»Рё СЂР°Р·РјРµС‰Р°РµРјС‹Р№ РѕР±СЉРµРєС‚ РЅРёР¶Рµ
+                            // если размещаемый объект ниже
                             if(topY < ($tCordY + ($bCordY -$tCordY)/2)){
                                 $distanseY = Math.min(Math.abs($tCordY - topY),Math.abs($bCordY-dovnY));
                                 //console.log($distanseY);
                             }
-                            // РµСЃР»Рё СЂР°Р·РјРµС‰Р°РµРјС‹Р№ РѕР±СЉРµРєС‚ РЅРёР¶Рµ
+                            // если размещаемый объект ниже
                             else{
                                 $distanseY = Math.min(Math.abs(topY - $bCordY),Math.abs(dovnY - $tCordY));
                                 //console.log($distanseY);
                             }
-                            // РµСЃР»Рё СЂР°Р·РјРµС‰Р°РµРјС‹Р№ РѕР±СЉРµРєС‚ РїСЂР°РІРµРµ
+                            // если размещаемый объект правее
                             if(topX > ($lCordX + ($rCordX -$lCordX)/2)){
                                 $distanseX = Math.min(Math.abs(topX-$rCordX),Math.abs(dovnX-$lCordX));
                                 //console.log($distanseX);
                             }
-                            // РµСЃР»Рё Р»РµРІРµРµ
+                            // если левее
                             else{
                                 $distanseX = Math.min(Math.abs(topX-$lCordX),Math.abs(dovnX-$rCordX));
                                 //console.log($distanseX);
@@ -214,22 +214,22 @@ $(document).ready(function(){
                         });
                         console.log($idFinedObjOLD);
 
-                        // РґРѕР±Р°РІР»СЏРµРј id РѕР±СЉРµРєС‚Р° РІ РєРѕР»Р»РµРєС†РёСЋ РІ РєР°С‡РµСЃС‚РІРµ РєР»СЋС‡Р° Рё РґРѕР±Р°РІР»СЏРµРј РїРѕ РєР»СЋС‡Сѓ РєРѕРѕСЂРґРёРЅР°С‚С‹ РІРµСЂС€РёРЅ РѕР±СЉРµРєС‚Р°
+                        // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
                         groupMain.set(idObject,[topX,topY,dovnX,dovnY]);
-                        // РґРѕР±Р°РІР»СЏРµРј РІ РјР°СЃСЃРёРІ СЂР°Р·РјРµС‰РµРЅРЅС‹С… РѕР±С…РµРєС‚РѕРІ id СЂР°Р·РјРµС‰РµРЅРЅРѕРіРѕ РјРѕРґСѓР»СЏ
+                        // добавляем в массив размещенных обхектов id размещенного модуля
                         appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
 
-                        // СѓРІРµР»РёС‡РёРІР°РµРј РёРЅРґРµРєСЃ
+                        // увеличиваем индекс
                         numberIdObjecy = numberIdObjecy + 1;
                         idObject = "appended-modul" + numberIdObjecy;
-                        // РѕС‚РєСЂРµРїР»СЏРµРј СЃРѕР±С‹С‚РёРµ РЅР° РєР»РёРє РѕС‚ С‚РµРєСѓС‰РµРіРѕ РјРѕРґСѓР»СЏ
+                        // открепляем событие на клик от текущего модуля
                         $(this).unbind("click");
                     }
                 }
                 else{
                     $moovblModul.remove();
                 }
-                // СѓСЃР»РѕРІРёСЏ СЃРѕР·РґР°РЅРёСЏ РѕР±СЉРµРєС‚Р° РµСЃР»Рё РЅР° РґРѕСЃРєРµ С‡С‚Рѕ-С‚Рѕ РµСЃС‚СЊ.
+                // условия создания объекта если на доске что-то есть.
                 $(this).unbind("mousemove");
             });
         };

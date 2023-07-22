@@ -282,28 +282,47 @@ $(document).ready(function(){
                         }
                         console.log($attachPosHoris,$attachPosVert);
                         // аттач справа
-                        if($attachPosHoris == 3 && $attachPosVert == 4){
+                        // к верхнему углу
+                        if(($attachPosHoris == 3 && $attachPosVert == 4)||($attachPosHoris == 4 && $attachPosVert == 4)){
                             $('#'+idObject).offset({top: rect2.top+(rect1.top - rect2.top), left: rect2.left - (rect2.left-rect1.right)+1});
                         }
-                        if($attachPosHoris == 3 && $attachPosVert == 1){
+                        // к нижнему углу
+                        if(($attachPosHoris == 3 && $attachPosVert == 1) || ($attachPosHoris == 4 && $attachPosVert == 1)){
                             $('#'+idObject).offset({top: rect2.top+(rect1.bottom - rect2.bottom), left: rect2.left - (rect2.left-rect1.right)+1});
                         }
+
+
+
                         // аттач слева к верхнему углу
                         if($attachPosHoris == 2 && $attachPosVert == 4 && rect1.top - rect2.bottom > rect1.top - rect2.top){
                             $('#'+idObject).offset({top: rect2.top-(rect1.top - rect2.bottom), left: rect2.left+(rect1.left - rect2.right)-1});
                         }
-                        if($attachPosHoris == 2 && $attachPosVert == 4 && rect1.top - rect2.bottom <= rect1.top - rect2.top){
+                        if(($attachPosHoris == 2 && $attachPosVert == 4)||($attachPosHoris == 1 && $attachPosVert == 4) && rect1.top - rect2.bottom <= rect1.top - rect2.top){
                             $('#'+idObject).offset({top: rect2.top+(rect1.top - rect2.top), left: rect2.left+(rect1.left - rect2.right)-1});
                         }
                         // аттач слева к нижнему углу
-                        if($attachPosHoris == 2 && $attachPosVert == 1 && rect1.bottom - rect2.top > rect1.bottom - rect2.bottom){
+                        if(($attachPosHoris == 2 && $attachPosVert == 1)||($attachPosHoris == 1 && $attachPosVert == 1) && rect1.bottom - rect2.top > rect1.bottom - rect2.bottom){
                             $('#'+idObject).offset({top: rect2.top-(rect2.bottom-rect1.bottom), left: rect2.left+(rect1.left - rect2.right)-1});
                         }
 
                         // аттач сверху к левому углу
+                        if(($attachPosHoris == 2 && $attachPosVert == 3) || ($attachPosHoris == 1 && $attachPosVert == 3)){
+                            $('#'+idObject).offset({top: rect2.top-(rect2.bottom-rect1.top)-1, left: rect1.left});
+                        }
+
                         // аттач сверху к правому углу
+                        if(($attachPosHoris == 3 && $attachPosVert == 3) || ($attachPosHoris == 4 && $attachPosVert == 3)){
+                            $('#'+idObject).offset({top: rect2.top-(rect2.bottom-rect1.top)-1, left: rect1.right-(rect2.right-rect2.left)});
+                        }
+
                         // аттач снизу к левому углу
+                        if(($attachPosHoris == 1 && $attachPosVert == 2) || ($attachPosHoris == 2 && $attachPosVert == 2)){
+                            $('#'+idObject).offset({top: rect1.bottom+1, left: rect1.left});
+                        }
                         // аттач снизу к правому углу
+                        if(($attachPosHoris == 4 && $attachPosVert == 2) || ($attachPosHoris == 3 && $attachPosVert == 2)){
+                            $('#'+idObject).offset({top: rect1.bottom+1, left: rect1.right-(rect2.right-rect2.left)});
+                        }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                         $('#'+$idFinedObjOLD).css({
                             'background-color': '#B9B9BA'

@@ -125,6 +125,7 @@ body {
     justify-content: center;
     align-items: center;
     flex-wrap: nowrap;
+    height: 100%;
 }
 .modul{
     position: relative;

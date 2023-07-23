@@ -4,6 +4,11 @@ $(document).ready(function(){
     $('#board').css({
         'height':document.documentElement.clientHeight
     });
+    window.addEventListener('resize', function(event) {
+        $('#board').css({
+            'height':document.documentElement.clientHeight
+        });
+    }, true);
 
     $(".modul").mouseover(function(e){ 
         $(this).css({
@@ -118,10 +123,6 @@ $(document).ready(function(){
             $(document).mousemove(function (e) {
                 // пока клавиша зажата и мышь движется меняем динамично смещение модуля
                 $moovblModul.offset({top: e.pageY-$deltaY, left: e.pageX-$deltaX});
-                /*так же здесь мы будем реализовывать вычисление ближайшего модуля*/
-                
-
-
             }).click(function (e) {
                 // запускаем логику если кнопка отжата
                 // проверяем что размещаемый объект находится в рабочей области

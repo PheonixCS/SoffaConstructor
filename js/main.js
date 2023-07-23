@@ -2,7 +2,7 @@
 $(document).ready(function(){
     
     $('#board').css({
-        'height':document.documentElement.clientHeight-50
+        'height':document.documentElement.clientHeight
     });
 
     $(".modul").mouseover(function(e){ 
@@ -24,12 +24,12 @@ $(document).ready(function(){
 
     // это используется чтобы мы не выходили за границы рабочей области
     // получаем глобальные координаты верхнего левого угла области рисования
-    let objContainer = document.getElementById('container');
-    $containerTX = objContainer.getBoundingClientRect().left;
-    $containerTY = objContainer.getBoundingClientRect().top;
-    // высчитываем глобальные координаты нижнего правого угла области рисования
-    $containerDX = $containerTX + 1050;
-    $containerDY = $containerTY + 700;
+    $updateSize = function(){
+        let objContainer = document.getElementById('container');
+        rectcont = objContainer.getBoundingClientRect();
+        $containerRX = rectcont.right-$('#menu').width();
+        return $containerRX;
+    };
 
     $idFinedObjOLD = "appended-modul0";
     // коллекции объектов
@@ -87,14 +87,15 @@ $(document).ready(function(){
             // считываем координаты блока на который нажали
             $elemCordX = e.currentTarget.getBoundingClientRect().left;
             $elemCordY = e.currentTarget.getBoundingClientRect().top;
-
+            $elemCordXR = e.currentTarget.getBoundingClientRect().right;
             // вычиляем смещение от позиции мыши для генерации нового объекта
             $deltaX = $mouseD_x-$elemCordX;
             $deltaY = $mouseD_y-$elemCordY;
+            $deltaXR = $elemCordXR-$mouseD_x;
             // получаем html код модуля
             $moovObj = $creatModul(id,$numberObj);
             // добавляем на страницу(он скрыт)
-            $append($('body'),$moovObj)
+            $append($('.canvas-UI'),$moovObj)
 
             // получаем добавленный модуль
             $moovblModul = $('#'+id);
@@ -124,7 +125,7 @@ $(document).ready(function(){
             }).click(function (e) {
                 // запускаем логику если кнопка отжата
                 // проверяем что размещаемый объект находится в рабочей области
-                if(e.pageY < $containerDY-$deltaY && e.pageY > $containerTY+$deltaY && e.pageX < $containerDX-$deltaX && e.pageX > $containerTX+$deltaX){                    
+                if(e.pageX + $deltaXR < $updateSize()){                    
                     // вычисляем координаты
                     objAdd = document.getElementById(idObject);
                     topY = objAdd.getBoundingClientRect().top;

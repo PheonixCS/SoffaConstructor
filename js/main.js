@@ -252,29 +252,29 @@ $(document).ready(function(){
                             //
                             //
                             ////////////////////////////////////////////////////////////////////
-                            // цикл для верхней вершины правой грани pos1
+                            // цикл для определения позиций возможной стыковки.
                             console.log($maxSpase14,$pos1);
                             for (let id of appendedObj.keys()) {
-                                if((appendedObj.get(id)[1]-$tCordY < $maxSpase14) && ($rCordX-appendedObj.get(id)[0] < $('#'+idObject).height()) && id!=key){
+                                // для верхней вершины правой грани pos1 (отлажено)
+                                if( (appendedObj.get(id)[1]-$tCordY >= 0) && (appendedObj.get(id)[1]-$tCordY < $maxSpase14) && appendedObj.get(id)[0]-$rCordX >= 0 &&(appendedObj.get(id)[0]-$rCordX < $('#'+idObject).width()) && id!=key){
                                     $maxSpase14 = appendedObj.get(key)[1]-$tCordY;
+                                    console.log(key,id,$maxSpase14);
+                                }
+                                // для верхней вершины правой грани pos2 (отлажено)
+                                if($rCordX-appendedObj.get(id)[2] >= 0 && ($rCordX-appendedObj.get(id)[2] < $maxSpase12) && $tCordY-appendedObj.get(id)[3] >= 0 &&($tCordY-appendedObj.get(id)[3] < $('#'+idObject).height()) && id != key ){
+                                    $maxSpase12 = $rCordX-appendedObj.get(id)[2];
+                                    //console.log(key,id,$maxSpase12);
                                 }
                             }
                             if($maxSpase14 < $('#'+idObject).height()){
                                 $pos1 = false;
                             }
 
-                            // цикл для верхней вершины правой грани pos2 (отлажено)
-                            for (let id of appendedObj.keys()) {
-                                if($rCordX-appendedObj.get(id)[2] >= 0 &&($rCordX-appendedObj.get(id)[2] < $maxSpase12) && ($tCordY-appendedObj.get(id)[3] < $('#'+idObject).height()) && id != key ){
-                                    $maxSpase12 = $rCordX-appendedObj.get(id)[2];
-                                    //console.log(key,id,$maxSpase12);
-                                }
-                            }
                             if($maxSpase12 < $('#'+idObject).width()){
                                 $pos2 = false;
                             }
-                            //console.log(key,$maxSpase12,$pos2);
-                            //alert(1);
+                            console.log(key,$maxSpase14,$pos1);
+                            alert(1);
 
 
 

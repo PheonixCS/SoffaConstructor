@@ -46,6 +46,7 @@ $(document).ready(function(){
     // массив размещенных объектов
     var appendedObj = new Map();
 
+
     //arr.set('key5','value5');
     //console.log(arr);
 
@@ -230,60 +231,53 @@ $(document).ready(function(){
                             //      |________| 
                             //      3        4
                             //
-                            ///////////////////////////////////////////
-
-                            $maxSpase14Height = 999; // для проверки доступности $pos1
-                            $maxSpase14Width = 999;  // для проверки доступности $pos1
-                            $freeSquare14 = 9999999;
-
-                            $maxSpase12 = 999; // для проверки доступности $pos2
-                            $maxSpase21 = 999; // для проверки доступности $pos3
-                            $maxSpase23 = 999; // для проверки доступности $pos4
-                            $maxSpase32 = 999; // для проверки доступности $pos5
-                            $maxSpase34 = 999; // для проверки доступности $pos6
-                            $maxSpase43 = 999; // для проверки доступности $pos7
-                            $maxSpase41 = 999; // для проверки доступности $pos8
-
-                            /////////////// переменные которые уже обьявленны и нам потребуются
-                            //
-                            //  $lCordX = appendedObj.get(key)[0]; // координата левой грани притендента
-                            //  $rCordX = appendedObj.get(key)[2]; // координата правой грани притендента
-                            //  $tCordY = appendedObj.get(key)[1]; // координата верхней грани притендента
-                            //  $bCordY = appendedObj.get(key)[3]; // координата нижней грани притендента
-                            //
-                            //  
-                            //
-                            //
-                            ////////////////////////////////////////////////////////////////////
+                            /////////////// переменные которые уже обьявленны и нам потребуются/////////////
+                            //                                                                             /
+                            //  $lCordX = appendedObj.get(key)[0]; // координата левой грани притендента   /
+                            //  $rCordX = appendedObj.get(key)[2]; // координата правой грани притендента  /
+                            //  $tCordY = appendedObj.get(key)[1]; // координата верхней грани притендента /
+                            //  $bCordY = appendedObj.get(key)[3]; // координата нижней грани притендента  /
+                            //                                                                             /
+                            ////////////////////////////////////////////////////////////////////////////////
                             // цикл для определения позиций возможной стыковки.
                             for (let id of appendedObj.keys()) {
-                                // для верхней вершины правой грани pos1 (отлажено)
-                                if(($tCordY - appendedObj.get(id)[1] >= 0 && $tCordY - appendedObj.get(id)[1] < $maxSpase14Height) && id!=key){
-                                    $maxSpase14Height = $tCordY - appendedObj.get(id)[1];
-                                    if($freeSquare14 > $maxSpase14Height * appendedObj.get(id)[2]){
-                                        $freeSquare14 = $maxSpase14Height * appendedObj.get(id)[2];
-                                    } 
-                                    
-                                }
-                                if((appendedObj.get(id)[3] - $tCordY >= 0 && appendedObj.get(id)[3] - $tCordY < $maxSpase14Height) && id!=key){
-                                    $maxSpase14Height = appendedObj.get(id)[3] - $tCordY;
-                                    console.log(appendedObj.get(key)[2],$rCordX);
-                                    if($freeSquare14 > $maxSpase14Height * (appendedObj.get(id)[2]-$rCordX)){
-                                        $freeSquare14 = $maxSpase14Height * (appendedObj.get(id)[2]-$rCordX);
+                                /////////// блок кода для правой грани правой вершины//////////////////////////////
+                                $lX = appendedObj.get(id)[0];
+                                $rX = appendedObj.get(id)[2];
+                                $tY = appendedObj.get(id)[1];
+                                $bY = appendedObj.get(id)[3];
+
+                                $d1 = $tY - $tCordY; // от верхней до верхней
+                                $d2 = $bY - $tCordY; // от нижней до верхней
+                                $d3 = $lX - $rCordX; // от левой до правой
+                                $d4 = $rX - $rCordX; // от правой до правой грани
+                                if($d2 > 0 && $d4 > 0){
+                                    if(id!=key && $d1 < $('#'+idObject).height() && $d3 < $('#'+idObject).width()){
+                                        $pos1 = false;
                                     }
-                                        console.log(key,id,$freeSquare14,$maxSpase14Height,appendedObj.get(id)[2]-$rCordX); 
-                                    
                                 }
-                                
-                                //console.log(key,id,$freeSquare14,$maxSpase14Height,$maxSpase14Width);
-                                
+                                /////////////////////////////////////////////////////////////////////////////////////
+
+                                /////////// блок кода для верхней грани правой вершины//////////////////////////////
+                                $lX = appendedObj.get(id)[0];
+                                $rX = appendedObj.get(id)[2];
+                                $tY = appendedObj.get(id)[1];
+                                $bY = appendedObj.get(id)[3];
+
+                                $d1 = $tCordY-$bY;
+                                $d2 = $rCordX-$rX;
+                                $d3 = $rCordX-$lX;
+                                $d4 = $tCordY-$tY;
+                                if($d3 > 0 && $d4 > 0){
+                                    if(id!=key && $d2 < $('#'+idObject).width() && $d1 < $('#'+idObject).height()){
+                                        $pos2 = false;
+                                    }
+                                }
+                                ////////////////////////////////////////////////////////////////////////////////////
                             }
                             // если свободна площадь меньше чем площадь модуля, то вершину помечаем недоступной для стыковки.
-                            if($freeSquare14  < $('#'+idObject).height()*$('#'+idObject).width()){
-                                $pos1 = false;
-                            }
-                            
-
+                            console.log("pos1",key,$pos1);
+                            console.log("pos2",key,$pos2);
 
 
                             ///////////////////////////////////////////////////////////
@@ -373,6 +367,17 @@ $(document).ready(function(){
                             // идея.при клейке добавлять id приклееных блоков в список списков с позицей l r b t это поможет сделать смещение
                             // болле правильным образом
                             // пока работаем на склейкой двух элементов.
+                            $updateCord = function(){
+                                objAdd = document.getElementById(idObject);
+                                topY = objAdd.getBoundingClientRect().top;
+                                topX = objAdd.getBoundingClientRect().left;
+                                dovnY = topY + $('#'+idObject).height();
+                                dovnX = topX + $('#'+idObject).width();
+                                groupMain.set(idObject,[topX,topY,dovnX,dovnY]);
+                                // добавляем в массив размещенных обхектов id размещенного модуля
+                                appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
+                            }
+
 
                             element1 = document.getElementById($idFinedObjNew);  
                             var rect1 = element1.getBoundingClientRect();
@@ -429,46 +434,54 @@ $(document).ready(function(){
                             if($minDistansHoris == Math.abs($distans4Horis)){
                                 $attachPosHoris = 4;
                             }
-                            console.log($attachPosHoris,$attachPosVert);
                             // аттач справа
                             // к верхнему углу
+                            // при атаче нужно менять координы в списках объектов.
                             if(($attachPosHoris == 3 && $attachPosVert == 4)||($attachPosHoris == 4 && $attachPosVert == 4)||($attachPosHoris == 3 && $attachPosVert == 3 && $distans3Vert < 0)){
                                 $('#'+idObject).offset({top: rect2.top+(rect1.top - rect2.top), left: rect2.left - (rect2.left-rect1.right)+1});
+                                $updateCord();
                             }
                             // к нижнему углу
                             if(($attachPosHoris == 3 && $attachPosVert == 1) || ($attachPosHoris == 4 && $attachPosVert == 1) || ($attachPosHoris == 3 && $attachPosVert == 2 && $distans2Vert > 0)){
                                 $('#'+idObject).offset({top: rect2.top+(rect1.bottom - rect2.bottom), left: rect2.left - (rect2.left-rect1.right)+1});
+                                $updateCord();
                             }
                             // аттач слева к верхнему углу
                             if($attachPosHoris == 2 && $attachPosVert == 4 && rect1.top - rect2.bottom > rect1.top - rect2.top ){
                                 $('#'+idObject).offset({top: rect2.top-(rect1.top - rect2.bottom), left: rect2.left+(rect1.left - rect2.right)-1});
+                                $updateCord();
                             }
                             if(($attachPosHoris == 2 && $attachPosVert == 4)||($attachPosHoris == 1 && $attachPosVert == 4) && rect1.top - rect2.bottom <= rect1.top - rect2.top || (($attachPosHoris == 2 && $attachPosVert == 3 && $distans3Vert < 0))){
                                 $('#'+idObject).offset({top: rect2.top+(rect1.top - rect2.top), left: rect2.left+(rect1.left - rect2.right)-1});
+                                $updateCord();
                             }
                             // аттач слева к нижнему углу
                             if(($attachPosHoris == 2 && $attachPosVert == 1)||($attachPosHoris == 1 && $attachPosVert == 1) && rect1.bottom - rect2.top > rect1.bottom - rect2.bottom || (($attachPosHoris == 2 && $attachPosVert == 2) && $distans2Vert >=0)){
                                 $('#'+idObject).offset({top: rect2.top-(rect2.bottom-rect1.bottom), left: rect2.left+(rect1.left - rect2.right)-1});
+                                $updateCord();
                             }
 
                             // аттач сверху к левому углу
                             if(($attachPosHoris == 1 && $attachPosVert == 3) || ($attachPosHoris == 2 && $attachPosVert == 3 && $distans3Vert >= 0)){
                                 $('#'+idObject).offset({top: rect2.top-(rect2.bottom-rect1.top)-1, left: rect1.left});
+                                $updateCord();
                             }
 
                             // аттач сверху к правому углу
                             if(($attachPosHoris == 3 && $attachPosVert == 3 && $distans3Vert >= 0) || ($attachPosHoris == 4 && $attachPosVert == 3)){
                                 $('#'+idObject).offset({top: rect2.top-(rect2.bottom-rect1.top)-1, left: rect1.right-(rect2.right-rect2.left)});
+                                $updateCord();
                             }
 
                             // аттач снизу к левому углу
                             if(($attachPosHoris == 1 && $attachPosVert == 2) || ($attachPosHoris == 2 && $attachPosVert == 2 && $distans2Vert <= 0 )){
                                 $('#'+idObject).offset({top: rect1.bottom+1, left: rect1.left});
-                                console.log($distans2Vert);
+                                $updateCord();
                             }
                             // аттач снизу к правому углу
                             if(($attachPosHoris == 4 && $attachPosVert == 2) || ($attachPosHoris == 3 && $attachPosVert == 2 && $distans2Vert <= 0 )){
                                 $('#'+idObject).offset({top: rect1.bottom+1, left: rect1.right-(rect2.right-rect2.left)});
+                                $updateCord();
                             }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                             $('#'+$idFinedObjOLD).css({
@@ -478,10 +491,7 @@ $(document).ready(function(){
                                 'background-color': '#FFF'
                             });
 
-                            // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
-                            groupMain.set(idObject,[topX,topY,dovnX,dovnY]);
-                            // добавляем в массив размещенных обхектов id размещенного модуля
-                            appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
+                            
 
                             // увеличиваем индекс
                             numberIdObjecy = numberIdObjecy + 1;

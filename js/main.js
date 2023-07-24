@@ -190,7 +190,7 @@ $(document).ready(function(){
                             $cordCenterDovnGrY = $bCordY;
 
                             // координаты центра верхней грани
-                            $cordCenterTopGrX = $rCordX+($rCordX-$lCordX)/2;
+                            $cordCenterTopGrX = $lCordX+($rCordX-$lCordX)/2;
                             $cordCenterTopGrY = $tCordY;
 
                             // координаты центра левой грани
@@ -204,21 +204,80 @@ $(document).ready(function(){
                             //////////////////////////////////////////
 
                             ///////////////////////////////////////////////////////////
-                            //// здесь год проверки позиций на разрешение стыковки ////
+                            //// здесь код проверки позиций на разрешение стыковки ////
                             ///////////////////////////////////////////////////////////
+
                             $pos1 = true; // правая грань верхний угол
                             $pos2 = true; // верхняя грань правый угол
-                            $pos3 = true; // верхняя грань левый угол
-                            $pos4 = true; // левая грань верхний угол
-                            $pos5 = true; // левая грань нижний угол
-                            $pos6 = true; // нижняя грань левый угол
-                            $pos7 = true; // нижняя грань правый угол
-                            $pos8 = true; // правая грань нижний угол
+                            $pos3 = true; //  верхняя грань левый угол
+                            $pos4 = true; //  левая грань верхний угол
+                            $pos5 = true; //   левая грань нижний угол
+                            $pos6 = true; //   нижняя грань левый угол
+                            $pos7 = true; //  нижняя грань правый угол
+                            $pos8 = true; //  правая грань нижний угол
 
                             // допустим есть объект key(id) и есть список всех объектов, как проврить можно ли стыковать
                             // к верхнему правому углу? минимальное расстояние от правой верхней вершины до
-                            // верхней грани остальных обеъктов, у которыйх ось y совпадает с осью y объекта key(id) должно быть
-                            // меньше чем высота объекта idObject. 
+                            // верхней грани остальных обеъктов, у которыйх ось y удалена в право от оси y объекта key(id) должно быть
+                            // больше чем ширина объекта idObject. 
+                            
+                            //////////////////////////////////////////
+                            //
+                            //      2________1
+                            //      |        |
+                            //      |        |
+                            //      |        |
+                            //      |________| 
+                            //      3        4
+                            //
+                            ///////////////////////////////////////////
+
+                            $maxSpase14 = 999; // для проверки доступности $pos1
+                            $maxSpase12 = 999; // для проверки доступности $pos2
+                            $maxSpase21 = 999; // для проверки доступности $pos3
+                            $maxSpase23 = 999; // для проверки доступности $pos4
+                            $maxSpase32 = 999; // для проверки доступности $pos5
+                            $maxSpase34 = 999; // для проверки доступности $pos6
+                            $maxSpase43 = 999; // для проверки доступности $pos7
+                            $maxSpase41 = 999; // для проверки доступности $pos8
+
+                            /////////////// переменные которые уже обьявленны и нам потребуются
+                            //
+                            //  $lCordX = appendedObj.get(key)[0]; // координата левой грани притендента
+                            //  $rCordX = appendedObj.get(key)[2]; // координата правой грани притендента
+                            //  $tCordY = appendedObj.get(key)[1]; // координата верхней грани притендента
+                            //  $bCordY = appendedObj.get(key)[3]; // координата нижней грани притендента
+                            //
+                            //  
+                            //
+                            //
+                            ////////////////////////////////////////////////////////////////////
+                            // цикл для верхней вершины правой грани pos1
+                            console.log($maxSpase14,$pos1);
+                            for (let id of appendedObj.keys()) {
+                                if((appendedObj.get(id)[1]-$tCordY < $maxSpase14) && ($rCordX-appendedObj.get(id)[0] < $('#'+idObject).height()) && id!=key){
+                                    $maxSpase14 = appendedObj.get(key)[1]-$tCordY;
+                                }
+                            }
+                            if($maxSpase14 < $('#'+idObject).height()){
+                                $pos1 = false;
+                            }
+
+                            // цикл для верхней вершины правой грани pos2 (отлажено)
+                            for (let id of appendedObj.keys()) {
+                                if($rCordX-appendedObj.get(id)[2] >= 0 &&($rCordX-appendedObj.get(id)[2] < $maxSpase12) && ($tCordY-appendedObj.get(id)[3] < $('#'+idObject).height()) && id != key ){
+                                    $maxSpase12 = $rCordX-appendedObj.get(id)[2];
+                                    //console.log(key,id,$maxSpase12);
+                                }
+                            }
+                            if($maxSpase12 < $('#'+idObject).width()){
+                                $pos2 = false;
+                            }
+                            //console.log(key,$maxSpase12,$pos2);
+                            //alert(1);
+
+
+
                             ///////////////////////////////////////////////////////////
                             ////////////////////// end block //////////////////////////
                             ///////////////////////////////////////////////////////////
@@ -234,10 +293,10 @@ $(document).ready(function(){
                             // дистанция от центра размещаемого до центра верхней грани рассматриваемого размещенного
                             // pos2 или pos3 должны быть true.
                             $dist2 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterTopGrX,$cordCenterTopGrY);
-                            // дистанция от центра размещаемого до центра нижней грани рассматриваемого размещенного
+                            // дистанция от центра размещаемого до центра левой грани рассматриваемого размещенного
                             // pos4 или pos5 должны быть true.
                             $dist3 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterLeftGrX ,$cordCenterLeftGrY);
-                            // дистанция от центра размещаемого до центра нижней грани рассматриваемого размещенного
+                            // дистанция от центра размещаемого до центра правой грани рассматриваемого размещенного
                             // pos1 или pos8 должны быть true.
                             $dist4 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterRightGrX ,$cordCenterRightGrY);
 
@@ -248,7 +307,7 @@ $(document).ready(function(){
                             // позициях прикрепления
 
                             $minDistanse = 30+$dist(topX,topY,$cordCenterMoovObjX,$cordCenterMoovObjY);
-                            console.log($minDistanse,$distanse);
+                            //console.log($minDistanse,$distanse,key);
                             if($('#'+idObject).hasClass('B')){
                                 $minDistanse = 130;
                             }
@@ -264,8 +323,7 @@ $(document).ready(function(){
                             if($('#'+idObject).hasClass('CB')){
                                 $minDistanse = 130;
                             }
-                            //console.log(key,$distanse,$dist1,$dist2,$dist3,$dist4);
-
+                            //console.log($distanse,$dist1,$dist2,$dist3,$dist4);
                             
                             // проверяем что дистанция подходящая. По умолчанию до переопределения дистанция у нас они не подходящие
                             // соответвенно если все позиции запрещенные мы не должны попасть в этот блок
@@ -282,6 +340,12 @@ $(document).ready(function(){
                                 }
                             }
                         }
+
+
+                        //////////////тут код проверки видимых объектов определения позиции клейки и т.д.///////////////
+
+
+
                         // по выходу из цикла нам нужно знать объект к которому клеить и разрешенные позиции клейки
                         // или нужно знать что разрешение стыковки ни с каким объектом не получено
                         // это возможно в случае если в определенном радиусе minDistanse нет объектов с разрешенной позицией клейки
@@ -338,7 +402,7 @@ $(document).ready(function(){
                             // $distans3Horis  - расстояние от правой границы обж1 до левой  границы обж2
                             // $distans4Horis  - расстояние от правой границы обж1 до правой границы обж2
                             // $attachPosHoris - позиция приклеивания по горизонтали
-                            $distans1Horis = rect1.left   - rect2.left;
+                            $distans1Horis = rect1.left  - rect2.left;
                             $distans2Horis = rect1.left  - rect2.right;
                             $distans3Horis = rect1.right  - rect2.left;
                             $distans4Horis = rect1.right - rect2.right;
@@ -380,7 +444,7 @@ $(document).ready(function(){
                             }
 
                             // аттач сверху к левому углу
-                            if(($attachPosHoris == 2 && $attachPosVert == 3 && $distans3Vert >= 0)){
+                            if(($attachPosHoris == 1 && $attachPosVert == 3) || ($attachPosHoris == 2 && $attachPosVert == 3 && $distans3Vert >= 0)){
                                 $('#'+idObject).offset({top: rect2.top-(rect2.bottom-rect1.top)-1, left: rect1.left});
                             }
 

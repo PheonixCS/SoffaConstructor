@@ -232,7 +232,10 @@ $(document).ready(function(){
                             //
                             ///////////////////////////////////////////
 
-                            $maxSpase14 = 999; // для проверки доступности $pos1
+                            $maxSpase14Height = 999; // для проверки доступности $pos1
+                            $maxSpase14Width = 999;  // для проверки доступности $pos1
+                            $freeSquare14 = 9999999;
+
                             $maxSpase12 = 999; // для проверки доступности $pos2
                             $maxSpase21 = 999; // для проверки доступности $pos3
                             $maxSpase23 = 999; // для проверки доступности $pos4
@@ -253,28 +256,33 @@ $(document).ready(function(){
                             //
                             ////////////////////////////////////////////////////////////////////
                             // цикл для определения позиций возможной стыковки.
-                            console.log($maxSpase14,$pos1);
                             for (let id of appendedObj.keys()) {
                                 // для верхней вершины правой грани pos1 (отлажено)
-                                if( (appendedObj.get(id)[1]-$tCordY >= 0) && (appendedObj.get(id)[1]-$tCordY < $maxSpase14) && appendedObj.get(id)[0]-$rCordX >= 0 &&(appendedObj.get(id)[0]-$rCordX < $('#'+idObject).width()) && id!=key){
-                                    $maxSpase14 = appendedObj.get(key)[1]-$tCordY;
-                                    console.log(key,id,$maxSpase14);
+                                if(($tCordY - appendedObj.get(id)[1] >= 0 && $tCordY - appendedObj.get(id)[1] < $maxSpase14Height) && id!=key){
+                                    $maxSpase14Height = $tCordY - appendedObj.get(id)[1];
+                                    if($freeSquare14 > $maxSpase14Height * appendedObj.get(id)[2]){
+                                        $freeSquare14 = $maxSpase14Height * appendedObj.get(id)[2];
+                                    } 
+                                    
                                 }
-                                // для верхней вершины правой грани pos2 (отлажено)
-                                if($rCordX-appendedObj.get(id)[2] >= 0 && ($rCordX-appendedObj.get(id)[2] < $maxSpase12) && $tCordY-appendedObj.get(id)[3] >= 0 &&($tCordY-appendedObj.get(id)[3] < $('#'+idObject).height()) && id != key ){
-                                    $maxSpase12 = $rCordX-appendedObj.get(id)[2];
-                                    //console.log(key,id,$maxSpase12);
+                                if((appendedObj.get(id)[3] - $tCordY >= 0 && appendedObj.get(id)[3] - $tCordY < $maxSpase14Height) && id!=key){
+                                    $maxSpase14Height = appendedObj.get(id)[3] - $tCordY;
+                                    console.log(appendedObj.get(key)[2],$rCordX);
+                                    if($freeSquare14 > $maxSpase14Height * (appendedObj.get(id)[2]-$rCordX)){
+                                        $freeSquare14 = $maxSpase14Height * (appendedObj.get(id)[2]-$rCordX);
+                                    }
+                                        console.log(key,id,$freeSquare14,$maxSpase14Height,appendedObj.get(id)[2]-$rCordX); 
+                                    
                                 }
+                                
+                                //console.log(key,id,$freeSquare14,$maxSpase14Height,$maxSpase14Width);
+                                
                             }
-                            if($maxSpase14 < $('#'+idObject).height()){
+                            // если свободна площадь меньше чем площадь модуля, то вершину помечаем недоступной для стыковки.
+                            if($freeSquare14  < $('#'+idObject).height()*$('#'+idObject).width()){
                                 $pos1 = false;
                             }
-
-                            if($maxSpase12 < $('#'+idObject).width()){
-                                $pos2 = false;
-                            }
-                            console.log(key,$maxSpase14,$pos1);
-                            alert(1);
+                            
 
 
 

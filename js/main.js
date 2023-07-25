@@ -359,7 +359,7 @@ $(document).ready(function(){
                                 $tY = appendedObj.get(id)[1];
                                 $bY = appendedObj.get(id)[3];
 
-                                $d1 = $bY - $bCordY; 
+                                $d1 = $bCordY - $bY; 
                                 $d2 = $bY - $tCordY; 
                                 $d3 = $lX - $rCordX;
                                 $d4 = $rX - $rCordX; 

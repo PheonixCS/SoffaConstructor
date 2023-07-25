@@ -377,7 +377,7 @@ $(document).ready(function(){
                             //console.log("pos4",key,$pos4);
                             //console.log("pos6",key,$pos6);
                             //console.log("pos7",key,$pos7);
-                            console.log("pos8",key,$pos8);
+                            //console.log("pos8",key,$pos8);
                             ///////////////////////////////////////////////////////////
                             ////////////////////// end block //////////////////////////
                             ///////////////////////////////////////////////////////////

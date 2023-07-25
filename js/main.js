@@ -159,6 +159,15 @@ $(document).ready(function(){
                         $idFinedObjNew = "appended-modul0";
                         $resultDistanse = 9999;
 
+                        $resPos1 = true; // правая грань верхний угол
+                        $resPos2 = true; // верхняя грань правый угол
+                        $resPos3 = true; //  верхняя грань левый угол
+                        $resPos4 = true; //  левая грань верхний угол
+                        $resPos5 = true; //   левая грань нижний угол
+                        $resPos6 = true; //   нижняя грань левый угол
+                        $resPos7 = true; //  нижняя грань правый угол
+                        $resPos8 = true; //  правая грань нижний угол
+
                         // поиск объекта к котором будем клеится
                         for (let key of appendedObj.keys()) {
                             // нужно добавить проверку, что к объекту можно приклеить и с какой стороны приклеить.
@@ -389,16 +398,34 @@ $(document).ready(function(){
                             };
                             // дистанция от центра размещаемого до центра нижней грани рассматриваемого размещенного
                             // pos6 или pos7 должны быть true.
-                            $dist1 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterDovnGrX,$cordCenterDovnGrY);
-                            // дистанция от центра размещаемого до центра верхней грани рассматриваемого размещенного
-                            // pos2 или pos3 должны быть true.
-                            $dist2 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterTopGrX,$cordCenterTopGrY);
-                            // дистанция от центра размещаемого до центра левой грани рассматриваемого размещенного
-                            // pos4 или pos5 должны быть true.
-                            $dist3 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterLeftGrX ,$cordCenterLeftGrY);
-                            // дистанция от центра размещаемого до центра правой грани рассматриваемого размещенного
-                            // pos1 или pos8 должны быть true.
-                            $dist4 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterRightGrX ,$cordCenterRightGrY);
+                            $dist1 = 99999999;
+                            $dist2 = 99999999;
+                            $dist3 = 99999999;
+                            $dist4 = 99999999;
+
+                            if($pos1 || $pos2 || $pos3 || $pos4 || $pos5 || $pos6 || $pos7 || $pos8){
+                                if($pos6 || $pos7){
+                                    $dist1 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterDovnGrX,$cordCenterDovnGrY);
+                                }
+                                // дистанция от центра размещаемого до центра верхней грани рассматриваемого размещенного
+                                // pos2 или pos3 должны быть true.
+                                if($pos2 || $pos3){
+                                    $dist2 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterTopGrX,$cordCenterTopGrY);
+                                }
+                                // дистанция от центра размещаемого до центра левой грани рассматриваемого размещенного
+                                // pos4 или pos5 должны быть true.
+                                if($pos4 || $pos5){
+                                    $dist3 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterLeftGrX ,$cordCenterLeftGrY);
+                                }
+                                // дистанция от центра размещаемого до центра правой грани рассматриваемого размещенного
+                                // pos1 или pos8 должны быть true.
+                                if($pos1 || $pos8){
+                                    $dist4 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterRightGrX ,$cordCenterRightGrY);
+                                }
+                            }
+                            else{
+                                continue;
+                            }
 
                             
 
@@ -430,6 +457,7 @@ $(document).ready(function(){
                             if($distanse < $resultDistanse && $distanse < $minDistanse){
                                 $resultDistanse = $distanse;
                                 // перезависывем переменные
+                                // здесь так же нужно перезаписать глобальные переменные разрешенных позиций клейки для объекта
                                 if(appendedObj.size == 1){
                                     $idFinedObjOLD = key;
                                     $idFinedObjNew = key;
@@ -437,14 +465,17 @@ $(document).ready(function(){
                                 else{
                                     $idFinedObjOLD = $idFinedObjNew;
                                     $idFinedObjNew = key;
+                                    $resPos1 = $pos1; // правая грань верхний угол
+                                    $resPos2 = $pos2; // верхняя грань правый угол
+                                    $resPos3 = $pos3; //  верхняя грань левый угол
+                                    $resPos4 = $pos4; //  левая грань верхний угол
+                                    $resPos5 = $pos5; //   левая грань нижний угол
+                                    $resPos6 = $pos6; //   нижняя грань левый угол
+                                    $resPos7 = $pos7; //  нижняя грань правый угол
+                                    $resPos8 = $pos8; //  правая грань нижний угол
                                 }
                             }
                         }
-
-
-                        //////////////тут код проверки видимых объектов определения позиции клейки и т.д.///////////////
-
-
 
                         // по выходу из цикла нам нужно знать объект к которому клеить и разрешенные позиции клейки
                         // или нужно знать что разрешение стыковки ни с каким объектом не получено
@@ -452,7 +483,6 @@ $(document).ready(function(){
                         // тогда нужно проверить что не происходит наложение по текущему месту разрешения
                         // если наложения нет оставить объект на месте
                         // если наложение есть то не размещать объект.
-
                         if($resultDistanse < 9999){
                             // "клеим"
                             //element = this;
@@ -460,11 +490,17 @@ $(document).ready(function(){
                             //console.log(rect.top, rect.right, rect.bottom, rect.left);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                             
-                            // здесь нужно проверить, можно ли клеить элементы
-                            // что делать если нельзя ?
-                            // идея.при клейке добавлять id приклееных блоков в список списков с позицей l r b t это поможет сделать смещение
-                            // болле правильным образом
-                            // пока работаем на склейкой двух элементов.
+                            // $resPos1 = $pos1; // правая грань верхний угол
+                            // $resPos2 = $pos2; // верхняя грань правый угол
+                            // $resPos3 = $pos3; //  верхняя грань левый угол
+                            // $resPos4 = $pos4; //  левая грань верхний угол
+                            // $resPos5 = $pos5; //   левая грань нижний угол
+                            // $resPos6 = $pos6; //   нижняя грань левый угол
+                            // $resPos7 = $pos7; //  нижняя грань правый угол
+                            // $resPos8 = $pos8; //  правая грань нижний угол
+
+                            // мы имеем информацию о разрешенных позициях для клейки
+                            console.log($resPos1,$resPos2,$resPos3,$resPos4,$resPos5,$resPos6,$resPos7,$resPos8);
                             $updateCord = function(){
                                 objAdd = document.getElementById(idObject);
                                 topY = objAdd.getBoundingClientRect().top;
@@ -478,20 +514,27 @@ $(document).ready(function(){
 
 
                             element1 = document.getElementById($idFinedObjNew);  
-                            var rect1 = element1.getBoundingClientRect();
+                            var rect1 = element1.getBoundingClientRect(); // объект к которому клеим
 
                             element2 = element1 = document.getElementById(idObject); 
-                            var rect2 = element2.getBoundingClientRect();
+                            var rect2 = element2.getBoundingClientRect(); // объект который клеим
                             
                             // $distans1Vert  - расстояние от нижней границы обж1 до нижней   границы обж2
                             // $distans2Vert  - расстояние от нижней границы обж1 до верхней  границы обж2
                             // $distans3Vert  - расстояние от верхней границы обж1 до нижней  границы обж2
                             // $distans4Vert  - расстояние от верхней границы обж1 до верхней границы обж2
                             // $attachPosVert - позиция приклеивания по вертикали
-                            $distans1Vert = rect1.bottom - rect2.bottom;
-                            $distans2Vert = rect1.bottom -    rect2.top;
-                            $distans3Vert = rect1.top    - rect2.bottom;
-                            $distans4Vert = rect1.top    -    rect2.top;
+                            // ниже происходит вычисление минимально расстояние до всех позиций атача
+                            // а нужно считать минимально расстояние только до разрешенной позиции атача
+                            // 
+                            // 
+                            //
+                            //
+                            /////////////////////////////////////////////////////////////////////////////
+                            $distans1Vert = rect1.bottom - rect2.bottom; // pos5 или pos8
+                            $distans2Vert = rect1.bottom -    rect2.top; // pos6 или pos7
+                            $distans3Vert = rect1.top    - rect2.bottom; // pos2 или pos3
+                            $distans4Vert = rect1.top    -    rect2.top; // pos1 или pos4
                             $attachPosVert = 0;
                             // находим минимальное смещение по модулю по вертикали
                             $minDistansVert = Math.min(Math.abs($distans1Vert),Math.abs($distans2Vert),Math.abs($distans3Vert),Math.abs($distans4Vert));

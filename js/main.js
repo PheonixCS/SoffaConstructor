@@ -158,6 +158,8 @@ $(document).ready(function(){
                         
                         $idFinedObjNew = "appended-modul0";
                         $resultDistanse = 9999;
+                        $resultDistanse2 = 9999;
+                        $idFinedObj ="appended-modul0"; // храним id ближайшего модуля.
 
                         $resPos1 = true; // правая грань верхний угол
                         $resPos2 = true; // верхняя грань правый угол
@@ -170,6 +172,11 @@ $(document).ready(function(){
 
                         // поиск объекта к котором будем клеится
                         for (let key of appendedObj.keys()) {
+                            $dist = function(x1,y1,x2,y2){
+                                return Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+                            };
+
+                            
                             // нужно добавить проверку, что к объекту можно приклеить и с какой стороны приклеить.
 
                             // идея 
@@ -385,9 +392,7 @@ $(document).ready(function(){
 
 
 
-                            $dist = function(x1,y1,x2,y2){
-                                return Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
-                            };
+                            
                             // дистанция от центра размещаемого до центра нижней грани рассматриваемого размещенного
                             // pos6 или pos7 должны быть true.
                             $dist1 = 99999999;
@@ -416,12 +421,23 @@ $(document).ready(function(){
                                 }
                             }
                             else{
+
+                                $dist1 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterDovnGrX,$cordCenterDovnGrY);
+                                $dist2 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterTopGrX,$cordCenterTopGrY);
+                                $dist3 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterLeftGrX ,$cordCenterLeftGrY);
+                                $dist4 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterRightGrX ,$cordCenterRightGrY);
+                                $distanse2 = Math.min($dist1,$dist2,$dist3,$dist4);
+                                if($distanse2 < $resultDistanse2){
+                                    $resultDistanse2 = $distanse2; // это для проверки наложения в случае еси подходящих объектов для стыковки нет.
+                                    $idFinedObj = key;
+                                }
                                 continue;
                             }
 
                             
 
                             $distanse = Math.min($dist1,$dist2,$dist3,$dist4);
+                            
                             // на данном этапе у нас есть информация о истанции до объекта размещения а так же о разрешенных
                             // позициях прикрепления
 
@@ -446,17 +462,17 @@ $(document).ready(function(){
                             
                             // проверяем что дистанция подходящая. По умолчанию до переопределения дистанция у нас они не подходящие
                             // соответвенно если все позиции запрещенные мы не должны попасть в этот блок
+                            ///console.log($dist1,$dist2,$dist3,$dist4,$distanse2,$idFinedObj);
+                            
                             if($distanse < $resultDistanse && $distanse < $minDistanse){
                                 $resultDistanse = $distanse;
                                 // перезависывем переменные
                                 // здесь так же нужно перезаписать глобальные переменные разрешенных позиций клейки для объекта
-                                if(appendedObj.size == 1){
+                                if(appendedObj.size < 1){
                                     $idFinedObjOLD = key;
                                     $idFinedObjNew = key;
                                 }
                                 else{
-                                    //$idFinedObjNew = key;
-                                    console.log($idFinedObjNew);
                                     $idFinedObjOLD = $idFinedObjNew;
                                     $idFinedObjNew = key;
                                     $resPos1 = $pos1; // правая грань верхний угол
@@ -494,7 +510,7 @@ $(document).ready(function(){
                             // $resPos8 = $pos8; //  правая грань нижний угол
 
                             // мы имеем информацию о разрешенных позициях для клейки
-                            console.log($resPos1,$resPos2,$resPos3,$resPos4,$resPos5,$resPos6,$resPos7,$resPos8,$idFinedObjNew);
+                            //console.log($resPos1,$resPos2,$resPos3,$resPos4,$resPos5,$resPos6,$resPos7,$resPos8,$idFinedObjNew);
                             $updateCord = function(){
                                 objAdd = document.getElementById(idObject);
                                 topY = objAdd.getBoundingClientRect().top;
@@ -615,7 +631,6 @@ $(document).ready(function(){
                             if($resultDistanse == $resultDist8){
                                 $resultPos = 8
                             }
-                            console.log($resultPos);
                             if($resultPos == 1){
                                 $('#'+idObject).offset({top: rect1.top, left: rect2.left - (rect2.left-rect1.right)+1});
                                 $updateCord();
@@ -652,12 +667,7 @@ $(document).ready(function(){
 
 
 
-                            $('#'+$idFinedObjOLD).css({
-                                'background-color': '#B9B9BA'
-                            });
-                            $('#'+$idFinedObjNew).css({
-                                'background-color': '#FFF'
-                            });
+                            
 
                             
 
@@ -669,20 +679,32 @@ $(document).ready(function(){
                             
                         }
                         else {
-
-                            // если разрешаемый объект стыковки не был найден, нужно провести проверку, можно ли размещать объект
-                            // на той позиции на которой он находится. Для этого нужно проврить не находимся ли мы в пересечении с
-                            // каким либо уже добавленным объектом, если нет, то соответсвенно размещаем, если да, то не размещаем(пока что).
-
-                            // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
-                            groupMain.set(idObject,[topX,topY,dovnX,dovnY]);
-                            // добавляем в массив размещенных обхектов id размещенного модуля
-                            appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
-                            // генерируем новый id для следующего модуля
-                            numberIdObjecy = numberIdObjecy + 1;
-                            idObject = "appended-modul" + numberIdObjecy;
-                            // открепляем событие на клик от текущего модуля
-                            $(this).unbind("click");
+                            element3 = document.getElementById(idObject);  
+                            var rect3 = element3.getBoundingClientRect(); // объект к которому клеим
+                            element4 = document.getElementById($idFinedObj);  
+                            var rect4 = element4.getBoundingClientRect(); // объект к которому клеим
+                            if((rect3.right < rect4.right && rect4.left < rect3.right) || (rect4.top < rect3.top && rect4.bottom > rect3.top )){
+                                $moovblModul.remove();
+                                $(this).unbind("click");
+                            }
+                            else{
+                                if((rect4.left < rect3.left && rect4.right > rect3.left) || (rect4.top < rect3.bottom && rect4.bottom > rect3.bottom )){
+                                    $moovblModul.remove();
+                                    $(this).unbind("click");
+                                }
+                                else {
+                                    alert(1);
+                                    // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
+                                    groupMain.set(idObject,[topX,topY,dovnX,dovnY]);
+                                    // добавляем в массив размещенных обхектов id размещенного модуля
+                                    appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
+                                    // генерируем новый id для следующего модуля
+                                    numberIdObjecy = numberIdObjecy + 1;
+                                    idObject = "appended-modul" + numberIdObjecy;
+                                    // открепляем событие на клик от текущего модуля
+                                    $(this).unbind("click");
+                                }
+                            }
                         }
                     }
                 }

@@ -257,7 +257,6 @@ $(document).ready(function(){
                                     }
                                 }
                                 /////////////////////////////////////////////////////////////////////////////////////
-
                                 /////////// блок кода для верхней грани правой вершины//////////////////////////////
                                 $lX = appendedObj.get(id)[0];
                                 $rX = appendedObj.get(id)[2];
@@ -274,12 +273,111 @@ $(document).ready(function(){
                                     }
                                 }
                                 ////////////////////////////////////////////////////////////////////////////////////
+                                /////////// блок кода для верхней грани левой вершины//////////////////////////////
+                                $lX = appendedObj.get(id)[0];
+                                $rX = appendedObj.get(id)[2];
+                                $tY = appendedObj.get(id)[1];
+                                $bY = appendedObj.get(id)[3];
+
+                                $d1 = $tCordY-$bY;
+                                $d2 = $lX-$lCordX;
+                                $d3 = $lCordX-$rX;
+                                $d4 = $tCordY-$tY;
+                                if($d3 < 0 && $d4 > 0){
+                                    if(id!=key && $d2 < $('#'+idObject).width() && $d1 < $('#'+idObject).height()){
+                                        $pos3 = false;
+                                    }
+                                }
+                                ////////////////////////////////////////////////////////////////////////////////////
+                                /////////// блок кода для левой грани верхней вершины//////////////////////////////
+                                $lX = appendedObj.get(id)[0];
+                                $rX = appendedObj.get(id)[2];
+                                $tY = appendedObj.get(id)[1];
+                                $bY = appendedObj.get(id)[3];
+
+                                $d1 = $tY - $tCordY; 
+                                $d2 = $bY - $tCordY; 
+                                $d3 = $lCordX - $rX; 
+                                $d4 = $lCordX-$lX;
+                                if($d2 > 0 && $d4 > 0){
+                                    if(id!=key && $d1 < $('#'+idObject).height() && $d3 < $('#'+idObject).width()){
+                                        $pos4 = false;
+                                    }
+                                }
+                                ////////////////////////////////////////////////////////////////////////////////////
+                                /////////// блок кода для левой грани нижней вершины//////////////////////////////
+                                $lX = appendedObj.get(id)[0];
+                                $rX = appendedObj.get(id)[2];
+                                $tY = appendedObj.get(id)[1];
+                                $bY = appendedObj.get(id)[3];
+
+                                $d1 = $bY - $bCordY; 
+                                $d2 = $bY - $tCordY; 
+                                $d3 = $lCordX - $rX; 
+                                $d4 = $lCordX-$lX;
+                                if($d2 > 0 && $d4 > 0){
+                                    if(id!=key && $d1 < $('#'+idObject).height() && $d3 < $('#'+idObject).width()){
+                                        $pos5 = false;
+                                    }
+                                }
+                                ////////////////////////////////////////////////////////////////////////////////////
+                                /////////// блок кода для нижней грани левой вершины//////////////////////////////
+                                $lX = appendedObj.get(id)[0];
+                                $rX = appendedObj.get(id)[2];
+                                $tY = appendedObj.get(id)[1];
+                                $bY = appendedObj.get(id)[3];
+
+                                $d1 = $tY-$bCordY;
+                                $d2 = $lX-$lCordX;
+                                $d3 = $lCordX-$rX;
+                                $d4 = $tCordY-$tY;
+                                if($d3 < 0 && $d4 < 0){
+                                    if(id!=key && $d2 < $('#'+idObject).width() && $d1 < $('#'+idObject).height()){
+                                        $pos6 = false;
+                                    }
+                                }
+                                ////////////////////////////////////////////////////////////////////////////////////
+                                /////////// блок кода для нижней грани правой вершины//////////////////////////////
+                                $lX = appendedObj.get(id)[0];
+                                $rX = appendedObj.get(id)[2];
+                                $tY = appendedObj.get(id)[1];
+                                $bY = appendedObj.get(id)[3];
+
+                                $d1 = $tY-$bCordY;
+                                $d2 = $rCordX-$rX;
+                                $d3 = $rCordX-$lX;
+                                $d4 = $tCordY-$tY;
+                                if($d3 > 0 && $d4 < 0){
+                                    if(id!=key && $d2 < $('#'+idObject).width() && $d1 < $('#'+idObject).height()){
+                                        $pos7 = false;
+                                    }
+                                }
+                                ////////////////////////////////////////////////////////////////////////////////////
+                                /////////// блок кода для правой грани нижней вершины//////////////////////////////
+                                $lX = appendedObj.get(id)[0];
+                                $rX = appendedObj.get(id)[2];
+                                $tY = appendedObj.get(id)[1];
+                                $bY = appendedObj.get(id)[3];
+
+                                $d1 = $bY - $bCordY; 
+                                $d2 = $bY - $tCordY; 
+                                $d3 = $lX - $rCordX;
+                                $d4 = $rX - $rCordX; 
+                                if($d2 > 0 && $d4 > 0){
+                                    if(id!=key && $d1 < $('#'+idObject).height() && $d3 < $('#'+idObject).width()){
+                                        $pos8 = false;
+                                    }
+                                }
+                                ////////////////////////////////////////////////////////////////////////////////////
                             }
                             // если свободна площадь меньше чем площадь модуля, то вершину помечаем недоступной для стыковки.
-                            console.log("pos1",key,$pos1);
-                            console.log("pos2",key,$pos2);
-
-
+                            //console.log("pos1",key,$pos1);
+                            //console.log("pos2",key,$pos2);
+                            //console.log("pos3",key,$pos3);
+                            //console.log("pos4",key,$pos4);
+                            //console.log("pos6",key,$pos6);
+                            //console.log("pos7",key,$pos7);
+                            console.log("pos8",key,$pos8);
                             ///////////////////////////////////////////////////////////
                             ////////////////////// end block //////////////////////////
                             ///////////////////////////////////////////////////////////

@@ -379,14 +379,6 @@ $(document).ready(function(){
                                 }
                                 ////////////////////////////////////////////////////////////////////////////////////
                             }
-                            // если свободна площадь меньше чем площадь модуля, то вершину помечаем недоступной для стыковки.
-                            //console.log("pos1",key,$pos1);
-                            //console.log("pos2",key,$pos2);
-                            //console.log("pos3",key,$pos3);
-                            //console.log("pos4",key,$pos4);
-                            //console.log("pos6",key,$pos6);
-                            //console.log("pos7",key,$pos7);
-                            //console.log("pos8",key,$pos8);
                             ///////////////////////////////////////////////////////////
                             ////////////////////// end block //////////////////////////
                             ///////////////////////////////////////////////////////////
@@ -657,22 +649,24 @@ $(document).ready(function(){
                                 $('#'+idObject).offset({top: rect2.top+(rect1.bottom - rect2.bottom), left: rect2.left - (rect2.left-rect1.right)+1});
                                 $updateCord();
                             }
-                            else{
-                                $('#'+$idFinedObjOLD).css({
-                                    'background-color': '#B9B9BA'
-                                });
-                                $('#'+$idFinedObjNew).css({
-                                    'background-color': '#FFF'
-                                });
 
-                                
 
-                                // увеличиваем индекс
-                                numberIdObjecy = numberIdObjecy + 1;
-                                idObject = "appended-modul" + numberIdObjecy;
-                                // открепляем событие на клик от текущего модуля
-                                $(this).unbind("click");
-                            }
+
+                            $('#'+$idFinedObjOLD).css({
+                                'background-color': '#B9B9BA'
+                            });
+                            $('#'+$idFinedObjNew).css({
+                                'background-color': '#FFF'
+                            });
+
+                            
+
+                            // увеличиваем индекс
+                            numberIdObjecy = numberIdObjecy + 1;
+                            idObject = "appended-modul" + numberIdObjecy;
+                            // открепляем событие на клик от текущего модуля
+                            $(this).unbind("click");
+                            
                         }
                         else {
 

@@ -533,132 +533,131 @@ $(document).ready(function(){
                             //
                             //
                             ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-                            $distans1Vert = 9999;
-                            $distans2Vert = 9999;
-                            $distans3Vert = 9999;
-                            $distans4Vert = 9999;
-
-                            if($resPos5 || $pos8){
-                                $distans1Vert = rect1.bottom - rect2.bottom; // pos5 или pos8
+                            $resultDist1 = 9999;
+                            $resultDist2 = 9999;
+                            $resultDist3 = 9999;
+                            $resultDist4 = 9999;
+                            $resultDist5 = 9999;
+                            $resultDist6 = 9999;
+                            $resultDist7 = 9999;
+                            $resultDist8 = 9999;
+                            $distanse1Vert = 9999;
+                            $distanse1Horisont = 9999;
+                            $distanse2Vert = 9999;
+                            $distanse2Horisont = 9999;
+                            $distanse3Vert = 9999;
+                            $distanse3Horisont = 9999;
+                            $distanse4Vert = 9999;
+                            $distanse4Horisont = 9999;
+                            $distanse5Vert = 9999;
+                            $distanse5Horisont = 9999;
+                            $distanse6Vert = 9999;
+                            $distanse6Horisont = 9999;
+                            $distanse7Vert = 9999;
+                            $distanse7Horisont = 9999;
+                            $distanse8Vert = 9999;
+                            $distanse8Horisont = 9999;
+                            if($resPos1){
+                                $distanse1Vert = rect1.top - rect2.top;
+                                $distanse1Horisont = rect1.right - rect2.left;
+                                $resultDist1 = Math.sqrt($distanse1Vert*$distanse1Vert+$distanse1Horisont*$distanse1Horisont);
                             }
-                            if($resPos6 || $resPos7){
-                                $distans2Vert = rect1.bottom -    rect2.top; // pos6 или pos7
+                            if($resPos2){
+                                $distanse2Vert = rect1.top - rect2.bottom;
+                                $distanse2Horisont = rect1.right - rect2.right;
+                                $resultDist2 = Math.sqrt($distanse2Vert*$distanse2Vert+$distanse2Horisont*$distanse2Horisont);
                             }
-                            if($resPos2 || $resPos3){
-                                $distans3Vert = rect1.top    - rect2.bottom; // pos2 или pos3
+                            if($resPos3){
+                                $distanse3Vert = rect1.top - rect2.bottom;
+                                $distanse3Horisont = rect1.left - rect2.left;
+                                $resultDist3 = Math.sqrt($distanse3Vert*$distanse3Vert+$distanse3Horisont*$distanse3Horisont);
                             }
-                            if($resPos1 || $resPos4){
-                                $distans4Vert = rect1.top    -    rect2.top; // pos1 или pos4
+                            if($resPos4){
+                                $distanse4Vert = rect1.top - rect2.top;
+                                $distanse4Horisont = rect1.left - rect2.right;
+                                $resultDist4 = Math.sqrt($distanse4Vert*$distanse4Vert+$distanse4Horisont*$distanse4Horisont);
                             }
-                            $attachPosVert = 0;
-                            // находим минимальное смещение по модулю по вертикали.
-                            $minDistansVert = Math.min(Math.abs($distans1Vert),Math.abs($distans2Vert),Math.abs($distans3Vert),Math.abs($distans4Vert));
-                            // вычисляем позицию атача.
-                            if($minDistansVert == Math.abs($distans1Vert)){
-                                $attachPosVert = 1; // pos5 или pos8
+                            if($resPos5){
+                                $distanse5Vert = rect1.bottom - rect2.bottom;
+                                $distanse5Horisont = rect1.left  - rect2.right;
+                                $resultDist5 = Math.sqrt($distanse5Vert*$distanse5Vert+$distanse5Horisont*$distanse5Horisont);
                             }
-                            if($minDistansVert == Math.abs($distans2Vert)){
-                                $attachPosVert = 2; // pos6 или pos7
+                            if($resPos6){
+                                $distanse6Vert = rect1.bottom -  rect2.top;
+                                $distanse6Horisont =  rect1.left - rect2.left;
+                                $resultDist6 = Math.sqrt($distanse6Vert*$distanse6Vert+$distanse6Horisont*$distanse6Horisont);
                             }
-                            if($minDistansVert == Math.abs($distans3Vert)){
-                                $attachPosVert = 3; // pos2 или pos3
+                            if($resPos7){
+                                $distanse7Vert = rect1.bottom - rect2.top;
+                                $distanse7Horisont = rect1.right - rect2.right;
+                                $resultDist7 = Math.sqrt($distanse7Vert*$distanse7Vert+$distanse7Horisont*$distanse7Horisont);
                             }
-                            if($minDistansVert == Math.abs($distans4Vert)){
-                                $attachPosVert = 4; // pos1 или pos4
+                            if($resPos8){
+                                $distanse8Vert = rect1.bottom - rect2.bottom;
+                                $distanse8Horisont = rect1.right - rect2.left;
+                                $resultDist8 = Math.sqrt($distanse8Vert*$distanse8Vert+$distanse8Horisont*$distanse8Horisont);
                             }
-                            // $distans1Horis  - расстояние от левой границы обж1 до левой   границы обж2
-                            // $distans2Horis  - расстояние от левой границы обж1 до правой  границы обж2
-                            // $distans3Horis  - расстояние от правой границы обж1 до левой  границы обж2
-                            // $distans4Horis  - расстояние от правой границы обж1 до правой границы обж2
-                            // $attachPosHoris - позиция приклеивания по горизонтали
-                            $distans1Horis = 99999;
-                            $distans2Horis = 99999;
-                            $distans3Horis = 99999;
-                            $distans4Horis = 99999;
-                            if(($resPos3 || $resPos6) && ($attachPosVert == 3 || $attachPosVert == 2)) {
-                                $distans1Horis = rect1.left  - rect2.left; // pos3 или pos6
+                            $resultDistanse = Math.min($resultDist1,$resultDist2,$resultDist3,$resultDist4,$resultDist5,$resultDist6,$resultDist7,$resultDist8);
+                            $resultPos = 0;
+                            if($resultDistanse == $resultDist1){
+                                $resultPos = 1
                             }
-                            if(($resPos4 || $resPos5) && ($attachPosVert == 4 || $attachPosVert == 1)) {
-                                $distans2Horis = rect1.left  - rect2.right; // pos4 или pos5
+                            if($resultDistanse == $resultDist2){
+                                $resultPos = 2
                             }
-                            if(($resPos1 || $resPos8) && ($attachPosVert == 1 || $attachPosVert == 4)) {
-                                $distans3Horis = rect1.right  - rect2.left; // pos1 или pos8
+                            if($resultDistanse == $resultDist3){
+                                $resultPos = 3
                             }
-                            if(($resPos2 || $resPos7)&&($attachPosVert == 3 || $attachPosVert == 2)) {
-                                $distans4Horis = rect1.right - rect2.right; // pos2 или pos7
+                            if($resultDistanse == $resultDist4){
+                                $resultPos = 4
                             }
-
-
-                            $attachPosHoris = 0;
-
-                            $minDistansHoris = Math.min(Math.abs($distans1Horis),Math.abs($distans2Horis),Math.abs($distans3Horis),Math.abs($distans4Horis));
-                            if($minDistansHoris == Math.abs($distans1Horis)){
-                                $attachPosHoris = 1;
+                            if($resultDistanse == $resultDist5){
+                                $resultPos = 5
                             }
-                            if($minDistansHoris == Math.abs($distans2Horis)){
-                                $attachPosHoris = 2;
+                            if($resultDistanse == $resultDist6){
+                                $resultPos = 6
                             }
-                            if($minDistansHoris == Math.abs($distans3Horis)){
-                                $attachPosHoris = 3;
+                            if($resultDistanse == $resultDist7){
+                                $resultPos = 7
                             }
-                            if($minDistansHoris == Math.abs($distans4Horis)){
-                                $attachPosHoris = 4;
+                            if($resultDistanse == $resultDist8){
+                                $resultPos = 8
                             }
-                            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                            // аттач справа
-                            // к верхнему углу
-                            // при атаче нужно менять координы в списках объектов.
-                            if(($attachPosHoris == 3 && $attachPosVert == 4)||($attachPosHoris == 4 && $attachPosVert == 4)||($attachPosHoris == 3 && $attachPosVert == 3 && $distans3Vert < 0)){
-                                $('#'+idObject).offset({top: rect2.top+(rect1.top - rect2.top), left: rect2.left - (rect2.left-rect1.right)+1});
+                            console.log($resultPos);
+                            if($resultPos == 1){
+                                $('#'+idObject).offset({top: rect1.top, left: rect2.left - (rect2.left-rect1.right)+1});
                                 $updateCord();
                             }
-                            // к нижнему углу
-                            if(($attachPosHoris == 3 && $attachPosVert == 1) || ($attachPosHoris == 4 && $attachPosVert == 1) || ($attachPosHoris == 3 && $attachPosVert == 2 && $distans2Vert > 0)){
-                                $('#'+idObject).offset({top: rect2.top+(rect1.bottom - rect2.bottom), left: rect2.left - (rect2.left-rect1.right)+1});
-                                $updateCord();
-                            }
-                            // аттач слева к верхнему углу
-                            if($attachPosHoris == 2 && $attachPosVert == 4 && rect1.top - rect2.bottom > rect1.top - rect2.top ){
-                                $('#'+idObject).offset({top: rect2.top-(rect1.top - rect2.bottom), left: rect2.left+(rect1.left - rect2.right)-1});
-                                $updateCord();
-                            }
-                            if(($attachPosHoris == 2 && $attachPosVert == 4)||($attachPosHoris == 1 && $attachPosVert == 4) && rect1.top - rect2.bottom <= rect1.top - rect2.top || (($attachPosHoris == 2 && $attachPosVert == 3 && $distans3Vert < 0))){
-                                $('#'+idObject).offset({top: rect2.top+(rect1.top - rect2.top), left: rect2.left+(rect1.left - rect2.right)-1});
-                                $updateCord();
-                            }
-                            // аттач слева к нижнему углу
-                            if(($attachPosHoris == 2 && $attachPosVert == 1)||($attachPosHoris == 1 && $attachPosVert == 1) && rect1.bottom - rect2.top > rect1.bottom - rect2.bottom || (($attachPosHoris == 2 && $attachPosVert == 2) && $distans2Vert >=0)){
-                                $('#'+idObject).offset({top: rect2.top-(rect2.bottom-rect1.bottom), left: rect2.left+(rect1.left - rect2.right)-1});
-                                $updateCord();
-                            }
-                            // аттач сверху к левому углу
-                            if(($attachPosHoris == 1 && $attachPosVert == 3) || ($attachPosHoris == 2 && $attachPosVert == 3 && $distans3Vert >= 0)){
-                                $('#'+idObject).offset({top: rect2.top-(rect2.bottom-rect1.top)-1, left: rect1.left});
-                                $updateCord();
-                            }
-
-                            // аттач сверху к правому углу
-                            if(($attachPosHoris == 3 && $attachPosVert == 3 && $distans3Vert >= 0) || ($attachPosHoris == 4 && $attachPosVert == 3)){
+                            
+                            if($resultPos == 2){
                                 $('#'+idObject).offset({top: rect2.top-(rect2.bottom-rect1.top)-1, left: rect1.right-(rect2.right-rect2.left)});
                                 $updateCord();
                             }
-
-                            // аттач снизу к левому углу
-                            if(($attachPosHoris == 1 && $attachPosVert == 2) || ($attachPosHoris == 2 && $attachPosVert == 2 && $distans2Vert <= 0 )){
+                            if($resultPos == 3){
+                                $('#'+idObject).offset({top: rect2.top-(rect2.bottom-rect1.top)-1, left: rect1.left});
+                                $updateCord();
+                            }
+                            if($resultPos == 4){
+                                $('#'+idObject).offset({top: rect2.top+(rect1.top - rect2.top), left: rect2.left+(rect1.left - rect2.right)-1});
+                                $updateCord();
+                            }
+                            if($resultPos == 5){
+                                $('#'+idObject).offset({top: rect2.top-(rect2.bottom-rect1.bottom), left: rect2.left+(rect1.left - rect2.right)-1});
+                                $updateCord();
+                            }
+                            if($resultPos == 6){
                                 $('#'+idObject).offset({top: rect1.bottom+1, left: rect1.left});
                                 $updateCord();
                             }
-                            // аттач снизу к правому углу
-                            if(($attachPosHoris == 4 && $attachPosVert == 2) || ($attachPosHoris == 3 && $attachPosVert == 2 && $distans2Vert <= 0 )){
+                            if($resultPos == 7){
                                 $('#'+idObject).offset({top: rect1.bottom+1, left: rect1.right-(rect2.right-rect2.left)});
                                 $updateCord();
                             }
-                            if($attachPosHoris == 0 || $attachPosVert == 0){
-                                $moovblModul.remove();
-                                $(this).unbind("click");
+                            if($resultPos == 8){
+                                $('#'+idObject).offset({top: rect2.top+(rect1.bottom - rect2.bottom), left: rect2.left - (rect2.left-rect1.right)+1});
+                                $updateCord();
                             }
                             else{
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                 $('#'+$idFinedObjOLD).css({
                                     'background-color': '#B9B9BA'
                                 });

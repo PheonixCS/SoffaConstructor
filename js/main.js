@@ -693,7 +693,6 @@ $(document).ready(function(){
                                     $(this).unbind("click");
                                 }
                                 else {
-                                    alert(1);
                                     // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
                                     groupMain.set(idObject,[topX,topY,dovnX,dovnY]);
                                     // добавляем в массив размещенных обхектов id размещенного модуля
@@ -748,8 +747,6 @@ $(document).ready(function(){
             idObj = $(obj).parent().attr('id');
             obj = document.getElementById(idObj);
         }
-        
-        console.log(obj);
         // if($(obj).hasClass('name')){
         //     obj = $(event1.Target).parent();
         //     console.log(obj);
@@ -771,12 +768,19 @@ $(document).ready(function(){
             $moovblModul = $('#'+idObj);
             $(document).mousemove(function (e) {
                 $moovblModul.offset({top: e.pageY-$deltaY, left: e.pageX-$deltaX});
+                topY = obj.getBoundingClientRect().top;
+                topX = obj.getBoundingClientRect().left;
+                dovnY = topY + $('#'+idObj).height();
+                dovnX = topX + $('#'+idObj).width();
+                groupMain.set(idObj,[topX,topY,dovnX,dovnY]);
+                // добавляем в массив размещенных обхектов id размещенного модуля
+                appendedObj.set(idObj,[topX,topY,dovnX,dovnY]);
             }).click(function (e) {
                 topY = obj.getBoundingClientRect().top;
                 topX = obj.getBoundingClientRect().left;
                 dovnY = topY + $('#'+idObj).height();
                 dovnX = topX + $('#'+idObj).width();
-                if(groupMain.size == 1){
+                if(appendedObj.size == 1){
                     $(this).unbind("click");
                     $(this).unbind("mousemove");
                 }
@@ -835,6 +839,9 @@ $(document).ready(function(){
                         $pos7 = true; //  нижняя грань правый угол
                         $pos8 = true; //  правая грань нижний угол
                         for (let id of appendedObj.keys()) {
+                            if(idObj == id) {
+                                continue;
+                            }
                             /////////// блок кода для правой грани правой вершины//////////////////////////////
                             $lX = appendedObj.get(id)[0];
                             $rX = appendedObj.get(id)[2];
@@ -1034,7 +1041,11 @@ $(document).ready(function(){
                             }
                         }
                     }
+                    console.log($idFinedObjNew);
+                    console.log(appendedObj);
                     if($resultDistanse < 9999){
+                        console.log($idFinedObjNew);
+                        console.log(appendedObj);
                         $updateCord = function(){
                             objAdd = document.getElementById(idObj);
                             topY = objAdd.getBoundingClientRect().top;
@@ -1180,26 +1191,36 @@ $(document).ready(function(){
                         var rect3 = obj.getBoundingClientRect(); // объект к которому клеим
                         element4 = document.getElementById($idFinedObj);  
                         var rect4 = element4.getBoundingClientRect(); // объект к которому клеим
-                        if((rect3.right < rect4.right && rect4.left < rect3.right) || (rect4.top < rect3.top && rect4.bottom > rect3.top )){
-                            $(obj).remove();
-                            $(this).unbind("click");
+                        console.log(rect3,rect4);
+                        // if((rect3.right < rect4.right && rect4.left < rect3.right) || (rect4.top < rect3.top && rect4.bottom > rect3.top )){
+                        //     appendedObj.delete(idObj);
+                        //     console.log(3);
+                        //     $(obj).remove();
+                        //     $(this).unbind("click");
+                        //     $(this).unbind("mousemove");
+                        // }
+                        // else{
+                            // if((rect4.left < rect3.left && rect4.right > rect3.left) || (rect4.top < rect3.bottom && rect4.bottom > rect3.bottom )){
+                            //     appendedObj.delete(idObj);
+                            //     console.log(2);
+                            //     $(this).unbind("mousemove");
+                            //     $(this).unbind("click");
+
+                            //     $(obj).remove();
+                            // }
+                            // else {
+                            console.log(1);
+                            // открепляем событие на клик от текущего модуля
                             $(this).unbind("mousemove");
-                        }
-                        else{
-                            if((rect4.left < rect3.left && rect4.right > rect3.left) || (rect4.top < rect3.bottom && rect4.bottom > rect3.bottom )){
-                                $(obj).remove();
-                                $(this).unbind("click");
-                                $(this).unbind("mousemove");
-                            }
-                            else {
-                                // открепляем событие на клик от текущего модуля
-                                $(this).unbind("click");
-                                $(this).unbind("mousemove");
-                            }
-                        }
+                            $(this).unbind("click");
+                            //}
+                        //}
                     }
-                }
+                    $(this).unbind("mousemove");
+                    $(this).unbind("click");
+                }// end block add
                 $(this).unbind("mousemove");
+                $(this).unbind("click");
             });
         }
     });

@@ -57,23 +57,23 @@ $(document).ready(function(){
     /// создаем html код модуля
     $creatModul = function(id,$number){
         if ($number == 1){
-            modul  = '<div id = "'+id+'" class = "appended-modul modul B"><div class="modul-nameAppendB B-name">Б</div></div>';
+            modul  = '<div id = "'+id+'" class = "appended-modul modul B"><div class="name modul-nameAppendB B-name">Б</div></div>';
             return modul;
         }
         if ($number == 2){
-            modul = '<div id = "'+id+'" class = "appended-modul modul BM"><div class="modul-nameAppendBM BM-name">БМ</div></div>';
+            modul = '<div id = "'+id+'" class = "appended-modul modul BM"><div class="name modul-nameAppendBM BM-name">БМ</div></div>';
             return modul;
         }
         if ($number == 3){
-            modul  = '<div id = "'+id+'" class = "appended-modul modul C"><div class="modul-nameAppendC C-name">С</div></div>';
+            modul  = '<div id = "'+id+'" class = "appended-modul modul C"><div class="name modul-nameAppendC C-name">С</div></div>';
             return modul;
         }
         if ($number == 4){
-            modul = '<div id = "'+id+'" class = "appended-modul modul CM"><div class="modul-nameAppendCM CM-name">СM</div></div>';
+            modul = '<div id = "'+id+'" class = "appended-modul modul CM"><div class="name modul-nameAppendCM CM-name">СM</div></div>';
             return modul;
         }
         if ($number == 5){
-            modul = '<div id = "'+id+'" class = "appended-modul modul CB"><div class="modul-nameAppendCB CB-name">СБ</div></div>';
+            modul = '<div id = "'+id+'" class = "appended-modul modul CB"><div class="name modul-nameAppendCB CB-name">СБ</div></div>';
             return modul;
         }
         return -1;
@@ -742,7 +742,21 @@ $(document).ready(function(){
     $( '.canvas-UI' ).on( 'mousedown', function( event1 ) {
         obj = event1.target;
         idObj = $(obj).attr('id');
-        if (event1.which == 1){
+        if(!idObj){
+            // блок кода если кликнули по имени блока
+            // нужно получить сам модуль
+            idObj = $(obj).parent().attr('id');
+            obj = document.getElementById(idObj);
+        }
+        
+        console.log(obj);
+        // if($(obj).hasClass('name')){
+        //     obj = $(event1.Target).parent();
+        //     console.log(obj);
+        //     idObj = $(event1.Target).parent().attr('id');
+        //     console.log(idObj);
+        // }
+        if (event1.which == 1 ){
             // считываем координаты мыши
             $mouseD_x = event1.pageX;
             $mouseD_y = event1.pageY;

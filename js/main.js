@@ -751,9 +751,9 @@ $(document).ready(function(){
         //     obj = $(event1.Target).parent();
         //     console.log(obj);
         //     idObj = $(event1.Target).parent().attr('id');
-        //     console.log(idObj);
+             console.log(idObj);
         // }
-        if (event1.which == 1 ){
+        if (event1.which == 1 && idObj != "container" ){
             // считываем координаты мыши
             $mouseD_x = event1.pageX;
             $mouseD_y = event1.pageY;

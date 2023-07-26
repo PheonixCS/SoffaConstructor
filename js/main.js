@@ -197,9 +197,30 @@ $(document).ready(function(){
                             //dovnY - нижняя грань,
                             //dovnX  - правая грань.
 
-                            // координаты центра перемещаемого объекта
+                            /////////////////////////////////////////////////////////
+
+                            // координаты центра перемещаемого объекта,
+                            // нам нужны расстояния от центра граней до центра граней
                             $cordCenterMoovObjX = (topX+dovnX)/2;
                             $cordCenterMoovObjY = (topY+dovnY)/2;
+                            
+                            // координаты центра левой грани
+                            $cordCenterMoovObjGrLX = topX;
+                            $cordCenterMoovObjGrLY = topY + (dovnY-topY)/2;
+
+                            // координаты центра правой грани перемещаемого объекта
+                            $cordCenterMoovObjGrRX = dovnX;
+                            $cordCenterMoovObjGrRY = topY + (dovnY-topY)/2;
+
+                            //координаты центра верхней грани
+                            $cordCenterMoovObjGrTX = topX + (dovnX-topX)/2;
+                            $cordCenterMoovObjGrTY = topY;
+
+                            //координаты центра нижней грани
+                            $cordCenterMoovObjGrDX = topX + (dovnX-topX)/2;
+                            $cordCenterMoovObjGrDY = dovnY;
+
+                            /////////////////////////////////////////////////////////
                             /////////////////////////////////////////
 
                             // координаты центра нижней грани
@@ -331,8 +352,9 @@ $(document).ready(function(){
                                 $d2 = $bY - $tCordY; 
                                 $d3 = $lCordX - $rX; 
                                 $d4 = $lCordX-$lX;
+                                $d5 = $tY - $bCordY;
                                 if($d2 > 0 && $d4 > 0){
-                                    if(id!=key && $d1 < $('#'+idObject).height() && $d3 < $('#'+idObject).width()){
+                                    if(id!=key && ($d1 < $('#'+idObject).height() && $d3 < $('#'+idObject).width())||($d5 < 0 && $d3 < $('#'+idObject).width())){
                                         $pos5 = false;
                                     }
                                 }
@@ -378,9 +400,10 @@ $(document).ready(function(){
                                 $d1 = $bCordY - $bY; 
                                 $d2 = $bY - $tCordY; 
                                 $d3 = $lX - $rCordX;
-                                $d4 = $rX - $rCordX; 
+                                $d4 = $rX - $rCordX;
+                                $d5 = $bCordY - $tY;  
                                 if($d2 > 0 && $d4 > 0){
-                                    if(id!=key && $d1 < $('#'+idObject).height() && $d3 < $('#'+idObject).width()){
+                                    if(id!=key && $d5 > 0 && $d1 < $('#'+idObject).height() && $d3 < $('#'+idObject).width()){
                                         $pos8 = false;
                                     }
                                 }
@@ -402,22 +425,46 @@ $(document).ready(function(){
 
                             if($pos1 || $pos2 || $pos3 || $pos4 || $pos5 || $pos6 || $pos7 || $pos8){
                                 if($pos6 || $pos7){
-                                    $dist1 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterDovnGrX,$cordCenterDovnGrY);
+    
+                                    $d1 = $dist($cordCenterMoovObjGrRX,$cordCenterMoovObjGrRY,$cordCenterDovnGrX,$cordCenterDovnGrY);
+                                    $d2 = $dist($cordCenterMoovObjGrTX,$cordCenterMoovObjGrTY,$cordCenterDovnGrX,$cordCenterDovnGrY);
+                                    $d3 = $dist($cordCenterMoovObjGrLX,$cordCenterMoovObjGrLY,$cordCenterDovnGrX,$cordCenterDovnGrY);
+                                    $d4 = $dist($cordCenterMoovObjGrDX,$cordCenterMoovObjGrDY,$cordCenterDovnGrX,$cordCenterDovnGrY);
+    
+                                    //$dist1 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterDovnGrX,$cordCenterDovnGrY);
+                                    $dist1 = Math.min($d1,$d2,$d3,$d4);
                                 }
                                 // дистанция от центра размещаемого до центра верхней грани рассматриваемого размещенного
                                 // pos2 или pos3 должны быть true.
                                 if($pos2 || $pos3){
-                                    $dist2 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterTopGrX,$cordCenterTopGrY);
+                                    $d1 = $dist($cordCenterMoovObjGrRX,$cordCenterMoovObjGrRY,$cordCenterTopGrX,$cordCenterTopGrY);
+                                    $d2 = $dist($cordCenterMoovObjGrTX,$cordCenterMoovObjGrTY,$cordCenterTopGrX,$cordCenterTopGrY);
+                                    $d3 = $dist($cordCenterMoovObjGrLX,$cordCenterMoovObjGrLY,$cordCenterTopGrX,$cordCenterTopGrY);
+                                    $d4 = $dist($cordCenterMoovObjGrDX,$cordCenterMoovObjGrDY,$cordCenterTopGrX,$cordCenterTopGrY);
+                                    
+                                    //$dist2 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterTopGrX,$cordCenterTopGrY);
+                                    $dist2 = Math.min($d1,$d2,$d3,$d4);
                                 }
                                 // дистанция от центра размещаемого до центра левой грани рассматриваемого размещенного
                                 // pos4 или pos5 должны быть true.
                                 if($pos4 || $pos5){
-                                    $dist3 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterLeftGrX ,$cordCenterLeftGrY);
+                                    $d1 = $dist($cordCenterMoovObjGrRX,$cordCenterMoovObjGrRY,$cordCenterLeftGrX,$cordCenterLeftGrY);
+                                    $d2 = $dist($cordCenterMoovObjGrTX,$cordCenterMoovObjGrTY,$cordCenterLeftGrX,$cordCenterLeftGrY);
+                                    $d3 = $dist($cordCenterMoovObjGrLX,$cordCenterMoovObjGrLY,$cordCenterLeftGrX,$cordCenterLeftGrY);
+                                    $d4 = $dist($cordCenterMoovObjGrDX,$cordCenterMoovObjGrDY,$cordCenterLeftGrX,$cordCenterLeftGrY);
+    
+                                    //$dist3 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterLeftGrX ,$cordCenterLeftGrY);
+                                    $dist3 = Math.min($d1,$d2,$d3,$d4);
                                 }
                                 // дистанция от центра размещаемого до центра правой грани рассматриваемого размещенного
                                 // pos1 или pos8 должны быть true.
                                 if($pos1 || $pos8){
-                                    $dist4 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterRightGrX ,$cordCenterRightGrY);
+                                    $d1 = $dist($cordCenterMoovObjGrRX,$cordCenterMoovObjGrRY,$cordCenterRightGrX,$cordCenterRightGrY);
+                                    $d2 = $dist($cordCenterMoovObjGrTX,$cordCenterMoovObjGrTY,$cordCenterRightGrX,$cordCenterRightGrY);
+                                    $d3 = $dist($cordCenterMoovObjGrLX,$cordCenterMoovObjGrLY,$cordCenterRightGrX,$cordCenterRightGrY);
+                                    $d4 = $dist($cordCenterMoovObjGrDX,$cordCenterMoovObjGrDY,$cordCenterRightGrX,$cordCenterRightGrY);
+                                    //$dist4 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterRightGrX ,$cordCenterRightGrY);
+                                    $dist4 = Math.min($d1,$d2,$d3,$d4);
                                 }
                             }
                             else{
@@ -751,7 +798,6 @@ $(document).ready(function(){
         //     obj = $(event1.Target).parent();
         //     console.log(obj);
         //     idObj = $(event1.Target).parent().attr('id');
-             console.log(idObj);
         // }
         if (event1.which == 1 && idObj != "container" ){
             // считываем координаты мыши
@@ -810,10 +856,30 @@ $(document).ready(function(){
                         $rCordX = appendedObj.get(key)[2]; // координата правой грани притендента
                         $tCordY = appendedObj.get(key)[1]; // координата верхней грани притендента
                         $bCordY = appendedObj.get(key)[3];
+                        /////////////////////////////////////////////////////////
 
-                        // координаты центра нижней грани
+                        // координаты центра перемещаемого объекта,
+                        // нам нужны расстояния от центра граней до центра граней
                         $cordCenterMoovObjX = (topX+dovnX)/2;
                         $cordCenterMoovObjY = (topY+dovnY)/2;
+                        
+                        // координаты центра левой грани
+                        $cordCenterMoovObjGrLX = topX;
+                        $cordCenterMoovObjGrLY = topY + (dovnY-topY)/2;
+
+                        // координаты центра правой грани перемещаемого объекта
+                        $cordCenterMoovObjGrRX = dovnX;
+                        $cordCenterMoovObjGrRY = topY + (dovnY-topY)/2;
+
+                        //координаты центра верхней грани
+                        $cordCenterMoovObjGrTX = topX + (dovnX-topX)/2;
+                        $cordCenterMoovObjGrTY = topY;
+
+                        //координаты центра нижней грани
+                        $cordCenterMoovObjGrDX = topX + (dovnX-topX)/2;
+                        $cordCenterMoovObjGrDY = dovnY;
+
+                        /////////////////////////////////////////////////////////
                         // координаты центра нижней грани
                         $cordCenterDovnGrX = $lCordX+($rCordX-$lCordX)/2;
                         $cordCenterDovnGrY = $bCordY;
@@ -907,12 +973,13 @@ $(document).ready(function(){
                             $tY = appendedObj.get(id)[1];
                             $bY = appendedObj.get(id)[3];
 
-                            $d1 = $bY - $bCordY; 
+                            $d1 = $bY - $bCordY;
                             $d2 = $bY - $tCordY; 
                             $d3 = $lCordX - $rX; 
                             $d4 = $lCordX-$lX;
+                            $d5 = $tY - $bCordY;
                             if($d2 > 0 && $d4 > 0){
-                                if(id!=key && $d1 < $('#'+idObj).height() && $d3 < $('#'+idObj).width()){
+                                if(id!=key && ($d1 < $('#'+idObj).height() && $d3 < $('#'+idObj).width())||($d5 < 0 && $d3 < $('#'+idObj).width())){
                                     $pos5 = false;
                                 }
                             }
@@ -959,34 +1026,63 @@ $(document).ready(function(){
                             $d2 = $bY - $tCordY; 
                             $d3 = $lX - $rCordX;
                             $d4 = $rX - $rCordX; 
+                            $d5 = $bCordY - $tY; 
                             if($d2 > 0 && $d4 > 0){
-                                if(id!=key && $d1 < $('#'+idObj).height() && $d3 < $('#'+idObj).width()){
+                                if(id!=key && $d5 > 0 && $d1 < $('#'+idObj).height() && $d3 < $('#'+idObj).width()){
                                     $pos8 = false;
                                 }
                             }
+                            
                         }
+                        console.log(key,$pos1,$pos2,$pos3,$pos4,$pos5,$pos6,$pos7,$pos8);
                         $dist1 = 99999999;
                         $dist2 = 99999999;
                         $dist3 = 99999999;
                         $dist4 = 99999999;
+                        // переделываем поиск дистанций, от центра граней до центра граней
+                        // пока как работает, смотри дистанцию от точки центр
                         if($pos1 || $pos2 || $pos3 || $pos4 || $pos5 || $pos6 || $pos7 || $pos8){
                             if($pos6 || $pos7){
-                                $dist1 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterDovnGrX,$cordCenterDovnGrY);
+
+                                $d1 = $dist($cordCenterMoovObjGrRX,$cordCenterMoovObjGrRY,$cordCenterDovnGrX,$cordCenterDovnGrY);
+                                $d2 = $dist($cordCenterMoovObjGrTX,$cordCenterMoovObjGrTY,$cordCenterDovnGrX,$cordCenterDovnGrY);
+                                $d3 = $dist($cordCenterMoovObjGrLX,$cordCenterMoovObjGrLY,$cordCenterDovnGrX,$cordCenterDovnGrY);
+                                $d4 = $dist($cordCenterMoovObjGrDX,$cordCenterMoovObjGrDY,$cordCenterDovnGrX,$cordCenterDovnGrY);
+
+                                //$dist1 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterDovnGrX,$cordCenterDovnGrY);
+                                $dist1 = Math.min($d1,$d2,$d3,$d4);
                             }
                             // дистанция от центра размещаемого до центра верхней грани рассматриваемого размещенного
                             // pos2 или pos3 должны быть true.
                             if($pos2 || $pos3){
-                                $dist2 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterTopGrX,$cordCenterTopGrY);
+                                $d1 = $dist($cordCenterMoovObjGrRX,$cordCenterMoovObjGrRY,$cordCenterTopGrX,$cordCenterTopGrY);
+                                $d2 = $dist($cordCenterMoovObjGrTX,$cordCenterMoovObjGrTY,$cordCenterTopGrX,$cordCenterTopGrY);
+                                $d3 = $dist($cordCenterMoovObjGrLX,$cordCenterMoovObjGrLY,$cordCenterTopGrX,$cordCenterTopGrY);
+                                $d4 = $dist($cordCenterMoovObjGrDX,$cordCenterMoovObjGrDY,$cordCenterTopGrX,$cordCenterTopGrY);
+                                
+                                //$dist2 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterTopGrX,$cordCenterTopGrY);
+                                $dist2 = Math.min($d1,$d2,$d3,$d4);
                             }
                             // дистанция от центра размещаемого до центра левой грани рассматриваемого размещенного
                             // pos4 или pos5 должны быть true.
                             if($pos4 || $pos5){
-                                $dist3 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterLeftGrX ,$cordCenterLeftGrY);
+                                $d1 = $dist($cordCenterMoovObjGrRX,$cordCenterMoovObjGrRY,$cordCenterLeftGrX,$cordCenterLeftGrY);
+                                $d2 = $dist($cordCenterMoovObjGrTX,$cordCenterMoovObjGrTY,$cordCenterLeftGrX,$cordCenterLeftGrY);
+                                $d3 = $dist($cordCenterMoovObjGrLX,$cordCenterMoovObjGrLY,$cordCenterLeftGrX,$cordCenterLeftGrY);
+                                $d4 = $dist($cordCenterMoovObjGrDX,$cordCenterMoovObjGrDY,$cordCenterLeftGrX,$cordCenterLeftGrY);
+
+                                //$dist3 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterLeftGrX ,$cordCenterLeftGrY);
+                                $dist3 = Math.min($d1,$d2,$d3,$d4);
                             }
                             // дистанция от центра размещаемого до центра правой грани рассматриваемого размещенного
                             // pos1 или pos8 должны быть true.
                             if($pos1 || $pos8){
-                                $dist4 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterRightGrX ,$cordCenterRightGrY);
+                                $d1 = $dist($cordCenterMoovObjGrRX,$cordCenterMoovObjGrRY,$cordCenterRightGrX,$cordCenterRightGrY);
+                                $d2 = $dist($cordCenterMoovObjGrTX,$cordCenterMoovObjGrTY,$cordCenterRightGrX,$cordCenterRightGrY);
+                                $d3 = $dist($cordCenterMoovObjGrLX,$cordCenterMoovObjGrLY,$cordCenterRightGrX,$cordCenterRightGrY);
+                                $d4 = $dist($cordCenterMoovObjGrDX,$cordCenterMoovObjGrDY,$cordCenterRightGrX,$cordCenterRightGrY);
+                                //$dist4 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterRightGrX ,$cordCenterRightGrY);
+                                $dist4 = Math.min($d1,$d2,$d3,$d4);
                             }
                         }
                         else{
@@ -1041,11 +1137,7 @@ $(document).ready(function(){
                             }
                         }
                     }
-                    console.log($idFinedObjNew);
-                    console.log(appendedObj);
                     if($resultDistanse < 9999){
-                        console.log($idFinedObjNew);
-                        console.log(appendedObj);
                         $updateCord = function(){
                             objAdd = document.getElementById(idObj);
                             topY = objAdd.getBoundingClientRect().top;
@@ -1191,7 +1283,6 @@ $(document).ready(function(){
                         var rect3 = obj.getBoundingClientRect(); // объект к которому клеим
                         element4 = document.getElementById($idFinedObj);  
                         var rect4 = element4.getBoundingClientRect(); // объект к которому клеим
-                        console.log(rect3,rect4);
                         // if((rect3.right < rect4.right && rect4.left < rect3.right) || (rect4.top < rect3.top && rect4.bottom > rect3.top )){
                         //     appendedObj.delete(idObj);
                         //     console.log(3);
@@ -1209,7 +1300,6 @@ $(document).ready(function(){
                             //     $(obj).remove();
                             // }
                             // else {
-                            console.log(1);
                             // открепляем событие на клик от текущего модуля
                             $(this).unbind("mousemove");
                             $(this).unbind("click");

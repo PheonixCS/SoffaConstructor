@@ -352,8 +352,8 @@ $(document).ready(function(){
                                 $d2 = $bY - $tCordY; 
                                 $d3 = $lCordX - $rX; 
                                 $d4 = $lCordX-$lX;
-                                $d5 = $tY - $bCordY;
-                                if($d2 > 0 && $d4 > 0){
+                                $d5 = $tY - $bCordY;// рассто€ние от верхней до нижней границыы
+                                if($d4 > 0){
                                     if(id!=key && ($d1 < $('#'+idObject).height() && $d3 < $('#'+idObject).width())||($d5 < 0 && $d3 < $('#'+idObject).width())){
                                         $pos5 = false;
                                     }
@@ -368,8 +368,8 @@ $(document).ready(function(){
                                 $d1 = $tY-$bCordY;
                                 $d2 = $lX-$lCordX;
                                 $d3 = $lCordX-$rX;
-                                $d4 = $tCordY-$tY;
-                                if($d3 < 0 && $d4 < 0){
+                                $d5 = $bCordY-$bY;
+                                if($d3 < 0 && $d4 <= 0 && $d5 < 0){
                                     if(id!=key && $d2 < $('#'+idObject).width() && $d1 < $('#'+idObject).height()){
                                         $pos6 = false;
                                     }
@@ -385,7 +385,8 @@ $(document).ready(function(){
                                 $d2 = $rCordX-$rX;
                                 $d3 = $rCordX-$lX;
                                 $d4 = $tCordY-$tY;
-                                if($d3 > 0 && $d4 < 0){
+                                $d5 = $bCordY-$bY;
+                                if($d3 > 0 && $d4 <= 0 && $d5 < 0){
                                     if(id!=key && $d2 < $('#'+idObject).width() && $d1 < $('#'+idObject).height()){
                                         $pos7 = false;
                                     }
@@ -400,10 +401,10 @@ $(document).ready(function(){
                                 $d1 = $bCordY - $bY; 
                                 $d2 = $bY - $tCordY; 
                                 $d3 = $lX - $rCordX;
-                                $d4 = $rX - $rCordX;
-                                $d5 = $bCordY - $tY;  
-                                if($d2 > 0 && $d4 > 0){
-                                    if(id!=key && $d5 > 0 && $d1 < $('#'+idObject).height() && $d3 < $('#'+idObject).width()){
+                                $d4 = $rX - $rCordX; 
+                                $d5 = $bCordY - $tY; 
+                                if($d4 > 0){
+                                    if(id!=key && $d5 > 0 && $d1 < $('#'+idObj).height() && $d3 < $('#'+idObj).width()){
                                         $pos8 = false;
                                     }
                                 }
@@ -785,54 +786,58 @@ $(document).ready(function(){
     });
     selectObj = 0;
     $( '.canvas-UI' ).on( 'click', function( event1 ) {
-        obj = event1.target;
-        idObj = $(obj).attr('id');
-        if(!idObj){
-            // блок кода если кликнули по имени блока
-            // нужно получить сам модуль
-            idObj = $(obj).parent().attr('id');
-            if(selectObj != 0){
-                $(selectObj).css({
-                    'border-color':'#2C2C2C'
-                });
-                selectObj = document.getElementById(idObj);
+        obj2 = event1.target;
+        idObj2 = $(obj2).attr('id');
+        if(idObj2 != 'container'){
+            if(!idObj2){
+                // блок кода если кликнули по имени блока
+                // нужно получить сам модуль
+                idObj2 = $(obj2).parent().attr('id');
+                if(selectObj != 0){
+                    $(selectObj).css({
+                        'border-color':'#2C2C2C'
+                    });
+                    selectObj = document.getElementById(idObj2);
+                }
+                else{
+                    selectObj = document.getElementById(idObj2);
+                }
             }
             else{
-                selectObj = document.getElementById(idObj);
+                if(selectObj != 0){
+                    
+                    $(selectObj).css({
+                        'border-color':'#2C2C2C'
+                    });
+                    selectObj = document.getElementById(idObj2);
+                }
+                else{
+                    selectObj = document.getElementById(idObj2);
+                }
             }
+            $(selectObj).css({
+                'border-color':'green'
+            });
         }
-        else{
-            if(selectObj != 0){
-                
-                $(selectObj).css({
-                    'border-color':'#2C2C2C'
-                });
-                selectObj = document.getElementById(idObj);
-            }
-            else{
-                selectObj = document.getElementById(idObj);
-            }
-        }
-        $(selectObj).css({
-            'border-color':'green'
-        });
     });
     $( '.canvas-UI' ).on( 'mousedown', function( event1 ) {
         obj = event1.target;
         classObj =$(obj).attr('class');
         if(classObj == "RotAndDel-Del" || $(obj).parent().parent().hasClass("RotAndDel-Del")){
-            
-            if (event1.which == 1 && selectObj!=0){
-                idObj = $(selectObj).attr('id');
-                appendedObj.delete(idObj);
-                if(groupMain.has(idObj)){
-                    groupMain.delete(idObj);
+            if($(selectObj).hasClass('appended-modul')){
+                if (event1.which == 1 && selectObj!=0){
+                    idObj = $(selectObj).attr('id');
+                    appendedObj.delete(idObj);
+                    if(groupMain.has(idObj)){
+                        groupMain.delete(idObj);
+                    }
+                    $(selectObj).remove();
                 }
-                $(selectObj).remove();
             }
         }
         else{
             idObj = $(obj).attr('id');
+            console.log(idObj);
             if(!idObj){
                 // блок кода если кликнули по имени блока
                 // нужно получить сам модуль
@@ -859,6 +864,9 @@ $(document).ready(function(){
                 $deltaXR = $elemCordXR-$mouseD_x;
                 $moovblModul = $('#'+idObj);
                 $(document).mousemove(function (e) {
+                    $('#'+idObj).css({
+                        'z-index':'9999'
+                    });
                     $moovblModul.offset({top: e.pageY-$deltaY, left: e.pageX-$deltaX});
                     topY = obj.getBoundingClientRect().top;
                     topX = obj.getBoundingClientRect().left;
@@ -1024,7 +1032,7 @@ $(document).ready(function(){
                                 $d3 = $lCordX - $rX; 
                                 $d4 = $lCordX-$lX;
                                 $d5 = $tY - $bCordY;
-                                if($d2 > 0 && $d4 > 0){
+                                if($d4 > 0){
                                     if(id!=key && ($d1 < $('#'+idObj).height() && $d3 < $('#'+idObj).width())||($d5 < 0 && $d3 < $('#'+idObj).width())){
                                         $pos5 = false;
                                     }
@@ -1040,8 +1048,10 @@ $(document).ready(function(){
                                 $d2 = $lX-$lCordX;
                                 $d3 = $lCordX-$rX;
                                 $d4 = $tCordY-$tY;
-                                if($d3 < 0 && $d4 < 0){
+                                $d5 = $bCordY-$bY;
+                                if($d3 < 0 && $d4 <= 0 && $d5 < 0){
                                     if(id!=key && $d2 < $('#'+idObj).width() && $d1 < $('#'+idObj).height()){
+                                        console.log(key,id,$d2,$d1)
                                         $pos6 = false;
                                     }
                                 }
@@ -1052,15 +1062,17 @@ $(document).ready(function(){
                                 $tY = appendedObj.get(id)[1];
                                 $bY = appendedObj.get(id)[3];
 
-                                $d1 = $tY-$bCordY;
+                                $d1 = $tY-$bCordY; // верхнн€ грань дл€ стыковки должна быть ниже
                                 $d2 = $rCordX-$rX;
                                 $d3 = $rCordX-$lX;
                                 $d4 = $tCordY-$tY;
-                                if($d3 > 0 && $d4 < 0){
+                                $d5 = $bCordY-$bY;
+                                if($d3 > 0 && $d4 <= 0 && $d5 < 0){
                                     if(id!=key && $d2 < $('#'+idObj).width() && $d1 < $('#'+idObj).height()){
                                         $pos7 = false;
                                     }
                                 }
+                                //if($d1 < 0 && $d2 < $('#'+idObj).width())
                                 ////////////////////////////////////////////////////////////////////////////////////
                                 /////////// блок кода дл€ правой грани нижней вершины//////////////////////////////
                                 $lX = appendedObj.get(id)[0];
@@ -1073,7 +1085,7 @@ $(document).ready(function(){
                                 $d3 = $lX - $rCordX;
                                 $d4 = $rX - $rCordX; 
                                 $d5 = $bCordY - $tY; 
-                                if($d2 > 0 && $d4 > 0){
+                                if($d4 > 0){
                                     if(id!=key && $d5 > 0 && $d1 < $('#'+idObj).height() && $d3 < $('#'+idObj).width()){
                                         $pos8 = false;
                                     }
@@ -1160,6 +1172,7 @@ $(document).ready(function(){
                             if($('#'+idObj).hasClass('CB')){
                                 $minDistanse = 90;
                             }
+                            //console.log(key,$pos1,$pos2,$pos3,$pos4,$pos5,$pos6,$pos7,$pos8);
                             if($distanse < $resultDistanse && $distanse < $minDistanse){
                                 $resultDistanse = $distanse;
                                 // перезависывем переменные
@@ -1179,6 +1192,7 @@ $(document).ready(function(){
                                     $resPos6 = $pos6; //   нижн€€ грань левый угол
                                     $resPos7 = $pos7; //  нижн€€ грань правый угол
                                     $resPos8 = $pos8; //  права€ грань нижний угол
+                                    
                                 }
                             }
                         }
@@ -1198,6 +1212,7 @@ $(document).ready(function(){
 
                             element2 = element1 = document.getElementById(idObj); 
                             var rect2 = element2.getBoundingClientRect(); // объект который клеим
+                            //console.log($idFinedObjNew);
                             $resultDist1 = 9999;
                             $resultDist2 = 9999;
                             $resultDist3 = 9999;
@@ -1326,7 +1341,7 @@ $(document).ready(function(){
                         }
                         else {
                             var rect3 = obj.getBoundingClientRect(); // объект к которому клеим
-                            element4 = document.getElementById($idFinedObj);  
+                            element4 = document.getElementById($idFinedObj);
                             var rect4 = element4.getBoundingClientRect(); // объект к которому клеим
                             // if((rect3.right < rect4.right && rect4.left < rect3.right) || (rect4.top < rect3.top && rect4.bottom > rect3.top )){
                             //     appendedObj.delete(idObj);
@@ -1349,8 +1364,12 @@ $(document).ready(function(){
                                 $(this).unbind("mousemove");
                                 $(this).unbind("click");
                                 //}
-                            //}
+                          
+                                //}
                         }
+                        $('#'+idObj).css({
+                            'z-index':'999'
+                        });
                         $(this).unbind("mousemove");
                         $(this).unbind("click");
                     }// end block add

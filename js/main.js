@@ -44,7 +44,8 @@ $(document).ready(function(){
     const subMain = new Map();
     // массив размещенных объектов
     var appendedObj = new Map();
-
+    // храним информацию о повороте объетов
+    var rotationObj = new Map();
 
     //arr.set('key5','value5');
     //console.log(arr);
@@ -867,6 +868,8 @@ $(document).ready(function(){
                                 groupMain.set(idObject,[topX,topY,dovnX,dovnY]);
                                 // добавляем в массив размещенных обхектов id размещенного модуля
                                 appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
+
+                                rotationObj.set(idObject,false);
                                 // генерируем новый id для следующего модуля
                                 numberIdObjecy = numberIdObjecy + 1;
                                 idObject = "appended-modul" + numberIdObjecy;
@@ -946,10 +949,34 @@ $(document).ready(function(){
             });
         }
     });
+
+    
+
     $( '.canvas-UI' ).on( 'mousedown', function( event1 ) {
         obj = event1.target;
         //console.log(obj)
         classObj =$(obj).attr('class');
+        if(classObj == "RotAndDel-Rot" || $(obj).parent().parent().hasClass("RotAndDel-Rot")){
+            if($(selectObj).hasClass('appended-modul')){
+                if (event1.which == 1 && selectObj!=0){
+                    idObj = $(selectObj).attr('id');
+                    if(!rotationObj.get($(selectObj).attr('id'))){
+                        $(selectObj).css({
+                            'transform-origin':'center center',
+                            'transform':'rotate(90deg)'
+                        });
+                        rotationObj.set($(selectObj).attr('id'),true);
+                    }
+                    else{
+                        $(selectObj).css({
+                            'transform-origin':'center center',
+                            'transform':'rotate(0deg)'
+                        }); 
+                        rotationObj.set($(selectObj).attr('id'),false);
+                    }
+                }
+            }
+        }
         if(classObj == "RotAndDel-Del" || $(obj).parent().parent().hasClass("RotAndDel-Del")){
             if($(selectObj).hasClass('appended-modul')){
                 if (event1.which == 1 && selectObj!=0){
@@ -1112,7 +1139,7 @@ $(document).ready(function(){
                                 $d3 = $lX - $rCordX; // от левой до правой
                                 $d4 = $rX - $rCordX;
                                 if($d2 > 0 && $d4 > 0){
-                                    if(id!=key && $d1 < $('#'+idObj).height() && $d3 < $('#'+idObj).width()){
+                                    if(id!=key && $d1 < $('#'+idObj).height()+1 && $d3 < $('#'+idObj).width()+1){
                                         $pos1 = false;
                                     }
                                 }
@@ -1126,7 +1153,7 @@ $(document).ready(function(){
                                 $d3 = $rCordX-$lX;
                                 $d4 = $tCordY-$tY;
                                 if($d3 > 0 && $d4 > 0){
-                                    if(id!=key && $d2 < $('#'+idObj).width() && $d1 < $('#'+idObj).height()){
+                                    if(id!=key && $d2 < $('#'+idObj).width()+1 && $d1 < $('#'+idObj).height()+1){
                                         $pos2 = false;
                                     }
                                 }
@@ -1140,7 +1167,7 @@ $(document).ready(function(){
                                 $d3 = $lCordX-$rX;
                                 $d4 = $tCordY-$tY;
                                 if($d3 < 0 && $d4 > 0){
-                                    if(id!=key && $d2 < $('#'+idObj).width() && $d1 < $('#'+idObj).height()){
+                                    if(id!=key && $d2 < $('#'+idObj).width()+1 && $d1 < $('#'+idObj).height()+1){
                                         $pos3 = false;
                                     }
                                 }
@@ -1155,7 +1182,7 @@ $(document).ready(function(){
                                 $d3 = $lCordX - $rX; 
                                 $d4 = $lCordX-$lX;
                                 if($d2 > 0 && $d4 > 0){
-                                    if(id!=key && $d1 < $('#'+idObj).height() && $d3 < $('#'+idObj).width()){
+                                    if(id!=key && $d1 < $('#'+idObj).height()+1 && $d3 < $('#'+idObj).width()+1){
                                         $pos4 = false;
                                     }
                                 }
@@ -1172,7 +1199,7 @@ $(document).ready(function(){
                                 $d4 = $lCordX-$lX;
                                 $d5 = $tY - $bCordY;
                                 if($d4 > 0){
-                                    if(id!=key && ($d1 < $('#'+idObj).height() && $d3 < $('#'+idObj).width())||($d5 < 0 && $d3 < $('#'+idObj).width())){
+                                    if(id!=key && ($d1 < $('#'+idObj).height()+1 && $d3 < $('#'+idObj).width()+1)||($d5 < 0 && $d3 < $('#'+idObj).width()+1)){
                                         $pos5 = false;
                                     }
                                 }
@@ -1189,7 +1216,7 @@ $(document).ready(function(){
                                 $d4 = $tCordY-$tY;
                                 $d5 = $bCordY-$bY;
                                 if($d3 < 0 && $d4 <= 0 && $d5 < 0){
-                                    if(id!=key && $d2 < $('#'+idObj).width() && $d1 < $('#'+idObj).height()){
+                                    if(id!=key && $d2 < $('#'+idObj).width()+1 && $d1 < $('#'+idObj).height()+1){
                                         $pos6 = false;
                                     }
                                 }
@@ -1206,7 +1233,7 @@ $(document).ready(function(){
                                 $d4 = $tCordY-$tY;
                                 $d5 = $bCordY-$bY;
                                 if($d3 > 0 && $d4 <= 0 && $d5 < 0){
-                                    if(id!=key && $d2 < $('#'+idObj).width() && $d1 < $('#'+idObj).height()){
+                                    if(id!=key && $d2 < $('#'+idObj).width()+1 && $d1 < $('#'+idObj).height()+1){
                                         $pos7 = false;
                                     }
                                 }
@@ -1224,7 +1251,7 @@ $(document).ready(function(){
                                 $d4 = $rX - $rCordX; 
                                 $d5 = $bCordY - $tY; 
                                 if($d4 > 0){
-                                    if(id!=key && $d5 > 0 && $d1 < $('#'+idObj).height() && $d3 < $('#'+idObj).width()){
+                                    if(id!=key && $d5 > 0 && $d1 < $('#'+idObj).height()+1 && $d3 < $('#'+idObj).width()+1){
                                         $pos8 = false;
                                     }
                                 }
@@ -1571,4 +1598,7 @@ $(document).ready(function(){
             });    
         }
     };
+
+
+    
 });

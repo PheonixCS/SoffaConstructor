@@ -57,7 +57,7 @@ $(document).ready(function(){
     $creatModul = function(id,$number){
         if ($number == 1){
 
-            modul = '<svg  id = "'+id+'" class = "appended-modul" width="101" height="303" viewBox="0 0 101 303" fill="none" xmlns="http://www.w3.org/2000/svg">'+
+            modul = '<svg  id = "'+id+'" class = "appended-modul appendedB" width="101" height="303" viewBox="0 0 101 303" fill="none" xmlns="http://www.w3.org/2000/svg">'+
             '<mask id="mask0_47_302" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="101" height="303">'+
             '<path d="M0 283.52L0 18.75C0 13.78 1.98001 9.00999 5.49001 5.48999C9.01001 1.96999 13.78 0 18.75 0H82.01C86.98 0 91.75 1.97999 95.27 5.48999C98.79 9.00999 100.76 13.78 100.76 18.75L100.76 283.52C100.76 288.49 98.78 293.26 95.27 296.78C91.75 300.3 86.98 302.27 82.01 302.27H18.75C13.78 302.27 9.01001 300.29 5.49001 296.78C1.97001 293.26 0 288.49 0 283.52Z" fill="white"/>'+
             '</mask>'+
@@ -86,7 +86,7 @@ $(document).ready(function(){
             return modul;
         }
         if ($number == 2){
-            modul = '<svg id = "'+id+'" class = "appended-modul" width="101" height="203" viewBox="0 0 101 203" fill="none" xmlns="http://www.w3.org/2000/svg">'+
+            modul = '<svg id = "'+id+'" class = "appended-modul appendedBM" width="101" height="203" viewBox="0 0 101 203" fill="none" xmlns="http://www.w3.org/2000/svg">'+
             '<mask id="mask0_47_240" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="101" height="203">'+
             '<path d="M0 183.74L0 18.97C0 14 1.98001 9.22999 5.49001 5.70999C9.01001 2.18999 13.78 0.219971 18.75 0.219971H82.01C86.98 0.219971 91.75 2.19999 95.27 5.70999C98.79 9.21999 100.76 14 100.76 18.97L100.76 183.74C100.76 188.71 98.78 193.48 95.27 197C91.76 200.52 86.98 202.49 82.01 202.49H18.75C13.78 202.49 9.01001 200.51 5.49001 197C1.97001 193.48 0 188.71 0 183.74Z" fill="white"/>'+
             '</mask>'+
@@ -114,7 +114,7 @@ $(document).ready(function(){
             return modul;
         }
         if ($number == 3){
-            modul = '<svg id = "'+id+'" class = "appended-modul" width="203" height="303" viewBox="0 0 203 303" fill="none" xmlns="http://www.w3.org/2000/svg">'+
+            modul = '<svg id = "'+id+'" class = "appended-modul appendedC" width="203" height="303" viewBox="0 0 203 303" fill="none" xmlns="http://www.w3.org/2000/svg">'+
             '<mask id="mask0_48_386" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="203" height="303">'+
             '<path d="M0 283.49L0 18.89C0 13.92 1.98 9.15004 5.49 5.63004C9 2.11004 13.78 0.140045 18.75 0.140045H183.52C188.49 0.140045 193.26 2.12004 196.78 5.63004C200.3 9.15004 202.27 13.92 202.27 18.89L202.27 283.49C202.27 288.46 200.29 293.23 196.78 296.75C193.26 300.27 188.49 302.24 183.52 302.24H18.75C13.78 302.24 9.01 300.26 5.49 296.75C1.97 293.23 0 288.46 0 283.49Z" fill="white"/>'+
             '</mask>'+
@@ -142,7 +142,7 @@ $(document).ready(function(){
             return modul;
         }
         if ($number == 4){
-            modul = '<svg id = "'+id+'" class = "appended-modul" width="203" height="203" viewBox="0 0 203 203" fill="none" xmlns="http://www.w3.org/2000/svg">'+
+            modul = '<svg id = "'+id+'" class = "appended-modul appendedCM" width="203" height="203" viewBox="0 0 203 203" fill="none" xmlns="http://www.w3.org/2000/svg">'+
             '<mask id="mask0_52_448" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="203" height="203">'+
             '<path d="M18.75 0H183.52C188.49 0 193.26 1.98 196.78 5.49C200.3 9 202.27 13.78 202.27 18.75V183.52C202.27 188.49 200.29 193.26 196.78 196.78C193.26 200.3 188.49 202.27 183.52 202.27H18.75C13.78 202.27 9.01 200.29 5.49 196.78C1.97 193.26 0 188.49 0 183.52V18.75C0 13.78 1.98 9.01 5.49 5.49C9 1.97 13.78 0 18.75 0Z" fill="white"/>'+
             '</mask>'+
@@ -170,7 +170,7 @@ $(document).ready(function(){
             return modul;
         }
         if ($number == 5){
-            modul = '<svg id = "'+id+'" class = "appended-modul" width="303" height="303" viewBox="0 0 303 303" fill="none" xmlns="http://www.w3.org/2000/svg">'+
+            modul = '<svg id = "'+id+'" class = "appended-modul appendedCB" width="303" height="303" viewBox="0 0 303 303" fill="none" xmlns="http://www.w3.org/2000/svg">'+
             '<mask id="mask0_0_1" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="303" height="303">'+
             '<path d="M19.28 0.360001H283.72C288.69 0.360001 293.46 2.34 296.98 5.85C300.5 9.37 302.47 14.14 302.47 19.11V283.88C302.47 288.85 300.49 293.62 296.98 297.14C293.46 300.66 288.69 302.63 283.72 302.63H19.28C14.31 302.63 9.54003 300.65 6.02003 297.14C2.50003 293.62 0.530029 288.85 0.530029 283.88V19.11C0.530029 14.14 2.51003 9.37 6.02003 5.85C9.54003 2.33 14.31 0.360001 19.28 0.360001Z" fill="white"/>'+
             '</mask>'+
@@ -209,7 +209,7 @@ $(document).ready(function(){
     /// Основная функция
     $moovFunc = function($numberObj,id,e){
         if (e.which == 1){
-
+            
             // считываем координаты мыши
             $mouseD_x = e.pageX;
             $mouseD_y = e.pageY;
@@ -225,7 +225,8 @@ $(document).ready(function(){
             $moovObj = $creatModul(id,$numberObj);
             // добавляем на страницу(он скрыт)
             $append($('.canvas-UI'),$moovObj)
-
+            $updateObjSize(id);
+            
             // получаем добавленный модуль
             $moovblModul = $('#'+id);
             $moovblModul.css({
@@ -234,6 +235,7 @@ $(document).ready(function(){
             // смещаем его так, чтобы он был ровно поверх модуля но который нажали
             $moovblModul.offset({top: e.pageY-$deltaY, left: e.pageX-$deltaX});
             // отображаем модуль
+            
             $moovblModul.show();
             
             $('body').css({
@@ -250,7 +252,8 @@ $(document).ready(function(){
             }).click(function (e) {
                 // запускаем логику если кнопка отжата
                 // проверяем что размещаемый объект находится в рабочей области
-                if(e.pageX + $deltaXR < $updateSize()){                    
+                // вот тут логику нужно чутка переделать, чтобы нельзя было выносить за рамки рабочей области
+                if(e.pageX + $deltaXR < 99999999){                    
                     // вычисляем координаты
                     objAdd = document.getElementById(idObject);
                     topY = objAdd.getBoundingClientRect().top;
@@ -854,31 +857,28 @@ $(document).ready(function(){
                             var rect3 = element3.getBoundingClientRect(); // объект к которому клеим
                             element4 = document.getElementById($idFinedObj);  
                             var rect4 = element4.getBoundingClientRect(); // объект к которому клеим
-                            if((rect3.right < rect4.right && rect4.left < rect3.right) || (rect4.top < rect3.top && rect4.bottom > rect3.top )){
+
+                            if((rect4.left < rect3.left && rect4.right > rect3.left) || (rect4.top < rect3.bottom && rect4.bottom > rect3.bottom )){
                                 $moovblModul.remove();
                                 $(this).unbind("click");
                             }
-                            else{
-                                if((rect4.left < rect3.left && rect4.right > rect3.left) || (rect4.top < rect3.bottom && rect4.bottom > rect3.bottom )){
-                                    $moovblModul.remove();
-                                    $(this).unbind("click");
-                                }
-                                else {
-                                    // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
-                                    groupMain.set(idObject,[topX,topY,dovnX,dovnY]);
-                                    // добавляем в массив размещенных обхектов id размещенного модуля
-                                    appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
-                                    // генерируем новый id для следующего модуля
-                                    numberIdObjecy = numberIdObjecy + 1;
-                                    idObject = "appended-modul" + numberIdObjecy;
-                                    // открепляем событие на клик от текущего модуля
-                                    $(this).unbind("click");
-                                }
+                            else {
+                                // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
+                                groupMain.set(idObject,[topX,topY,dovnX,dovnY]);
+                                // добавляем в массив размещенных обхектов id размещенного модуля
+                                appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
+                                // генерируем новый id для следующего модуля
+                                numberIdObjecy = numberIdObjecy + 1;
+                                idObject = "appended-modul" + numberIdObjecy;
+                                // открепляем событие на клик от текущего модуля
+                                $(this).unbind("click");
                             }
+                            
                         }
                     }
                 }
                 else{
+                    console.log(1);
                     $moovblModul.remove();
                     $(this).unbind("click");
                 }
@@ -976,22 +976,20 @@ $(document).ready(function(){
                 // нужно получить сам модуль
                 idObj = $(event1.target).parent().attr('id');
                 obj = document.getElementById(idObj);
-                console.log(obj);
             }
             if(!idObj){
                 // блок кода если кликнули по имени блока
                 // нужно получить сам модуль
                 idObj = $(event1.target).parent().parent().attr('id');
                 obj = document.getElementById(idObj);
-                console.log(obj);
             }
             // if($(obj).hasClass('name')){
             //     obj = $(event1.Target).parent();
             //     console.log(obj);
             //     idObj = $(event1.Target).parent().attr('id');
             // }
-            
-            if (event1.which == 1 && idObj != "container" ){
+            if (event1.which == 1 && $(obj).hasClass('appended-modul')){
+                
                 // считываем координаты мыши
                 $mouseD_x = event1.pageX;
                 $mouseD_y = event1.pageY;
@@ -1192,7 +1190,6 @@ $(document).ready(function(){
                                 $d5 = $bCordY-$bY;
                                 if($d3 < 0 && $d4 <= 0 && $d5 < 0){
                                     if(id!=key && $d2 < $('#'+idObj).width() && $d1 < $('#'+idObj).height()){
-                                        console.log(key,id,$d2,$d1)
                                         $pos6 = false;
                                     }
                                 }
@@ -1231,7 +1228,7 @@ $(document).ready(function(){
                                         $pos8 = false;
                                     }
                                 }
-                                
+                                console.log(id,$pos6,$pos7)
                             }
                             $dist1 = 99999999;
                             $dist2 = 99999999;
@@ -1505,7 +1502,7 @@ $(document).ready(function(){
                                 $(this).unbind("mousemove");
                                 $(this).unbind("click");
                                 //}
-                          
+                        
                                 //}
                         }
                         $('#'+idObj).css({
@@ -1520,4 +1517,58 @@ $(document).ready(function(){
             }
         }
     });
+
+    $updateObjSize = function($idUpdObj){
+        $basescale = 0.05;
+        if($('#'+$idUpdObj).hasClass('appendedB')){
+            $bOriginWidth = 101;
+            $bOriginHeight = 303;
+            $bWidth = $updateSize()*$basescale;
+            $bHeight = $bOriginHeight*($bWidth/$bOriginWidth);
+            $('#'+$idUpdObj).css({
+                'width':$bWidth,
+                'height':$bHeight
+            });
+        }
+        if($('#'+$idUpdObj).hasClass('appendedBM')){
+            $bmOriginWidth = 101;
+            $bmOriginHeight = 203;
+            $bmWidth = $updateSize()*$basescale;
+            $bmHeight = $bmOriginHeight*($bmWidth/$bmOriginWidth);
+            $('#'+$idUpdObj).css({
+                'width':$bmWidth,
+                'height':$bmHeight
+            });
+        }
+        if($('#'+$idUpdObj).hasClass('appendedC')){
+            $cOriginWidth = 203;
+            $cOriginHeight = 303;
+            $cWidth = $updateSize()*$basescale*2;
+            $cHeight = $cOriginHeight*($cWidth/$cOriginWidth);
+            $('#'+$idUpdObj).css({
+                'width':$cWidth,
+                'height':$cHeight
+            });
+        }
+        if($('#'+$idUpdObj).hasClass('appendedCM')){
+            $cmOriginWidth = 203;
+            $cmOriginHeight = 203;
+            $cmWidth = $updateSize()*$basescale*2;
+            $cmHeight = $cmOriginHeight*($cmWidth/$cmOriginWidth);
+            $('#'+$idUpdObj).css({
+                'width':$cmWidth,
+                'height':$cmHeight
+            });
+        }
+        if($('#'+$idUpdObj).hasClass('appendedCB')){
+            $cbOriginWidth = 303;
+            $cbOriginHeight = 303;
+            $cbWidth = $updateSize()*$basescale*3;
+            $cbHeight = $cbOriginHeight*($cbWidth/$cbOriginWidth); 
+            $('#'+$idUpdObj).css({
+                'width':$cbWidth,
+                'height':$cbHeight
+            });    
+        }
+    };
 });

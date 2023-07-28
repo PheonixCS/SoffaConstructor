@@ -204,11 +204,13 @@ body {
 
 /*    */
 .appended-modul{
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
     position: absolute;
     z-index: 999;
     display: none;
     vertical-align: middle;
-    border-color: red;
 }
 .modul-nameAppendB{
     margin: 0 auto;

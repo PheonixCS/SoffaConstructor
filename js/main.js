@@ -468,7 +468,7 @@ $(document).ready(function(){
              
             if($d2 >= 0.5 && $d4 >= 0.5){
                 if($id!=$ourId && $d1 <= $ourHeight-5 && $d3 <= $ourWidth-5){
-                    console.log($targetId,'pos1 false',$d2,'-расстояние до ',$id);
+                    //console.log($targetId,'pos1 false',$d2,'-расстояние до ',$id);
                     $pos1 = false;
                 }
             }
@@ -516,19 +516,22 @@ $(document).ready(function(){
             $d2 = $lX-$lCordX;
             $d3 = $lCordX-$rX;
             $d5 = $bCordY-$bY;
-            if($d3 < 0.5 && $d5 < 0.5){
-                if($id!=$ourId && $d2 <= $ourWidth-5 && $d1 <= $ourHeight-5){
+            if($d3 < -0.5 && $d5 < -0.5){
+                if($id!=$ourId && $d2 >= 0 && $d2 <= $ourWidth-5 && $d1 <= $ourHeight-5){
                     $pos6 = false;
+                    console.log($id,$targetId,$d1,$d2,$d3,$d5,$pos6)
                 }
             }
-            //console.log($id,$targetId,$d4)
+            //alert(1);
+            
+            //console.log($id,$targetId,$d3,$d5)
             $d1 = $tY-$bCordY;
             $d2 = $rCordX-$rX;
             $d3 = $rCordX-$lX;
             $d4 = $tCordY-$tY;
             $d5 = $bCordY-$bY;
             if($d3 > 0.5 && $d4 <= -0.5 && $d5 < -0.5){
-                if($id!=$ourId && $d2 <= $ourWidth-5 && $d1 <= $ourHeight-5){
+                if($id!=$ourId && $d2 >= 0 && $d2 <= $ourWidth-5 && $d1 <= $ourHeight-5){
                     $pos7 = false;
                 }
             }
@@ -543,6 +546,7 @@ $(document).ready(function(){
                 }
             }
         }
+        console.log($targetId,[$pos1,$pos2,$pos3,$pos4,$pos5,$pos6,$pos7,$pos8]);
         return([$pos1,$pos2,$pos3,$pos4,$pos5,$pos6,$pos7,$pos8]);
     };
     $setPositionObetcs = function($idOur,$idTar,$posTar){
@@ -556,41 +560,51 @@ $(document).ready(function(){
 
         element2 = element1 = document.getElementById($idOur); 
         var rect2 = element2.getBoundingClientRect(); // объект который клеим
-
+        console.log($idOur,$idTar,$resultPos);
+        console.log($('#'+$idOur).offset());
         if($resultPos == 1){
+
             $('#'+$idOur).offset({top: rect1.top, left: rect2.left - (rect2.left-rect1.right)});
-            $updateCord($idOur);
+
         }
         
         if($resultPos == 2){
+
             $('#'+$idOur).offset({top: rect2.top-(rect2.bottom-rect1.top), left: rect1.right-(rect2.right-rect2.left)});
-            $updateCord($idOur);
+
         }
         if($resultPos == 3){
+
             $('#'+$idOur).offset({top: rect2.top-(rect2.bottom-rect1.top), left: rect1.left});
-            $updateCord($idOur);
+
         }
         if($resultPos == 4){
+
             $('#'+$idOur).offset({top: rect2.top+(rect1.top - rect2.top), left: rect2.left+(rect1.left - rect2.right)});
-            $updateCord($idOur);
+
         }
         if($resultPos == 5){
+
             $('#'+$idOur).offset({top: rect2.top-(rect2.bottom-rect1.bottom), left: rect2.left+(rect1.left - rect2.right)});
-            $updateCord($idOur);
+
         }
         if($resultPos == 6){
+
             $('#'+$idOur).offset({top: rect1.bottom, left: rect1.left});
-            $updateCord($idOur);
+
         }
         if($resultPos == 7){
+
             $('#'+$idOur).offset({top: rect1.bottom, left: rect1.right-(rect2.right-rect2.left)});
-            $updateCord($idOur);
+
         }
         if($resultPos == 8){
+
             $('#'+$idOur).offset({top: rect2.top+(rect1.bottom - rect2.bottom), left: rect2.left - (rect2.left-rect1.right)});
-            $updateCord($idOur);
+
         }
         $updateCord($idOur);
+        console.log($('#'+$idOur).offset());
     };
     $updateSize = function(){
         let objContainer = document.getElementById('container');
@@ -680,7 +694,7 @@ $(document).ready(function(){
         obj2 = event1.target;
         idObj2 = $(obj2).attr('id');
         if($(obj2).parent().parent().hasClass('appended-modul')){
-            console.log(selectObj);
+            //console.log(selectObj);
             $(selectObj).children().children('.modul-border').css({
                 'stroke':'black'
             });
@@ -692,7 +706,7 @@ $(document).ready(function(){
             selectObj = document.getElementById(selectObj);
         }
         else if($(obj2).parent().hasClass('appended-modul')){
-            console.log(2);
+            //console.log(2);
 
         }
         else{
@@ -716,16 +730,19 @@ $(document).ready(function(){
                     idObj = $(selectObj).attr('id');
                     if(!rotationObj.get($(selectObj).attr('id'))){
                         $(selectObj).css({
-                            'display':'none',
                             'transform-origin':'center center',
                             'transform':'rotate(90deg)'
 
                         });
-                        $(selectObj).mousedown();
+                        //$(selectObj).click();
+                        $resPosAndIdF = $findMinDistObj(idObj); // найти ближайший
+                        $resultPos = $resPosAndIdF[2];
+                        $findeObj = $resPosAndIdF[0];
+                        $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
+                        console.log($('#'+idObj).offset(),idObj);
+                        // открепляем событие на клик от текущего модуля
+
                         rotationObj.set($(selectObj).attr('id'),true);
-                        $(selectObj).css({
-                            'display':'inline'
-                        });
                     }
                     else{
                         $(selectObj).css({
@@ -777,12 +794,13 @@ $(document).ready(function(){
                 obj = document.getElementById(idObj);
             }
             if (event1.which == 1 && $(obj).hasClass('appended-modul')){
-                
+                console.log($(obj).offset());
                 $offsetClick = $calculateMouseOffsetMoovbl(event1,idObj);
                 $deltaX = $offsetClick[0];
                 $deltaY = $offsetClick[1];
                 $moovblModul = $('#'+idObj);
                 $(document).mousemove(function (e) {
+                    console.log(2);
                     $('#'+idObj).css({
                         'z-index':'9999'
                     });

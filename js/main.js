@@ -26,14 +26,7 @@ $(document).ready(function(){
     numberIdObjecy = 0;
     idObject = "appended-modul" + numberIdObjecy;
 
-    // это используется чтобы мы не выходили за границы рабочей области
-    // получаем глобальные координаты верхнего левого угла области рисования
-    $updateSize = function(){
-        let objContainer = document.getElementById('container');
-        rectcont = objContainer.getBoundingClientRect();
-        $containerRX = rectcont.right-$('#menu').width();
-        return $containerRX;
-    };
+    
 
     $idFinedObjOLD = "appended-modul0";
     // коллекции объектов
@@ -54,6 +47,16 @@ $(document).ready(function(){
     /* БЛОК ПЕРЕМЕННЫЕ*/
 
     //// вспомогательные функции /////
+    $updateCord = function($id){
+        objAdd = document.getElementById($id);
+        topY = objAdd.getBoundingClientRect().top;
+        topX = objAdd.getBoundingClientRect().left;
+        dovnY = objAdd.getBoundingClientRect().bottom;
+        dovnX = objAdd.getBoundingClientRect().right;
+        groupMain.set($id,[topX,topY,dovnX,dovnY]);
+        // добавляем в массив размещенных обхектов id размещенного модуля
+        appendedObj.set($id,[topX,topY,dovnX,dovnY]);
+    }
     /// создаем html код модуля
     $creatModul = function(id,$number){
         if ($number == 1){
@@ -69,7 +72,7 @@ $(document).ready(function(){
             '<path d="M0 283.51L0 18.77C0 13.8 1.97001 9.03001 5.48001 5.51001C8.99001 1.99001 13.74 0.0200195 18.7 0.0200195H81.8C86.76 0.0200195 91.52 2.00001 95.02 5.51001C98.53 9.03001 100.5 13.79 100.5 18.77L100.5 283.51C100.5 288.48 98.53 293.25 95.02 296.77C91.51 300.29 86.76 302.26 81.8 302.26H18.7C13.74 302.26 8.98001 300.28 5.48001 296.77C1.97001 293.25 0 288.49 0 283.51Z" fill="white"/>'+
             '</mask>'+
             '<g mask="url(#mask1_47_302)">'+
-            '<path d="M0 283.51L0 18.77C0 13.8 1.97001 9.03001 5.48001 5.51001C8.99001 1.99001 13.74 0.0200195 18.7 0.0200195H81.8C86.76 0.0200195 91.52 2.00001 95.02 5.51001C98.53 9.03001 100.5 13.79 100.5 18.77L100.5 283.51C100.5 288.48 98.53 293.25 95.02 296.77C91.51 300.29 86.76 302.26 81.8 302.26H18.7C13.74 302.26 8.98001 300.28 5.48001 296.77C1.97001 293.25 0 288.49 0 283.51Z" stroke="black" stroke-width="8.99"/>'+
+            '<path class="modul-border" d="M0 283.51L0 18.77C0 13.8 1.97001 9.03001 5.48001 5.51001C8.99001 1.99001 13.74 0.0200195 18.7 0.0200195H81.8C86.76 0.0200195 91.52 2.00001 95.02 5.51001C98.53 9.03001 100.5 13.79 100.5 18.77L100.5 283.51C100.5 288.48 98.53 293.25 95.02 296.77C91.51 300.29 86.76 302.26 81.8 302.26H18.7C13.74 302.26 8.98001 300.28 5.48001 296.77C1.97001 293.25 0 288.49 0 283.51Z" stroke="black" stroke-width="8.99"/>'+
             '</g>'+
             '<path d="M59.4098 153.86V152.08C59.4098 150.29 59.1198 148.98 58.5498 148.15C57.9698 147.32 57.1098 146.9 55.9398 146.9C54.7698 146.9 53.9598 147.32 53.4498 148.16C52.9398 149 52.6898 150.45 52.6898 152.5V153.85H59.4098V153.86ZM48.3498 153.86V151.78C48.3498 148.52 49.0098 146.01 50.3298 144.23C51.6498 142.45 53.5198 141.57 55.9398 141.57C61.1498 141.57 63.7498 145.01 63.7498 151.89V159.17H38.7598V143.39H43.1298V153.88H48.3398L48.3498 153.86Z" fill="black"/>'+
             '<path d="M91.2199 177.37V179.04H80.4799C79.5899 179.04 78.7399 179.01 77.9499 178.96C78.0899 179.1 78.2499 179.27 78.3999 179.44C78.5599 179.62 79.2299 180.44 80.4099 181.89L79.2299 182.8L76.1399 178.81V177.37H91.2099H91.2199Z" fill="black"/>'+
@@ -98,7 +101,7 @@ $(document).ready(function(){
             '<path d="M0 183.72L0 18.77C0 13.79 1.97001 9.02 5.48001 5.5C8.99001 1.98 13.74 0 18.7 0H81.8C86.76 0 91.52 1.98 95.02 5.5C98.52 9.02 100.5 13.79 100.5 18.77L100.5 183.72C100.5 188.7 98.53 193.47 95.02 196.99C91.51 200.51 86.76 202.49 81.8 202.49H18.7C13.74 202.49 8.98001 200.51 5.48001 196.99C1.97001 193.47 0 188.7 0 183.72Z" fill="white"/>'+
             '</mask>'+
             '<g mask="url(#mask1_47_240)">'+
-            '<path d="M0 183.72L0 18.77C0 13.79 1.97001 9.02 5.48001 5.5C8.99001 1.98 13.74 0 18.7 0H81.8C86.76 0 91.52 1.98 95.02 5.5C98.52 9.02 100.5 13.79 100.5 18.77L100.5 183.72C100.5 188.7 98.53 193.47 95.02 196.99C91.51 200.51 86.76 202.49 81.8 202.49H18.7C13.74 202.49 8.98001 200.51 5.48001 196.99C1.97001 193.47 0 188.7 0 183.72Z" stroke="black" stroke-width="8.99"/>'+
+            '<path "modul-border" d="M0 183.72L0 18.77C0 13.79 1.97001 9.02 5.48001 5.5C8.99001 1.98 13.74 0 18.7 0H81.8C86.76 0 91.52 1.98 95.02 5.5C98.52 9.02 100.5 13.79 100.5 18.77L100.5 183.72C100.5 188.7 98.53 193.47 95.02 196.99C91.51 200.51 86.76 202.49 81.8 202.49H18.7C13.74 202.49 8.98001 200.51 5.48001 196.99C1.97001 193.47 0 188.7 0 183.72Z" stroke="black" stroke-width="8.99"/>'+
             '</g>'+
             '<path d="M59.41 120.59V118.81C59.41 117.02 59.12 115.71 58.55 114.88C57.97 114.05 57.11 113.63 55.94 113.63C54.77 113.63 53.96 114.05 53.45 114.89C52.94 115.73 52.69 117.18 52.69 119.23V120.58H59.41V120.59ZM48.35 120.59V118.51C48.35 115.25 49.01 112.74 50.33 110.96C51.65 109.18 53.52 108.3 55.94 108.3C61.15 108.3 63.75 111.74 63.75 118.62V125.9H38.76V110.12H43.13V120.61H48.34L48.35 120.59Z" fill="black"/>'+
             '<path d="M63.75 92.97L44.15 98.9901V99.14C48.14 98.92 50.8 98.8201 52.13 98.8201H63.75V103.55H38.76V96.34L57.87 90.4301V90.33L38.76 84.06V76.8501H63.75V81.79H51.92C51.36 81.79 50.72 81.79 49.99 81.76C49.26 81.74 47.32 81.67 44.18 81.53V81.6801L63.75 88.12V92.97Z" fill="black"/>'+
@@ -126,7 +129,7 @@ $(document).ready(function(){
             '<path d="M0 283.48L0 18.75C0 13.77 1.98 8.99999 5.5 5.48999C9.02 1.96999 13.79 0 18.77 0H183.73C188.71 0 193.48 1.97999 197 5.48999C200.52 9.00999 202.5 13.78 202.5 18.75L202.5 283.48C202.5 288.46 200.52 293.23 197 296.74C193.48 300.26 188.71 302.23 183.73 302.23H18.77C13.79 302.23 9.02 300.25 5.5 296.74C1.98 293.22 0 288.45 0 283.48Z" fill="white"/>'+
             '</mask>'+
             '<g mask="url(#mask1_48_386)">'+
-            '<path d="M0 283.48L0 18.75C0 13.77 1.98 8.99999 5.5 5.48999C9.02 1.96999 13.79 0 18.77 0H183.73C188.71 0 193.48 1.97999 197 5.48999C200.52 9.00999 202.5 13.78 202.5 18.75L202.5 283.48C202.5 288.46 200.52 293.23 197 296.74C193.48 300.26 188.71 302.23 183.73 302.23H18.77C13.79 302.23 9.02 300.25 5.5 296.74C1.98 293.22 0 288.45 0 283.48Z" stroke="black" stroke-width="9.01"/>'+
+            '<path "modul-border" d="M0 283.48L0 18.75C0 13.77 1.98 8.99999 5.5 5.48999C9.02 1.96999 13.79 0 18.77 0H183.73C188.71 0 193.48 1.97999 197 5.48999C200.52 9.00999 202.5 13.78 202.5 18.75L202.5 283.48C202.5 288.46 200.52 293.23 197 296.74C193.48 300.26 188.71 302.23 183.73 302.23H18.77C13.79 302.23 9.02 300.25 5.5 296.74C1.98 293.22 0 288.45 0 283.48Z" stroke="black" stroke-width="9.01"/>'+
             '</g>'+
             '<path d="M93.8199 148.59C93.8199 150.58 94.5699 152.12 96.0699 153.22C97.5699 154.31 99.6599 154.86 102.33 154.86C107.9 154.86 110.69 152.77 110.69 148.59C110.69 146.84 110.25 144.71 109.37 142.22H113.81C114.66 144.27 115.09 146.56 115.09 149.09C115.09 152.72 113.99 155.5 111.78 157.43C109.58 159.35 106.41 160.32 102.29 160.32C99.6899 160.32 97.4199 159.85 95.4599 158.9C93.5099 157.95 92.0099 156.6 90.9699 154.83C89.9299 153.06 89.4099 150.98 89.4099 148.6C89.4099 146.22 89.9999 143.74 91.1699 141.29L95.4799 143C95.0399 143.93 94.6499 144.87 94.3199 145.82C93.9899 146.76 93.8199 147.69 93.8199 148.6V148.59Z" fill="black"/>'+
             '<path d="M193.26 177.43V179.1H182.52C181.63 179.1 180.78 179.07 179.99 179.02C180.13 179.16 180.29 179.33 180.44 179.5C180.6 179.68 181.27 180.5 182.45 181.95L181.27 182.86L178.18 178.87V177.43H193.25H193.26Z" fill="black"/>'+
@@ -154,7 +157,7 @@ $(document).ready(function(){
             '<path d="M18.77 0H183.73C188.71 0 193.48 1.98 197 5.5C200.52 9.02 202.5 13.79 202.5 18.77V183.73C202.5 188.71 200.52 193.48 197 197C193.48 200.52 188.71 202.5 183.73 202.5H18.77C13.79 202.5 9.02 200.52 5.5 197C1.98 193.48 0 188.71 0 183.73V18.77C0 13.79 1.98 9.02 5.5 5.5C9.02 1.98 13.79 0 18.77 0Z" fill="white"/>'+
             '</mask>'+
             '<g mask="url(#mask1_52_448)">'+
-            '<path d="M18.77 0H183.73C188.71 0 193.48 1.98 197 5.5C200.52 9.02 202.5 13.79 202.5 18.77V183.73C202.5 188.71 200.52 193.48 197 197C193.48 200.52 188.71 202.5 183.73 202.5H18.77C13.79 202.5 9.02 200.52 5.5 197C1.98 193.48 0 188.71 0 183.73V18.77C0 13.79 1.98 9.02 5.5 5.5C9.02 1.98 13.79 0 18.77 0Z" stroke="black" stroke-width="9.01"/>'+
+            '<path "modul-border" d="M18.77 0H183.73C188.71 0 193.48 1.98 197 5.5C200.52 9.02 202.5 13.79 202.5 18.77V183.73C202.5 188.71 200.52 193.48 197 197C193.48 200.52 188.71 202.5 183.73 202.5H18.77C13.79 202.5 9.02 200.52 5.5 197C1.98 193.48 0 188.71 0 183.73V18.77C0 13.79 1.98 9.02 5.5 5.5C9.02 1.98 13.79 0 18.77 0Z" stroke="black" stroke-width="9.01"/>'+
             '</g>'+
             '<path d="M87.24 93.82C85.25 93.82 83.71 94.57 82.61 96.07C81.52 97.57 80.97 99.66 80.97 102.33C80.97 107.9 83.06 110.69 87.24 110.69C88.99 110.69 91.12 110.25 93.61 109.37V113.81C91.56 114.66 89.27 115.09 86.74 115.09C83.11 115.09 80.33 113.99 78.4 111.78C76.48 109.58 75.51 106.41 75.51 102.29C75.51 99.69 75.98 97.42 76.93 95.46C77.88 93.51 79.23 92.01 81 90.97C82.77 89.93 84.85 89.41 87.23 89.41C89.61 89.41 92.09 90 94.54 91.17L92.83 95.48C91.9 95.04 90.96 94.65 90.01 94.32C89.07 93.99 88.14 93.82 87.23 93.82H87.24Z" fill="black"/>'+
             '<path d="M109.5 114.75L103.48 95.15H103.33C103.55 99.14 103.65 101.8 103.65 103.13V114.75H98.92V89.76H106.13L112.04 108.87H112.14L118.41 89.76H125.62V114.75H120.68V102.92C120.68 102.36 120.68 101.72 120.71 100.99C120.73 100.26 120.8 98.32 120.94 95.18H120.79L114.35 114.75H109.5Z" fill="black"/>'+
@@ -207,746 +210,498 @@ $(document).ready(function(){
     {
         tar.append(elem);
     }
-    /// Основная функция
-    $moovFunc = function($numberObj,id,e){
-        if (e.which == 1){
-            
-            // считываем координаты мыши
-            $mouseD_x = e.pageX;
-            $mouseD_y = e.pageY;
-            // считываем координаты блока на который нажали
-            $elemCordX = e.currentTarget.getBoundingClientRect().left;
-            $elemCordY = e.currentTarget.getBoundingClientRect().top;
-            $elemCordXR = e.currentTarget.getBoundingClientRect().right;
-            // вычиляем смещение от позиции мыши для генерации нового объекта
-            $deltaX = $mouseD_x-$elemCordX;
-            $deltaY = $mouseD_y-$elemCordY;
-            $deltaXR = $elemCordXR-$mouseD_x;
-            // получаем html код модуля
-            $moovObj = $creatModul(id,$numberObj);
-            // добавляем на страницу(он скрыт)
-            $append($('.canvas-UI'),$moovObj)
-            $updateObjSize(id);
-            
-            // получаем добавленный модуль
-            $moovblModul = $('#'+id);
-            $moovblModul.css({
-                'cursor': 'grabbing'
-            });
-            // смещаем его так, чтобы он был ровно поверх модуля но который нажали
-            $moovblModul.offset({top: e.pageY-$deltaY, left: e.pageX-$deltaX});
-            // отображаем модуль
-            
-            $moovblModul.show();
-            
-            $('body').css({
-                'pointer-events':'none'
-            });
-            $('#container').css({
-                'pointer-events':'auto'
-            });
+    $calculateMouseOffset = function($e){
+        $mouseD_x = $e.pageX;
+        $mouseD_y = $e.pageY;
+        // считываем координаты блока на который нажали
+        $elemCordX = $e.currentTarget.getBoundingClientRect().left;
+        $elemCordY = $e.currentTarget.getBoundingClientRect().top;
+        $elemCordXR = $e.currentTarget.getBoundingClientRect().right;
+        // вычиляем смещение от позиции мыши для генерации нового объекта
+        $deltaX = $mouseD_x-$elemCordX;
+        $deltaY = $mouseD_y-$elemCordY;
+        return [$deltaX,$deltaY];
+    };
+    $calculateMouseOffsetMoovbl = function($e,$tarId){
+        $mouseD_x = $e.pageX;
+        $mouseD_y = $e.pageY;
+        $tar = document.getElementById($tarId);
+        // считываем координаты блока на который нажали
+        $elemCordX = $tar.getBoundingClientRect().left;
+        $elemCordY = $tar.getBoundingClientRect().top;
+        $elemCordXR = $tar.getBoundingClientRect().right;
+        // вычиляем смещение от позиции мыши для генерации нового объекта
+        $deltaX = $mouseD_x-$elemCordX;
+        $deltaY = $mouseD_y-$elemCordY;
+        return [$deltaX,$deltaY];
+    };
+    $spawnElem = function($numberObj,$id,$e){
+        $offsetClick = $calculateMouseOffset($e);
+        $deltaX = $offsetClick[0];
+        $deltaY = $offsetClick[1];
+        // получаем html код модуля
+        $moovObj = $creatModul($id,$numberObj);
+        // добавляем на страницу(он скрыт)
+        $append($('.canvas-UI'),$moovObj)
+        $updateObjSize($id);
+        
+        // получаем добавленный модуль
+        $moovblModul = $('#'+$id);
+        $moovblModul.css({
+            'cursor': 'grabbing'
+        });
+        // смещаем его так, чтобы он был ровно поверх модуля но который нажали
+        $moovblModul.offset({top: $e.pageY-$deltaY, left: $e.pageX-$deltaX});
+        // отображаем модуль
+        
+        $moovblModul.show();
+        
+        $('body').css({
+            'pointer-events':'none'
+        });
+        $('#container').css({
+            'pointer-events':'auto'
+        });
+    };
+    $findMinDistObj = function($id){
+        // данная функция запускается 
+        // имеем $id - элемент который перетаскиваем
+        // appendenObj = ['id':'lx','tx','rx','by'] - массив который содержит id и координаты уже размещенных объектов
+        $resulPos = 0; // 1 2 3 4 5 6 7 8
+        // запускаем основной цикл обхода в нем мы от каждой вершины до каждой вершины будем смотреть дистанцию
+        // и находить минимальную
+        // получам координаты вершин нашего объекта
+        $elem = document.getElementById($id);
+        $elemRect = $elem.getBoundingClientRect();
 
+        $TLx = $elemRect.left;
+        $TLy = $elemRect.top;
+
+        $TRx = $elemRect.right;
+        $TRy = $elemRect.top;
+
+        $BRx = $elemRect.right;
+        $BRy = $elemRect.bottom;
+
+        $BLx = $elemRect.left;
+        $BLy = $elemRect.bottom;
+        $resultDistanse = 9999;
+        $reultIDelem = 0; 
+        if(appendedObj.size>0){
+            for(let key of appendedObj.keys()){
+                $pos1 = true;
+                $pos2 = true;
+                $pos3 = true;
+                $pos4 = true;
+                $pos5 = true;
+                $pos6 = true;
+                $pos7 = true;
+                $pos8 = true;
+                if(key == $id){
+                    continue;
+                }
+                $dist = function(x1,y1,x2,y2){
+                    return Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+                }
+                $tCordY = appendedObj.get(key)[0];
+                $rCordX = appendedObj.get(key)[2];
+                $lCordX = appendedObj.get(key)[1];
+                $bCordY = appendedObj.get(key)[3];
+                // сначала нужно выяснить разрешенные позиции
+                $allowPos = $AllowedPositions(key,$id);
+                //console.log(key,$allowPos);
+                $pos1 = $allowPos[0];
+                $pos2 = $allowPos[1];
+                $pos3 = $allowPos[2];
+                $pos4 = $allowPos[3];
+                $pos5 = $allowPos[4];
+                $pos6 = $allowPos[5];
+                $pos7 = $allowPos[6];
+                $pos8 = $allowPos[7];
+
+                // после этого нужно вычислить минимальную дистанцию смещения до разрешенных позиций
+                // здесь в зависимости от разрешенной позиции будем считать расстояние смещения
+
+                // координаты вершин притендента на клейку
+                $prTLx = appendedObj.get(key)[0];
+                $prTLy = appendedObj.get(key)[1];
+
+                $prTRx = appendedObj.get(key)[2];
+                $prTRy = appendedObj.get(key)[1];
+
+                $prBRx = appendedObj.get(key)[2];
+                $prBRy = appendedObj.get(key)[3];
+
+                $prBLx = appendedObj.get(key)[0];
+                $prBLy = appendedObj.get(key)[3];
+                //////
+                if($pos1){ // от левой верхней до правой верхней
+                    $distX =  $TLx-$prTRx;
+                    $distY =  $TLy-$prTRy;
+                    $distResPr = Math.sqrt($distX*$distX+$distY*$distY);
+                    //console.log($distResPr);
+                    if($distResPr<$resultDistanse){
+                        $resultDistanse = $distResPr;
+                        $reultIDelem = key;
+                        $resulPos = 1;
+                    }
+                }
+                if($pos2){ // от правой нижней до првой верхней
+                    $distX =  $BRx-$prTRx;
+                    $distY =  $BRy-$prTRy;
+                    $distResPr = Math.sqrt($distX*$distX+$distY*$distY);
+                    if($distResPr<$resultDistanse){
+                        $resultDistanse = $distResPr;
+                        $reultIDelem = key;
+                        $resulPos = 2;
+                    }
+                }
+                if($pos3){
+                    $distX =  $BLx-$prTLx;
+                    $distY =  $BLy-$prTLy;
+                    $distResPr = Math.sqrt($distX*$distX+$distY*$distY);
+                    if($distResPr<$resultDistanse){
+                        $resultDistanse = $distResPr;
+                        $reultIDelem = key;
+                        $resulPos = 3;
+                    }
+                }
+                if($pos4){
+                    $distX =  $TRx-$prTLx;
+                    $distY =  $TRy-$prTLy;
+                    $distResPr = Math.sqrt($distX*$distX+$distY*$distY);
+                    if($distResPr<$resultDistanse){
+                        $resultDistanse = $distResPr;
+                        $reultIDelem = key;
+                        $resulPos = 4;
+                    }
+                }
+                if($pos5){
+                    $distX =  $BRx-$prBLx;
+                    $distY =  $BRy-$prBLy;
+                    $distResPr = Math.sqrt($distX*$distX+$distY*$distY);
+                    if($distResPr<$resultDistanse){
+                        $resultDistanse = $distResPr;
+                        $reultIDelem = key;
+                        $resulPos = 5;
+                    }
+                }
+                if($pos6){
+                    $distX =  $TLx-$prBLx;
+                    $distY =  $TLy-$prBLy;
+                    $distResPr = Math.sqrt($distX*$distX+$distY*$distY);
+                    if($distResPr<$resultDistanse){
+                        $resultDistanse = $distResPr;
+                        $reultIDelem = key;
+                        $resulPos = 6;
+                    }
+                }
+                if($pos7){
+                    $distX =  $TRx-$prBRx;
+                    $distY =  $TRy-$prBRy;
+                    $distResPr = Math.sqrt($distX*$distX+$distY*$distY);
+                    if($distResPr<$resultDistanse){
+                        $resultDistanse = $distResPr;
+                        $reultIDelem = key;
+                        $resulPos = 7;
+                    }
+                }
+                if($pos8){
+                    $distX =  $BLx-$prBRx;
+                    $distY =  $BLy-$prBRy;
+                    $distResPr = Math.sqrt($distX*$distX+$distY*$distY);
+                    //console.log($distResPr);
+                    if($distResPr<$resultDistanse){
+                        $resultDistanse = $distResPr;
+                        $reultIDelem = key;
+                        $resulPos = 8;
+
+                    }
+                }
+            }
+            
+            if($resulPos != 0){
+                //console.log($reultIDelem,$resultDistanse,$resulPos);
+                return([$reultIDelem,$resultDistanse,$resulPos]);
+            }
+            return(0); // не нашли позицию для размещения, размещаем по месту расположения
+        }
+        else{
+            if(appendedObj.keys() == 0)
+            return(1); // добвыленных элементов всего 0, размещаем по месту расположения
+        }
+        return(appendedObj.keys());
+    };
+    $AllowedPositions = function($targetId,$ourId){
+        $elemRect = document.getElementById($ourId).getBoundingClientRect();
+        $ourWidth = $elemRect.right-$elemRect.left;
+        $ourHeight = $elemRect.bottom-$elemRect.top;
+
+        $pos1 = true;
+        $pos2 = true;
+        $pos3 = true;
+        $pos4 = true;
+        $pos5 = true;
+        $pos6 = true;
+        $pos7 = true;
+        $pos8 = true;
+
+        $tarElemRect = document.getElementById($targetId).getBoundingClientRect();
+        $lCordX = $tarElemRect.left;  
+        $rCordX = $tarElemRect.right; 
+        $tCordY = $tarElemRect.top;
+        $bCordY = $tarElemRect.bottom;
+        for ($id of appendedObj.keys()) {
+            if($id == $targetId || $id == $ourId){
+                continue;
+            }
+            ///pos1
+            $lX = appendedObj.get($id)[0];
+            $rX = appendedObj.get($id)[2];
+            $tY = appendedObj.get($id)[1];
+            $bY = appendedObj.get($id)[3];
+
+            $d1 = $tY - $tCordY; 
+            $d2 = $bY - $tCordY;
+            $d3 = $lX - $rCordX; 
+            $d4 = $rX - $rCordX;
+             
+            if($d2 >= 0.5 && $d4 >= 0.5){
+                if($id!=$ourId && $d1 <= $ourHeight-5 && $d3 <= $ourWidth-5){
+                    console.log($targetId,'pos1 false',$d2,'-расстояние до ',$id);
+                    $pos1 = false;
+                }
+            }
+
+            $d1 = $tCordY-$bY;
+            $d2 = $rCordX-$rX;
+            $d3 = $rCordX-$lX;
+            $d4 = $tCordY-$tY;
+            if($d3 > 0.5 && $d4 > 0.5){
+                if($id!=$ourId && $d2 <= $ourWidth-5 && $d1 <= $ourHeight-5){
+                    $pos2 = false;
+                }
+            }
+
+            $d1 = $tCordY-$bY;
+            $d2 = $lX-$lCordX;
+            $d3 = $lCordX-$rX;
+            $d4 = $tCordY-$tY;
+            if($d3 < -0.5 && $d4 > 0.5){
+                if($id!=$ourId && $d2 <= $ourWidth-5 && $d1 <= $ourHeight-5){
+                    $pos3 = false;
+                }
+            }
+
+            $d1 = $tY - $tCordY; 
+            $d2 = $bY - $tCordY; 
+            $d3 = $lCordX - $rX; 
+            $d4 = $lCordX-$lX;
+            if($d2 > 0.5 && $d4 > 0.5){
+                if($id!=$ourId && $d1 <= $ourHeight-5 && $d3 <= $ourWidth-5){
+                    $pos4 = false;
+                }
+            }
+            $d1 = $bY - $bCordY; 
+            $d2 = $bY - $tCordY; 
+            $d3 = $lCordX - $rX; 
+            $d4 = $lCordX-$lX;
+            $d5 = $tY - $bCordY;
+            if($d4 > 0.5){
+                if($id!=$ourId && ($d1 <= $ourHeight-5 && $d3 <= $ourWidth-5)||($d5 < 0 && $d3 <= $ourWidth-5)){
+                    $pos5 = false;
+                }
+            }
+            $d1 = $tY-$bCordY;
+            $d2 = $lX-$lCordX;
+            $d3 = $lCordX-$rX;
+            $d5 = $bCordY-$bY;
+            if($d3 < 0.5 && $d5 < 0.5){
+                if($id!=$ourId && $d2 <= $ourWidth-5 && $d1 <= $ourHeight-5){
+                    $pos6 = false;
+                }
+            }
+            //console.log($id,$targetId,$d4)
+            $d1 = $tY-$bCordY;
+            $d2 = $rCordX-$rX;
+            $d3 = $rCordX-$lX;
+            $d4 = $tCordY-$tY;
+            $d5 = $bCordY-$bY;
+            if($d3 > 0.5 && $d4 <= -0.5 && $d5 < -0.5){
+                if($id!=$ourId && $d2 <= $ourWidth-5 && $d1 <= $ourHeight-5){
+                    $pos7 = false;
+                }
+            }
+            $d1 = $bCordY - $bY; 
+            $d2 = $bY - $tCordY; 
+            $d3 = $lX - $rCordX;
+            $d4 = $rX - $rCordX; 
+            $d5 = $bCordY - $tY; 
+            if($d4 > 0.5){
+                if($id!=$ourId && $d5 > 0 && $d1 <= $ourHeight-5 && $d3 <= $ourWidth-5){
+                    $pos8 = false;
+                }
+            }
+        }
+        return([$pos1,$pos2,$pos3,$pos4,$pos5,$pos6,$pos7,$pos8]);
+    };
+    $setPositionObetcs = function($idOur,$idTar,$posTar){
+        // $idOur - объект который атачим
+        // $idTar - объект к которому атачим
+        // $posTar - куда собственно атачим
+        $resultPos = $posTar;
+
+        element1 = document.getElementById($idTar);  
+        var rect1 = element1.getBoundingClientRect(); // объект к которому клеим
+
+        element2 = element1 = document.getElementById($idOur); 
+        var rect2 = element2.getBoundingClientRect(); // объект который клеим
+
+        if($resultPos == 1){
+            $('#'+$idOur).offset({top: rect1.top, left: rect2.left - (rect2.left-rect1.right)});
+            $updateCord($idOur);
+        }
+        
+        if($resultPos == 2){
+            $('#'+$idOur).offset({top: rect2.top-(rect2.bottom-rect1.top), left: rect1.right-(rect2.right-rect2.left)});
+            $updateCord($idOur);
+        }
+        if($resultPos == 3){
+            $('#'+$idOur).offset({top: rect2.top-(rect2.bottom-rect1.top), left: rect1.left});
+            $updateCord($idOur);
+        }
+        if($resultPos == 4){
+            $('#'+$idOur).offset({top: rect2.top+(rect1.top - rect2.top), left: rect2.left+(rect1.left - rect2.right)});
+            $updateCord($idOur);
+        }
+        if($resultPos == 5){
+            $('#'+$idOur).offset({top: rect2.top-(rect2.bottom-rect1.bottom), left: rect2.left+(rect1.left - rect2.right)});
+            $updateCord($idOur);
+        }
+        if($resultPos == 6){
+            $('#'+$idOur).offset({top: rect1.bottom, left: rect1.left});
+            $updateCord($idOur);
+        }
+        if($resultPos == 7){
+            $('#'+$idOur).offset({top: rect1.bottom, left: rect1.right-(rect2.right-rect2.left)});
+            $updateCord($idOur);
+        }
+        if($resultPos == 8){
+            $('#'+$idOur).offset({top: rect2.top+(rect1.bottom - rect2.bottom), left: rect2.left - (rect2.left-rect1.right)});
+            $updateCord($idOur);
+        }
+        $updateCord($idOur);
+    };
+    $updateSize = function(){
+        let objContainer = document.getElementById('container');
+        rectcont = objContainer.getBoundingClientRect();
+        $containerRX = rectcont.right-$('#menu').width();
+        return $containerRX;
+    };
+
+    
+    /// Основная функция размещения объектов
+    $appendMainFunc = function($numberObj,id,e){
+        if (e.which == 1){
+            $spawnElem($numberObj,id,e);
+            $offsetClick = $calculateMouseOffset(e);
+            $deltaX = $offsetClick[0];
+            $deltaY = $offsetClick[1];
             // запускаем логику если мышь начала движение
             $(document).mousemove(function (e) {
                 // пока клавиша зажата и мышь движется меняем динамично смещение модуля
                 $moovblModul.offset({top: e.pageY-$deltaY, left: e.pageX-$deltaX});
             }).click(function (e) {
                 // запускаем логику если кнопка отжата
-                // проверяем что размещаемый объект находится в рабочей области
-                // вот тут логику нужно чутка переделать, чтобы нельзя было выносить за рамки рабочей области
-                if(e.pageX + $deltaXR < 99999999){                    
-                    // вычисляем координаты
-                    objAdd = document.getElementById(idObject);
-                    topY = objAdd.getBoundingClientRect().top;
-                    topX = objAdd.getBoundingClientRect().left;
-                    dovnY = topY + $('#'+idObject).height();
-                    dovnX = topX + $('#'+idObject).width();
+                objAdd = document.getElementById(idObject);
+                topY = objAdd.getBoundingClientRect().top;
+                topX = objAdd.getBoundingClientRect().left;
+                dovnY = topY + $('#'+idObject).height();
+                dovnX = topX + $('#'+idObject).width();
 
-                    // условие создание объекта если на доске ничего нет.
-                    if(groupMain.size == 0){
-                        // основная логика
-                        // добавляем объект высчитывем координаты его углов
-                        
-                        // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
-                        groupMain.set(idObject,[topX,topY,dovnX,dovnY]);
-                        // добавляем в массив размещенных обхектов id размещенного модуля
-                        appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
-                        // генерируем новый id для следующего модуля
-                        numberIdObjecy = numberIdObjecy + 1;
-                        idObject = "appended-modul" + numberIdObjecy;
-                        // открепляем событие на клик от текущего модуля
-                        $(this).unbind("click");
-                    }
-                    // если на доске что-то есть.
-                    else{
-                        /*ну а теперь самое сложно... наверное :D*/
-                        // вычисление расстояний и поиск минимального
-                        // основная логика
-                        
-                        $idFinedObjNew = "appended-modul0";
-                        $resultDistanse = 9999;
-                        $resultDistanse2 = 9999;
-                        $idFinedObj ="appended-modul0"; // храним id ближайшего модуля.
-
-                        $resPos1 = true; // правая грань верхний угол
-                        $resPos2 = true; // верхняя грань правый угол
-                        $resPos3 = true; //  верхняя грань левый угол
-                        $resPos4 = true; //  левая грань верхний угол
-                        $resPos5 = true; //   левая грань нижний угол
-                        $resPos6 = true; //   нижняя грань левый угол
-                        $resPos7 = true; //  нижняя грань правый угол
-                        $resPos8 = true; //  правая грань нижний угол
-
-                        // поиск объекта к котором будем клеится
-                        for (let key of appendedObj.keys()) {
-                            $dist = function(x1,y1,x2,y2){
-                                return Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
-                            };
-
-                            
-                            // нужно добавить проверку, что к объекту можно приклеить и с какой стороны приклеить.
-
-                            // идея 
-                            // проверять не только дистанцию до грани но и проверять две позиции стыковки на пересечения в случае стыковки
-                            // если будут пересечения, то браковать позицию стыковки. - гуд идея. Меньше памяти, меньше трудоемкость.
-                            
-                            // взависимоси от стороны высчитывается расстояние до грани.
-                            // нужно записать так же с какой стороны клеить.
-
-
-                            $lCordX = appendedObj.get(key)[0]; // координата левой грани притендента
-                            $rCordX = appendedObj.get(key)[2]; // координата правой грани притендента
-                            $tCordY = appendedObj.get(key)[1]; // координата верхней грани притендента
-                            $bCordY = appendedObj.get(key)[3]; // координата нижней грани притендента
-
-                            //topY - верхняя грань нашего размещаемого объекта
-                            //topX - левая грань объекта
-                            //dovnY - нижняя грань,
-                            //dovnX  - правая грань.
-
-                            /////////////////////////////////////////////////////////
-
-                            // координаты центра перемещаемого объекта,
-                            // нам нужны расстояния от центра граней до центра граней
-                            $cordCenterMoovObjX = (topX+dovnX)/2;
-                            $cordCenterMoovObjY = (topY+dovnY)/2;
-                            
-                            // координаты центра левой грани
-                            $cordCenterMoovObjGrLX = topX;
-                            $cordCenterMoovObjGrLY = topY + (dovnY-topY)/2;
-
-                            // координаты центра правой грани перемещаемого объекта
-                            $cordCenterMoovObjGrRX = dovnX;
-                            $cordCenterMoovObjGrRY = topY + (dovnY-topY)/2;
-
-                            //координаты центра верхней грани
-                            $cordCenterMoovObjGrTX = topX + (dovnX-topX)/2;
-                            $cordCenterMoovObjGrTY = topY;
-
-                            //координаты центра нижней грани
-                            $cordCenterMoovObjGrDX = topX + (dovnX-topX)/2;
-                            $cordCenterMoovObjGrDY = dovnY;
-
-                            /////////////////////////////////////////////////////////
-                            /////////////////////////////////////////
-
-                            // координаты центра нижней грани
-                            $cordCenterDovnGrX = $lCordX+($rCordX-$lCordX)/2;
-                            $cordCenterDovnGrY = $bCordY;
-
-                            // координаты центра верхней грани
-                            $cordCenterTopGrX = $lCordX+($rCordX-$lCordX)/2;
-                            $cordCenterTopGrY = $tCordY;
-
-                            // координаты центра левой грани
-                            $cordCenterLeftGrX = $lCordX;
-                            $cordCenterLeftGrY = $tCordY+($bCordY-$tCordY)/2;
-
-                            // координаты центра правой грани
-                            $cordCenterRightGrX = $rCordX;
-                            $cordCenterRightGrY = $tCordY+($bCordY-$tCordY)/2;
-
-                            //////////////////////////////////////////
-
-                            ///////////////////////////////////////////////////////////
-                            //// здесь код проверки позиций на разрешение стыковки ////
-                            ///////////////////////////////////////////////////////////
-
-                            $pos1 = true; // правая грань верхний угол
-                            $pos2 = true; // верхняя грань правый угол
-                            $pos3 = true; //  верхняя грань левый угол
-                            $pos4 = true; //  левая грань верхний угол
-                            $pos5 = true; //   левая грань нижний угол
-                            $pos6 = true; //   нижняя грань левый угол
-                            $pos7 = true; //  нижняя грань правый угол
-                            $pos8 = true; //  правая грань нижний угол
-
-                            // допустим есть объект key(id) и есть список всех объектов, как проврить можно ли стыковать
-                            // к верхнему правому углу? минимальное расстояние от правой верхней вершины до
-                            // верхней грани остальных обеъктов, у которыйх ось y удалена в право от оси y объекта key(id) должно быть
-                            // больше чем ширина объекта idObject. 
-                            
-                            //////////////////////////////////////////
-                            //
-                            //      2________1
-                            //      |        |
-                            //      |        |
-                            //      |        |
-                            //      |________| 
-                            //      3        4
-                            //
-                            /////////////// переменные которые уже обьявленны и нам потребуются/////////////
-                            //                                                                             /
-                            //  $lCordX = appendedObj.get(key)[0]; // координата левой грани притендента   /
-                            //  $rCordX = appendedObj.get(key)[2]; // координата правой грани притендента  /
-                            //  $tCordY = appendedObj.get(key)[1]; // координата верхней грани притендента /
-                            //  $bCordY = appendedObj.get(key)[3]; // координата нижней грани притендента  /
-                            //                                                                             /
-                            ////////////////////////////////////////////////////////////////////////////////
-                            // цикл для определения позиций возможной стыковки.
-                            for (let id of appendedObj.keys()) {
-                                /////////// блок кода для правой грани правой вершины//////////////////////////////
-                                $lX = appendedObj.get(id)[0];
-                                $rX = appendedObj.get(id)[2];
-                                $tY = appendedObj.get(id)[1];
-                                $bY = appendedObj.get(id)[3];
-
-                                $d1 = $tY - $tCordY; // от верхней до верхней
-                                $d2 = $bY - $tCordY; // от нижней до верхней
-                                $d3 = $lX - $rCordX; // от левой до правой
-                                $d4 = $rX - $rCordX; // от правой до правой грани
-                                if($d2 > 0 && $d4 > 0){
-                                    if(id!=key && $d1 < $('#'+idObject).height() && $d3 < $('#'+idObject).width()){
-                                        $pos1 = false;
-                                    }
-                                }
-                                /////////////////////////////////////////////////////////////////////////////////////
-                                /////////// блок кода для верхней грани правой вершины//////////////////////////////
-                                $lX = appendedObj.get(id)[0];
-                                $rX = appendedObj.get(id)[2];
-                                $tY = appendedObj.get(id)[1];
-                                $bY = appendedObj.get(id)[3];
-
-                                $d1 = $tCordY-$bY;
-                                $d2 = $rCordX-$rX;
-                                $d3 = $rCordX-$lX;
-                                $d4 = $tCordY-$tY;
-                                if($d3 > 0 && $d4 > 0){
-                                    if(id!=key && $d2 < $('#'+idObject).width() && $d1 < $('#'+idObject).height()){
-                                        $pos2 = false;
-                                    }
-                                }
-                                ////////////////////////////////////////////////////////////////////////////////////
-                                /////////// блок кода для верхней грани левой вершины//////////////////////////////
-                                $lX = appendedObj.get(id)[0];
-                                $rX = appendedObj.get(id)[2];
-                                $tY = appendedObj.get(id)[1];
-                                $bY = appendedObj.get(id)[3];
-
-                                $d1 = $tCordY-$bY;
-                                $d2 = $lX-$lCordX;
-                                $d3 = $lCordX-$rX;
-                                $d4 = $tCordY-$tY;
-                                if($d3 < 0 && $d4 > 0){
-                                    if(id!=key && $d2 < $('#'+idObject).width() && $d1 < $('#'+idObject).height()){
-                                        $pos3 = false;
-                                    }
-                                }
-                                ////////////////////////////////////////////////////////////////////////////////////
-                                /////////// блок кода для левой грани верхней вершины//////////////////////////////
-                                $lX = appendedObj.get(id)[0];
-                                $rX = appendedObj.get(id)[2];
-                                $tY = appendedObj.get(id)[1];
-                                $bY = appendedObj.get(id)[3];
-
-                                $d1 = $tY - $tCordY; 
-                                $d2 = $bY - $tCordY; 
-                                $d3 = $lCordX - $rX; 
-                                $d4 = $lCordX-$lX;
-                                if($d2 > 0 && $d4 > 0){
-                                    if(id!=key && $d1 < $('#'+idObject).height() && $d3 < $('#'+idObject).width()){
-                                        $pos4 = false;
-                                    }
-                                }
-                                ////////////////////////////////////////////////////////////////////////////////////
-                                /////////// блок кода для левой грани нижней вершины//////////////////////////////
-                                $lX = appendedObj.get(id)[0];
-                                $rX = appendedObj.get(id)[2];
-                                $tY = appendedObj.get(id)[1];
-                                $bY = appendedObj.get(id)[3];
-
-                                $d1 = $bY - $bCordY; 
-                                $d2 = $bY - $tCordY; 
-                                $d3 = $lCordX - $rX; 
-                                $d4 = $lCordX-$lX;
-                                $d5 = $tY - $bCordY;// расстояние от верхней до нижней границыы
-                                if($d4 > 0){
-                                    if(id!=key && ($d1 < $('#'+idObject).height() && $d3 < $('#'+idObject).width())||($d5 < 0 && $d3 < $('#'+idObject).width())){
-                                        $pos5 = false;
-                                    }
-                                }
-                                ////////////////////////////////////////////////////////////////////////////////////
-                                /////////// блок кода для нижней грани левой вершины//////////////////////////////
-                                $lX = appendedObj.get(id)[0];
-                                $rX = appendedObj.get(id)[2];
-                                $tY = appendedObj.get(id)[1];
-                                $bY = appendedObj.get(id)[3];
-
-                                $d1 = $tY-$bCordY;
-                                $d2 = $lX-$lCordX;
-                                $d3 = $lCordX-$rX;
-                                $d5 = $bCordY-$bY;
-                                if($d3 < 0 && $d4 <= 0 && $d5 < 0){
-                                    if(id!=key && $d2 < $('#'+idObject).width() && $d1 < $('#'+idObject).height()){
-                                        $pos6 = false;
-                                    }
-                                }
-                                ////////////////////////////////////////////////////////////////////////////////////
-                                /////////// блок кода для нижней грани правой вершины//////////////////////////////
-                                $lX = appendedObj.get(id)[0];
-                                $rX = appendedObj.get(id)[2];
-                                $tY = appendedObj.get(id)[1];
-                                $bY = appendedObj.get(id)[3];
-
-                                $d1 = $tY-$bCordY;
-                                $d2 = $rCordX-$rX;
-                                $d3 = $rCordX-$lX;
-                                $d4 = $tCordY-$tY;
-                                $d5 = $bCordY-$bY;
-                                if($d3 > 0 && $d4 <= 0 && $d5 < 0){
-                                    if(id!=key && $d2 < $('#'+idObject).width() && $d1 < $('#'+idObject).height()){
-                                        $pos7 = false;
-                                    }
-                                }
-                                ////////////////////////////////////////////////////////////////////////////////////
-                                /////////// блок кода для правой грани нижней вершины//////////////////////////////
-                                $lX = appendedObj.get(id)[0];
-                                $rX = appendedObj.get(id)[2];
-                                $tY = appendedObj.get(id)[1];
-                                $bY = appendedObj.get(id)[3];
-
-                                $d1 = $bCordY - $bY; 
-                                $d2 = $bY - $tCordY; 
-                                $d3 = $lX - $rCordX;
-                                $d4 = $rX - $rCordX; 
-                                $d5 = $bCordY - $tY; 
-                                if($d4 > 0){
-                                    if(id!=key && $d5 > 0 && $d1 < $('#'+idObject).height() && $d3 < $('#'+idObject).width()){
-                                        $pos8 = false;
-                                    }
-                                }
-                                ////////////////////////////////////////////////////////////////////////////////////
-                            }
-                            ///////////////////////////////////////////////////////////
-                            ////////////////////// end block //////////////////////////
-                            ///////////////////////////////////////////////////////////
-
-
-
-                            
-                            // дистанция от центра размещаемого до центра нижней грани рассматриваемого размещенного
-                            // pos6 или pos7 должны быть true.
-                            $dist1 = 99999999;
-                            $dist2 = 99999999;
-                            $dist3 = 99999999;
-                            $dist4 = 99999999;
-
-                            if($pos1 || $pos2 || $pos3 || $pos4 || $pos5 || $pos6 || $pos7 || $pos8){
-                                if($pos6 || $pos7){
-    
-                                    $d1 = $dist($cordCenterMoovObjGrRX,$cordCenterMoovObjGrRY,$cordCenterDovnGrX,$cordCenterDovnGrY);
-                                    $d2 = $dist($cordCenterMoovObjGrTX,$cordCenterMoovObjGrTY,$cordCenterDovnGrX,$cordCenterDovnGrY);
-                                    $d3 = $dist($cordCenterMoovObjGrLX,$cordCenterMoovObjGrLY,$cordCenterDovnGrX,$cordCenterDovnGrY);
-                                    $d4 = $dist($cordCenterMoovObjGrDX,$cordCenterMoovObjGrDY,$cordCenterDovnGrX,$cordCenterDovnGrY);
-    
-                                    //$dist1 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterDovnGrX,$cordCenterDovnGrY);
-                                    $dist1 = Math.min($d1,$d2,$d3,$d4);
-                                }
-                                // дистанция от центра размещаемого до центра верхней грани рассматриваемого размещенного
-                                // pos2 или pos3 должны быть true.
-                                if($pos2 || $pos3){
-                                    $d1 = $dist($cordCenterMoovObjGrRX,$cordCenterMoovObjGrRY,$cordCenterTopGrX,$cordCenterTopGrY);
-                                    $d2 = $dist($cordCenterMoovObjGrTX,$cordCenterMoovObjGrTY,$cordCenterTopGrX,$cordCenterTopGrY);
-                                    $d3 = $dist($cordCenterMoovObjGrLX,$cordCenterMoovObjGrLY,$cordCenterTopGrX,$cordCenterTopGrY);
-                                    $d4 = $dist($cordCenterMoovObjGrDX,$cordCenterMoovObjGrDY,$cordCenterTopGrX,$cordCenterTopGrY);
-                                    
-                                    //$dist2 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterTopGrX,$cordCenterTopGrY);
-                                    $dist2 = Math.min($d1,$d2,$d3,$d4);
-                                }
-                                // дистанция от центра размещаемого до центра левой грани рассматриваемого размещенного
-                                // pos4 или pos5 должны быть true.
-                                if($pos4 || $pos5){
-                                    $d1 = $dist($cordCenterMoovObjGrRX,$cordCenterMoovObjGrRY,$cordCenterLeftGrX,$cordCenterLeftGrY);
-                                    $d2 = $dist($cordCenterMoovObjGrTX,$cordCenterMoovObjGrTY,$cordCenterLeftGrX,$cordCenterLeftGrY);
-                                    $d3 = $dist($cordCenterMoovObjGrLX,$cordCenterMoovObjGrLY,$cordCenterLeftGrX,$cordCenterLeftGrY);
-                                    $d4 = $dist($cordCenterMoovObjGrDX,$cordCenterMoovObjGrDY,$cordCenterLeftGrX,$cordCenterLeftGrY);
-    
-                                    //$dist3 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterLeftGrX ,$cordCenterLeftGrY);
-                                    $dist3 = Math.min($d1,$d2,$d3,$d4);
-                                }
-                                // дистанция от центра размещаемого до центра правой грани рассматриваемого размещенного
-                                // pos1 или pos8 должны быть true.
-                                if($pos1 || $pos8){
-                                    $d1 = $dist($cordCenterMoovObjGrRX,$cordCenterMoovObjGrRY,$cordCenterRightGrX,$cordCenterRightGrY);
-                                    $d2 = $dist($cordCenterMoovObjGrTX,$cordCenterMoovObjGrTY,$cordCenterRightGrX,$cordCenterRightGrY);
-                                    $d3 = $dist($cordCenterMoovObjGrLX,$cordCenterMoovObjGrLY,$cordCenterRightGrX,$cordCenterRightGrY);
-                                    $d4 = $dist($cordCenterMoovObjGrDX,$cordCenterMoovObjGrDY,$cordCenterRightGrX,$cordCenterRightGrY);
-                                    //$dist4 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterRightGrX ,$cordCenterRightGrY);
-                                    $dist4 = Math.min($d1,$d2,$d3,$d4);
-                                }
-                            }
-                            else{
-
-                                $dist1 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterDovnGrX,$cordCenterDovnGrY);
-                                $dist2 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterTopGrX,$cordCenterTopGrY);
-                                $dist3 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterLeftGrX ,$cordCenterLeftGrY);
-                                $dist4 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterRightGrX ,$cordCenterRightGrY);
-                                $distanse2 = Math.min($dist1,$dist2,$dist3,$dist4);
-                                if($distanse2 < $resultDistanse2){
-                                    $resultDistanse2 = $distanse2; // это для проверки наложения в случае еси подходящих объектов для стыковки нет.
-                                    $idFinedObj = key;
-                                }
-                                continue;
-                            }
-
-                            
-
-                            $distanse = Math.min($dist1,$dist2,$dist3,$dist4);
-                            
-                            // на данном этапе у нас есть информация о истанции до объекта размещения а так же о разрешенных
-                            // позициях прикрепления
-
-                            $minDistanse = 30+$dist(topX,topY,$cordCenterMoovObjX,$cordCenterMoovObjY);
-                            //console.log($minDistanse,$distanse,key);
-                            if($('#'+idObject).hasClass('B')){
-                                $minDistanse = 130;
-                            }
-                            if($('#'+idObject).hasClass('BM')){
-                                $minDistanse = 130;
-                            }
-                            if($('#'+idObject).hasClass('CM')){
-                                $minDistanse = 130;
-                            }
-                            if($('#'+idObject).hasClass('C')){
-                                $minDistanse = 130;
-                            }
-                            if($('#'+idObject).hasClass('CB')){
-                                $minDistanse = 130;
-                            }
-                            //console.log($distanse,$dist1,$dist2,$dist3,$dist4);
-                            
-                            // проверяем что дистанция подходящая. По умолчанию до переопределения дистанция у нас они не подходящие
-                            // соответвенно если все позиции запрещенные мы не должны попасть в этот блок
-                            ///console.log($dist1,$dist2,$dist3,$dist4,$distanse2,$idFinedObj);
-                            
-                            if($distanse < $resultDistanse && $distanse < $minDistanse){
-                                $resultDistanse = $distanse;
-                                // перезависывем переменные
-                                // здесь так же нужно перезаписать глобальные переменные разрешенных позиций клейки для объекта
-                                if(appendedObj.size < 1){
-                                    $idFinedObjOLD = key;
-                                    $idFinedObjNew = key;
-                                }
-                                else{
-                                    $idFinedObjOLD = $idFinedObjNew;
-                                    $idFinedObjNew = key;
-                                    $resPos1 = $pos1; // правая грань верхний угол
-                                    $resPos2 = $pos2; // верхняя грань правый угол
-                                    $resPos3 = $pos3; //  верхняя грань левый угол
-                                    $resPos4 = $pos4; //  левая грань верхний угол
-                                    $resPos5 = $pos5; //   левая грань нижний угол
-                                    $resPos6 = $pos6; //   нижняя грань левый угол
-                                    $resPos7 = $pos7; //  нижняя грань правый угол
-                                    $resPos8 = $pos8; //  правая грань нижний угол
-                                }
-                            }
-                        }
-
-                        // по выходу из цикла нам нужно знать объект к которому клеить и разрешенные позиции клейки
-                        // или нужно знать что разрешение стыковки ни с каким объектом не получено
-                        // это возможно в случае если в определенном радиусе minDistanse нет объектов с разрешенной позицией клейки
-                        // тогда нужно проверить что не происходит наложение по текущему месту разрешения
-                        // если наложения нет оставить объект на месте
-                        // если наложение есть то не размещать объект.
-                        if($resultDistanse < 9999){
-                            // "клеим"
-                            //element = this;
-                            //var rect = element.getBoundingClientRect();
-                            //console.log(rect.top, rect.right, rect.bottom, rect.left);
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                            
-                            // $resPos1 = $pos1; // правая грань верхний угол
-                            // $resPos2 = $pos2; // верхняя грань правый угол
-                            // $resPos3 = $pos3; //  верхняя грань левый угол
-                            // $resPos4 = $pos4; //  левая грань верхний угол
-                            // $resPos5 = $pos5; //   левая грань нижний угол
-                            // $resPos6 = $pos6; //   нижняя грань левый угол
-                            // $resPos7 = $pos7; //  нижняя грань правый угол
-                            // $resPos8 = $pos8; //  правая грань нижний угол
-
-                            // мы имеем информацию о разрешенных позициях для клейки
-                            //console.log($resPos1,$resPos2,$resPos3,$resPos4,$resPos5,$resPos6,$resPos7,$resPos8,$idFinedObjNew);
-                            $updateCord = function(){
-                                objAdd = document.getElementById(idObject);
-                                topY = objAdd.getBoundingClientRect().top;
-                                topX = objAdd.getBoundingClientRect().left;
-                                dovnY = topY + $('#'+idObject).height();
-                                dovnX = topX + $('#'+idObject).width();
-                                groupMain.set(idObject,[topX,topY,dovnX,dovnY]);
-                                // добавляем в массив размещенных обхектов id размещенного модуля
-                                appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
-                            }
-
-
-                            element1 = document.getElementById($idFinedObjNew);  
-                            var rect1 = element1.getBoundingClientRect(); // объект к которому клеим
-
-                            element2 = element1 = document.getElementById(idObject); 
-                            var rect2 = element2.getBoundingClientRect(); // объект который клеим
-                            
-                            // $distans1Vert  - расстояние от нижней границы обж1 до нижней   границы обж2
-                            // $distans2Vert  - расстояние от нижней границы обж1 до верхней  границы обж2
-                            // $distans3Vert  - расстояние от верхней границы обж1 до нижней  границы обж2
-                            // $distans4Vert  - расстояние от верхней границы обж1 до верхней границы обж2
-                            // $attachPosVert - позиция приклеивания по вертикали
-                            // ниже происходит вычисление минимально расстояние до всех позиций атача
-                            // а нужно считать минимально расстояние только до разрешенной позиции атача
-                            // 
-                            // 
-                            //
-                            //
-                            ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-                            $resultDist1 = 9999;
-                            $resultDist2 = 9999;
-                            $resultDist3 = 9999;
-                            $resultDist4 = 9999;
-                            $resultDist5 = 9999;
-                            $resultDist6 = 9999;
-                            $resultDist7 = 9999;
-                            $resultDist8 = 9999;
-                            $distanse1Vert = 9999;
-                            $distanse1Horisont = 9999;
-                            $distanse2Vert = 9999;
-                            $distanse2Horisont = 9999;
-                            $distanse3Vert = 9999;
-                            $distanse3Horisont = 9999;
-                            $distanse4Vert = 9999;
-                            $distanse4Horisont = 9999;
-                            $distanse5Vert = 9999;
-                            $distanse5Horisont = 9999;
-                            $distanse6Vert = 9999;
-                            $distanse6Horisont = 9999;
-                            $distanse7Vert = 9999;
-                            $distanse7Horisont = 9999;
-                            $distanse8Vert = 9999;
-                            $distanse8Horisont = 9999;
-                            if($resPos1){
-                                $distanse1Vert = rect1.top - rect2.top;
-                                $distanse1Horisont = rect1.right - rect2.left;
-                                $resultDist1 = Math.sqrt($distanse1Vert*$distanse1Vert+$distanse1Horisont*$distanse1Horisont);
-                            }
-                            if($resPos2){
-                                $distanse2Vert = rect1.top - rect2.bottom;
-                                $distanse2Horisont = rect1.right - rect2.right;
-                                $resultDist2 = Math.sqrt($distanse2Vert*$distanse2Vert+$distanse2Horisont*$distanse2Horisont);
-                            }
-                            if($resPos3){
-                                $distanse3Vert = rect1.top - rect2.bottom;
-                                $distanse3Horisont = rect1.left - rect2.left;
-                                $resultDist3 = Math.sqrt($distanse3Vert*$distanse3Vert+$distanse3Horisont*$distanse3Horisont);
-                            }
-                            if($resPos4){
-                                $distanse4Vert = rect1.top - rect2.top;
-                                $distanse4Horisont = rect1.left - rect2.right;
-                                $resultDist4 = Math.sqrt($distanse4Vert*$distanse4Vert+$distanse4Horisont*$distanse4Horisont);
-                            }
-                            if($resPos5){
-                                $distanse5Vert = rect1.bottom - rect2.bottom;
-                                $distanse5Horisont = rect1.left  - rect2.right;
-                                $resultDist5 = Math.sqrt($distanse5Vert*$distanse5Vert+$distanse5Horisont*$distanse5Horisont);
-                            }
-                            if($resPos6){
-                                $distanse6Vert = rect1.bottom -  rect2.top;
-                                $distanse6Horisont =  rect1.left - rect2.left;
-                                $resultDist6 = Math.sqrt($distanse6Vert*$distanse6Vert+$distanse6Horisont*$distanse6Horisont);
-                            }
-                            if($resPos7){
-                                $distanse7Vert = rect1.bottom - rect2.top;
-                                $distanse7Horisont = rect1.right - rect2.right;
-                                $resultDist7 = Math.sqrt($distanse7Vert*$distanse7Vert+$distanse7Horisont*$distanse7Horisont);
-                            }
-                            if($resPos8){
-                                $distanse8Vert = rect1.bottom - rect2.bottom;
-                                $distanse8Horisont = rect1.right - rect2.left;
-                                $resultDist8 = Math.sqrt($distanse8Vert*$distanse8Vert+$distanse8Horisont*$distanse8Horisont);
-                            }
-                            $resultDistanse = Math.min($resultDist1,$resultDist2,$resultDist3,$resultDist4,$resultDist5,$resultDist6,$resultDist7,$resultDist8);
-                            $resultPos = 0;
-                            if($resultDistanse == $resultDist1){
-                                $resultPos = 1
-                            }
-                            if($resultDistanse == $resultDist2){
-                                $resultPos = 2
-                            }
-                            if($resultDistanse == $resultDist3){
-                                $resultPos = 3
-                            }
-                            if($resultDistanse == $resultDist4){
-                                $resultPos = 4
-                            }
-                            if($resultDistanse == $resultDist5){
-                                $resultPos = 5
-                            }
-                            if($resultDistanse == $resultDist6){
-                                $resultPos = 6
-                            }
-                            if($resultDistanse == $resultDist7){
-                                $resultPos = 7
-                            }
-                            if($resultDistanse == $resultDist8){
-                                $resultPos = 8
-                            }
-                            if($resultPos == 1){
-                                $('#'+idObject).offset({top: rect1.top, left: rect2.left - (rect2.left-rect1.right)+1});
-                                $updateCord();
-                            }
-                            
-                            if($resultPos == 2){
-                                $('#'+idObject).offset({top: rect2.top-(rect2.bottom-rect1.top)-1, left: rect1.right-(rect2.right-rect2.left)});
-                                $updateCord();
-                            }
-                            if($resultPos == 3){
-                                $('#'+idObject).offset({top: rect2.top-(rect2.bottom-rect1.top)-1, left: rect1.left});
-                                $updateCord();
-                            }
-                            if($resultPos == 4){
-                                $('#'+idObject).offset({top: rect2.top+(rect1.top - rect2.top), left: rect2.left+(rect1.left - rect2.right)-1});
-                                $updateCord();
-                            }
-                            if($resultPos == 5){
-                                $('#'+idObject).offset({top: rect2.top-(rect2.bottom-rect1.bottom), left: rect2.left+(rect1.left - rect2.right)-1});
-                                $updateCord();
-                            }
-                            if($resultPos == 6){
-                                $('#'+idObject).offset({top: rect1.bottom+1, left: rect1.left});
-                                $updateCord();
-                            }
-                            if($resultPos == 7){
-                                $('#'+idObject).offset({top: rect1.bottom+1, left: rect1.right-(rect2.right-rect2.left)});
-                                $updateCord();
-                            }
-                            if($resultPos == 8){
-                                $('#'+idObject).offset({top: rect2.top+(rect1.bottom - rect2.bottom), left: rect2.left - (rect2.left-rect1.right)+1});
-                                $updateCord();
-                            }
-
-
-
-                            
-
-                            
-
-                            // увеличиваем индекс
-                            numberIdObjecy = numberIdObjecy + 1;
-                            idObject = "appended-modul" + numberIdObjecy;
-                            // открепляем событие на клик от текущего модуля
-                            $(this).unbind("click");
-                            
-                        }
-                        else {
-                            element3 = document.getElementById(idObject);  
-                            var rect3 = element3.getBoundingClientRect(); // объект к которому клеим
-                            element4 = document.getElementById($idFinedObj);  
-                            var rect4 = element4.getBoundingClientRect(); // объект к которому клеим
-
-                            if((rect4.left < rect3.left && rect4.right > rect3.left) || (rect4.top < rect3.bottom && rect4.bottom > rect3.bottom )){
-                                $moovblModul.remove();
-                                $(this).unbind("click");
-                            }
-                            else {
-                                // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
-                                groupMain.set(idObject,[topX,topY,dovnX,dovnY]);
-                                // добавляем в массив размещенных обхектов id размещенного модуля
-                                appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
-
-                                rotationObj.set(idObject,false);
-                                // генерируем новый id для следующего модуля
-                                numberIdObjecy = numberIdObjecy + 1;
-                                idObject = "appended-modul" + numberIdObjecy;
-                                // открепляем событие на клик от текущего модуля
-                                $(this).unbind("click");
-                            }
-                            
-                        }
-                    }
-                }
-                else{
-                    console.log(1);
-                    $moovblModul.remove();
+                // условие создание объекта если на доске ничего нет.
+                if(groupMain.size == 0){
+                    // основная логика
+                    // добавляем объект высчитывем координаты его углов
+                    // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
+                    groupMain.set(idObject,[topX,topY,dovnX,dovnY]);
+                    // добавляем в массив размещенных обхектов id размещенного модуля
+                    appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
+                    // генерируем новый id для следующего модуля
+                    numberIdObjecy = numberIdObjecy + 1;
+                    idObject = "appended-modul" + numberIdObjecy;
+                    // открепляем событие на клик от текущего модуля
                     $(this).unbind("click");
+                }
+                // если на доске что-то есть.
+                else{
+                    /*ну а теперь самое сложно... наверное :D*/
+                    // вычисление расстояний и поиск минимального
+                    // основная логика
+                    $resPosAndIdF = $findMinDistObj(idObject);
+                    //console.log($resPosAndIdF);
+                    $resultPos = $resPosAndIdF[2];
+                    $findeObj = $resPosAndIdF[0];
+                    // далее нужна функция стыковки объектов
+                    $setPositionObetcs(idObject,$findeObj,$resultPos);
+                    // увеличиваем индекс
+                    numberIdObjecy = numberIdObjecy + 1;
+                    idObject = "appended-modul" + numberIdObjecy;
+                    rotationObj.set(idObject,false);
+                    // открепляем событие на клик от текущего модуля
+                    $(this).unbind("click");
+                    
                 }
                 // условия создания объекта если на доске что-то есть.
                 $(this).unbind("mousemove");
             });
         };
     };
-
-
-
-
-
     $(".B").mousedown(function(e){
-        $moovFunc(1,idObject,e);
+        $appendMainFunc(1,idObject,e);
     });
     $(".BM").mousedown(function(e){
-        $moovFunc(2,idObject,e);
+        $appendMainFunc(2,idObject,e);
     });
     $(".C").mousedown(function(e){
-        $moovFunc(3,idObject,e);
+        $appendMainFunc(3,idObject,e);
     });
     $(".CM").mousedown(function(e){
-        $moovFunc(4,idObject,e);
+        $appendMainFunc(4,idObject,e);
     });
     $(".CB").mousedown(function(e){
-        $moovFunc(5,idObject,e);
+        $appendMainFunc(5,idObject,e);
     });
+
+
+    // логика выделения
     selectObj = 0;
     $( '.canvas-UI' ).on( 'click', function( event1 ) {
         obj2 = event1.target;
         idObj2 = $(obj2).attr('id');
-        if(idObj2 != 'container'){
-            if(!idObj2){
-                // блок кода если кликнули по имени блока
-                // нужно получить сам модуль
-                idObj2 = $(obj2).parent().attr('id');
-                if(!idObj2){
-                    idObj2 = $(obj2).parent().parent().attr('id');
-                }
-                if(selectObj != 0){
-                    $(selectObj).css({
-                        'border-color':'#2C2C2C'
-                    });
-                    selectObj = document.getElementById(idObj2);
-                }
-                else{
-                    selectObj = document.getElementById(idObj2);
-                }
-            }
-            else{
-                if(selectObj != 0){
-                    
-                    $(selectObj).css({
-                        'border-color':'#2C2C2C'
-                    });
-                    selectObj = document.getElementById(idObj2);
-                }
-                else{
-                    selectObj = document.getElementById(idObj2);
-                }
-            }
-            $(selectObj).css({
-                'border-color':'green'
+        if($(obj2).parent().parent().hasClass('appended-modul')){
+            console.log(selectObj);
+            $(selectObj).children().children('.modul-border').css({
+                'stroke':'black'
             });
+
+            selectObj = $(obj2).parent().parent().attr('id');
+            $('#'+selectObj).children().children('.modul-border').css({
+                'stroke':'red'
+            });
+            selectObj = document.getElementById(selectObj);
+        }
+        else if($(obj2).parent().hasClass('appended-modul')){
+            console.log(2);
+
+        }
+        else{
+            if($(obj2).attr('class')!="RotAndDel-Rot"){
+                $('.modul-border').css({
+                    'stroke':'black'
+                });
+                selectObj = 0;
+            }
         }
     });
 
@@ -954,7 +709,6 @@ $(document).ready(function(){
 
     $( '.canvas-UI' ).on( 'mousedown', function( event1 ) {
         obj = event1.target;
-        //console.log(obj)
         classObj =$(obj).attr('class');
         if(classObj == "RotAndDel-Rot" || $(obj).parent().parent().hasClass("RotAndDel-Rot")){
             if($(selectObj).hasClass('appended-modul')){
@@ -967,7 +721,6 @@ $(document).ready(function(){
                             'transform':'rotate(90deg)'
 
                         });
-                        $updateCordRotObj($(selectObj).attr('id')); 
                         $(selectObj).mousedown();
                         rotationObj.set($(selectObj).attr('id'),true);
                         $(selectObj).css({
@@ -979,8 +732,12 @@ $(document).ready(function(){
                             'transform-origin':'center center',
                             'transform':'rotate(0deg)'
                         });
-                        $updateCordRotObj($(selectObj).attr('id')); 
-                        $(selectObj).mousedown();
+                        $resPosAndIdF = $findMinDistObj(idObj); // найти ближайший
+                        if($resPosAndIdF){
+                            $resultPos = $resPosAndIdF[2];
+                            $findeObj = $resPosAndIdF[0];
+                            $setPositionObetcs(idObj,$findeObj,$resultPos);
+                        }
                         rotationObj.set($(selectObj).attr('id'),false);
                     }
                 }
@@ -1019,536 +776,36 @@ $(document).ready(function(){
                 idObj = $(event1.target).parent().parent().attr('id');
                 obj = document.getElementById(idObj);
             }
-            // if($(obj).hasClass('name')){
-            //     obj = $(event1.Target).parent();
-            //     console.log(obj);
-            //     idObj = $(event1.Target).parent().attr('id');
-            // }
             if (event1.which == 1 && $(obj).hasClass('appended-modul')){
                 
-                // считываем координаты мыши
-                $mouseD_x = event1.pageX;
-                $mouseD_y = event1.pageY;
-                // считываем координаты блока на который нажали
-                $elemCordX = obj.getBoundingClientRect().left;
-                $elemCordY = obj.getBoundingClientRect().top;
-                $elemCordXR = obj.getBoundingClientRect().right;
-                // вычиляем смещение от позиции мыши для генерации нового объекта
-                $deltaX = $mouseD_x-$elemCordX;
-                $deltaY = $mouseD_y-$elemCordY;
-                $deltaXR = $elemCordXR-$mouseD_x;
+                $offsetClick = $calculateMouseOffsetMoovbl(event1,idObj);
+                $deltaX = $offsetClick[0];
+                $deltaY = $offsetClick[1];
                 $moovblModul = $('#'+idObj);
                 $(document).mousemove(function (e) {
                     $('#'+idObj).css({
                         'z-index':'9999'
                     });
                     $moovblModul.offset({top: e.pageY-$deltaY, left: e.pageX-$deltaX});
-                    topY = obj.getBoundingClientRect().top;
-                    topX = obj.getBoundingClientRect().left;
-                    dovnY = topY + $('#'+idObj).height();
-                    dovnX = topX + $('#'+idObj).width();
-                    groupMain.set(idObj,[topX,topY,dovnX,dovnY]);
-                    // добавляем в массив размещенных обхектов id размещенного модуля
-                    appendedObj.set(idObj,[topX,topY,dovnX,dovnY]);
                 }).click(function (e) {
-                    topY = obj.getBoundingClientRect().top;
-                    topX = obj.getBoundingClientRect().left;
-                    dovnY = topY + $('#'+idObj).height();
-                    dovnX = topX + $('#'+idObj).width();
                     if(appendedObj.size == 1){
                         $(this).unbind("click");
-                        $(this).unbind("mousemove");
                     }
                     else{
-                        $idFinedObjNew = "appended-modul0";
-                        $resultDistanse = 9999;
-                        $resultDistanse2 = 9999;
-                        $idFinedObj ="appended-modul0"; // храним id ближайшего модуля.
-
-                        $resPos1 = true; // правая грань верхний угол
-                        $resPos2 = true; // верхняя грань правый угол
-                        $resPos3 = true; //  верхняя грань левый угол
-                        $resPos4 = true; //  левая грань верхний угол
-                        $resPos5 = true; //   левая грань нижний угол
-                        $resPos6 = true; //   нижняя грань левый угол
-                        $resPos7 = true; //  нижняя грань правый угол
-                        $resPos8 = true; //  правая грань нижний угол
-
-                        for (let key of appendedObj.keys()) {
-                            if(key == idObj) {
-                                continue;
-                            }
-                            $dist = function(x1,y1,x2,y2){
-                                return Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
-                            };
-                            $lCordX = appendedObj.get(key)[0]; // координата левой грани притендента
-                            $rCordX = appendedObj.get(key)[2]; // координата правой грани притендента
-                            $tCordY = appendedObj.get(key)[1]; // координата верхней грани притендента
-                            $bCordY = appendedObj.get(key)[3];
-                            /////////////////////////////////////////////////////////
-
-                            // координаты центра перемещаемого объекта,
-                            // нам нужны расстояния от центра граней до центра граней
-                            $cordCenterMoovObjX = (topX+dovnX)/2;
-                            $cordCenterMoovObjY = (topY+dovnY)/2;
-                            
-                            // координаты центра левой грани
-                            $cordCenterMoovObjGrLX = topX;
-                            $cordCenterMoovObjGrLY = topY + (dovnY-topY)/2;
-
-                            // координаты центра правой грани перемещаемого объекта
-                            $cordCenterMoovObjGrRX = dovnX;
-                            $cordCenterMoovObjGrRY = topY + (dovnY-topY)/2;
-
-                            //координаты центра верхней грани
-                            $cordCenterMoovObjGrTX = topX + (dovnX-topX)/2;
-                            $cordCenterMoovObjGrTY = topY;
-
-                            //координаты центра нижней грани
-                            $cordCenterMoovObjGrDX = topX + (dovnX-topX)/2;
-                            $cordCenterMoovObjGrDY = dovnY;
-
-                            /////////////////////////////////////////////////////////
-                            // координаты центра нижней грани
-                            $cordCenterDovnGrX = $lCordX+($rCordX-$lCordX)/2;
-                            $cordCenterDovnGrY = $bCordY;
-
-                            // координаты центра верхней грани
-                            $cordCenterTopGrX = $lCordX+($rCordX-$lCordX)/2;
-                            $cordCenterTopGrY = $tCordY;
-
-                            // координаты центра левой грани
-                            $cordCenterLeftGrX = $lCordX;
-                            $cordCenterLeftGrY = $tCordY+($bCordY-$tCordY)/2;
-
-                            // координаты центра правой грани
-                            $cordCenterRightGrX = $rCordX;
-                            $cordCenterRightGrY = $tCordY+($bCordY-$tCordY)/2;
-
-                            $pos1 = true; // правая грань верхний угол
-                            $pos2 = true; // верхняя грань правый угол
-                            $pos3 = true; //  верхняя грань левый угол
-                            $pos4 = true; //  левая грань верхний угол
-                            $pos5 = true; //   левая грань нижний угол
-                            $pos6 = true; //   нижняя грань левый угол
-                            $pos7 = true; //  нижняя грань правый угол
-                            $pos8 = true; //  правая грань нижний угол
-                            for (let id of appendedObj.keys()) {
-                                if(idObj == id) {
-                                    continue;
-                                }
-                                /////////// блок кода для правой грани правой вершины//////////////////////////////
-                                $lX = appendedObj.get(id)[0];
-                                $rX = appendedObj.get(id)[2];
-                                $tY = appendedObj.get(id)[1];
-                                $bY = appendedObj.get(id)[3];
-
-                                $d1 = $tY - $tCordY; // от верхней до верхней
-                                $d2 = $bY - $tCordY; // от нижней до верхней
-                                $d3 = $lX - $rCordX; // от левой до правой
-                                $d4 = $rX - $rCordX;
-                                if($d2 > 0 && $d4 > 0){
-                                    if(id!=key && $d1 < $('#'+idObj).height()+1 && $d3 < $('#'+idObj).width()+1){
-                                        $pos1 = false;
-                                    }
-                                }
-                                $lX = appendedObj.get(id)[0];
-                                $rX = appendedObj.get(id)[2];
-                                $tY = appendedObj.get(id)[1];
-                                $bY = appendedObj.get(id)[3];
-
-                                $d1 = $tCordY-$bY;
-                                $d2 = $rCordX-$rX;
-                                $d3 = $rCordX-$lX;
-                                $d4 = $tCordY-$tY;
-                                if($d3 > 0 && $d4 > 0){
-                                    if(id!=key && $d2 < $('#'+idObj).width()+1 && $d1 < $('#'+idObj).height()+1){
-                                        $pos2 = false;
-                                    }
-                                }
-                                $lX = appendedObj.get(id)[0];
-                                $rX = appendedObj.get(id)[2];
-                                $tY = appendedObj.get(id)[1];
-                                $bY = appendedObj.get(id)[3];
-
-                                $d1 = $tCordY-$bY;
-                                $d2 = $lX-$lCordX;
-                                $d3 = $lCordX-$rX;
-                                $d4 = $tCordY-$tY;
-                                if($d3 < 0 && $d4 > 0){
-                                    if(id!=key && $d2 < $('#'+idObj).width()+1 && $d1 < $('#'+idObj).height()+1){
-                                        $pos3 = false;
-                                    }
-                                }
-
-                                $lX = appendedObj.get(id)[0];
-                                $rX = appendedObj.get(id)[2];
-                                $tY = appendedObj.get(id)[1];
-                                $bY = appendedObj.get(id)[3];
-
-                                $d1 = $tY - $tCordY; 
-                                $d2 = $bY - $tCordY; 
-                                $d3 = $lCordX - $rX; 
-                                $d4 = $lCordX-$lX;
-                                if($d2 > 0 && $d4 > 0){
-                                    if(id!=key && $d1 < $('#'+idObj).height()+1 && $d3 < $('#'+idObj).width()+1){
-                                        $pos4 = false;
-                                    }
-                                }
-                                ////////////////////////////////////////////////////////////////////////////////////
-                                /////////// блок кода для левой грани нижней вершины//////////////////////////////
-                                $lX = appendedObj.get(id)[0];
-                                $rX = appendedObj.get(id)[2];
-                                $tY = appendedObj.get(id)[1];
-                                $bY = appendedObj.get(id)[3];
-
-                                $d1 = $bY - $bCordY;
-                                $d2 = $bY - $tCordY; 
-                                $d3 = $lCordX - $rX; 
-                                $d4 = $lCordX-$lX;
-                                $d5 = $tY - $bCordY;
-                                if($d4 > 0){
-                                    if(id!=key && ($d1 < $('#'+idObj).height()+1 && $d3 < $('#'+idObj).width()+1)||($d5 < 0 && $d3 < $('#'+idObj).width()+1)){
-                                        $pos5 = false;
-                                    }
-                                }
-                                ////////////////////////////////////////////////////////////////////////////////////
-                                /////////// блок кода для нижней грани левой вершины//////////////////////////////
-                                $lX = appendedObj.get(id)[0];
-                                $rX = appendedObj.get(id)[2];
-                                $tY = appendedObj.get(id)[1];
-                                $bY = appendedObj.get(id)[3];
-
-                                $d1 = $tY-$bCordY;
-                                $d2 = $lX-$lCordX;
-                                $d3 = $lCordX-$rX;
-                                $d4 = $tCordY-$tY;
-                                $d5 = $bCordY-$bY;
-                                if($d3 < 0 && $d4 <= 0 && $d5 < 0){
-                                    if(id!=key && $d2 < $('#'+idObj).width()+1 && $d1 < $('#'+idObj).height()+1){
-                                        $pos6 = false;
-                                    }
-                                }
-                                ////////////////////////////////////////////////////////////////////////////////////
-                                /////////// блок кода для нижней грани правой вершины//////////////////////////////
-                                $lX = appendedObj.get(id)[0];
-                                $rX = appendedObj.get(id)[2];
-                                $tY = appendedObj.get(id)[1];
-                                $bY = appendedObj.get(id)[3];
-
-                                $d1 = $tY-$bCordY; // верхння грань для стыковки должна быть ниже
-                                $d2 = $rCordX-$rX;
-                                $d3 = $rCordX-$lX;
-                                $d4 = $tCordY-$tY;
-                                $d5 = $bCordY-$bY;
-                                if($d3 > 0 && $d4 <= 0 && $d5 < 0){
-                                    if(id!=key && $d2 < $('#'+idObj).width()+1 && $d1 < $('#'+idObj).height()+1){
-                                        $pos7 = false;
-                                    }
-                                }
-                                //if($d1 < 0 && $d2 < $('#'+idObj).width())
-                                ////////////////////////////////////////////////////////////////////////////////////
-                                /////////// блок кода для правой грани нижней вершины//////////////////////////////
-                                $lX = appendedObj.get(id)[0];
-                                $rX = appendedObj.get(id)[2];
-                                $tY = appendedObj.get(id)[1];
-                                $bY = appendedObj.get(id)[3];
-
-                                $d1 = $bCordY - $bY; 
-                                $d2 = $bY - $tCordY; 
-                                $d3 = $lX - $rCordX;
-                                $d4 = $rX - $rCordX; 
-                                $d5 = $bCordY - $tY; 
-                                if($d4 > 0){
-                                    if(id!=key && $d5 > 0 && $d1 < $('#'+idObj).height()+1 && $d3 < $('#'+idObj).width()+1){
-                                        $pos8 = false;
-                                    }
-                                }
-                                console.log(id,$pos6,$pos7)
-                            }
-                            $dist1 = 99999999;
-                            $dist2 = 99999999;
-                            $dist3 = 99999999;
-                            $dist4 = 99999999;
-                            // переделываем поиск дистанций, от центра граней до центра граней
-                            // пока как работает, смотри дистанцию от точки центр
-                            if($pos1 || $pos2 || $pos3 || $pos4 || $pos5 || $pos6 || $pos7 || $pos8){
-                                if($pos6 || $pos7){
-
-                                    $d1 = $dist($cordCenterMoovObjGrRX,$cordCenterMoovObjGrRY,$cordCenterDovnGrX,$cordCenterDovnGrY);
-                                    $d2 = $dist($cordCenterMoovObjGrTX,$cordCenterMoovObjGrTY,$cordCenterDovnGrX,$cordCenterDovnGrY);
-                                    $d3 = $dist($cordCenterMoovObjGrLX,$cordCenterMoovObjGrLY,$cordCenterDovnGrX,$cordCenterDovnGrY);
-                                    $d4 = $dist($cordCenterMoovObjGrDX,$cordCenterMoovObjGrDY,$cordCenterDovnGrX,$cordCenterDovnGrY);
-
-                                    //$dist1 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterDovnGrX,$cordCenterDovnGrY);
-                                    $dist1 = Math.min($d1,$d2,$d3,$d4);
-                                }
-                                // дистанция от центра размещаемого до центра верхней грани рассматриваемого размещенного
-                                // pos2 или pos3 должны быть true.
-                                if($pos2 || $pos3){
-                                    $d1 = $dist($cordCenterMoovObjGrRX,$cordCenterMoovObjGrRY,$cordCenterTopGrX,$cordCenterTopGrY);
-                                    $d2 = $dist($cordCenterMoovObjGrTX,$cordCenterMoovObjGrTY,$cordCenterTopGrX,$cordCenterTopGrY);
-                                    $d3 = $dist($cordCenterMoovObjGrLX,$cordCenterMoovObjGrLY,$cordCenterTopGrX,$cordCenterTopGrY);
-                                    $d4 = $dist($cordCenterMoovObjGrDX,$cordCenterMoovObjGrDY,$cordCenterTopGrX,$cordCenterTopGrY);
-                                    
-                                    //$dist2 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterTopGrX,$cordCenterTopGrY);
-                                    $dist2 = Math.min($d1,$d2,$d3,$d4);
-                                }
-                                // дистанция от центра размещаемого до центра левой грани рассматриваемого размещенного
-                                // pos4 или pos5 должны быть true.
-                                if($pos4 || $pos5){
-                                    $d1 = $dist($cordCenterMoovObjGrRX,$cordCenterMoovObjGrRY,$cordCenterLeftGrX,$cordCenterLeftGrY);
-                                    $d2 = $dist($cordCenterMoovObjGrTX,$cordCenterMoovObjGrTY,$cordCenterLeftGrX,$cordCenterLeftGrY);
-                                    $d3 = $dist($cordCenterMoovObjGrLX,$cordCenterMoovObjGrLY,$cordCenterLeftGrX,$cordCenterLeftGrY);
-                                    $d4 = $dist($cordCenterMoovObjGrDX,$cordCenterMoovObjGrDY,$cordCenterLeftGrX,$cordCenterLeftGrY);
-
-                                    //$dist3 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterLeftGrX ,$cordCenterLeftGrY);
-                                    $dist3 = Math.min($d1,$d2,$d3,$d4);
-                                }
-                                // дистанция от центра размещаемого до центра правой грани рассматриваемого размещенного
-                                // pos1 или pos8 должны быть true.
-                                if($pos1 || $pos8){
-                                    $d1 = $dist($cordCenterMoovObjGrRX,$cordCenterMoovObjGrRY,$cordCenterRightGrX,$cordCenterRightGrY);
-                                    $d2 = $dist($cordCenterMoovObjGrTX,$cordCenterMoovObjGrTY,$cordCenterRightGrX,$cordCenterRightGrY);
-                                    $d3 = $dist($cordCenterMoovObjGrLX,$cordCenterMoovObjGrLY,$cordCenterRightGrX,$cordCenterRightGrY);
-                                    $d4 = $dist($cordCenterMoovObjGrDX,$cordCenterMoovObjGrDY,$cordCenterRightGrX,$cordCenterRightGrY);
-                                    //$dist4 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterRightGrX ,$cordCenterRightGrY);
-                                    $dist4 = Math.min($d1,$d2,$d3,$d4);
-                                }
-                            }
-                            else{
-                                $dist1 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterDovnGrX,$cordCenterDovnGrY);
-                                $dist2 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterTopGrX,$cordCenterTopGrY);
-                                $dist3 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterLeftGrX ,$cordCenterLeftGrY);
-                                $dist4 = $dist($cordCenterMoovObjX,$cordCenterMoovObjY,$cordCenterRightGrX ,$cordCenterRightGrY);
-                                $distanse2 = Math.min($dist1,$dist2,$dist3,$dist4);
-                                if($distanse2 < $resultDistanse2){
-                                    $resultDistanse2 = $distanse2; // это для проверки наложения в случае еси подходящих объектов для стыковки нет.
-                                    $idFinedObj = key;
-                                }
-                                continue;
-                            }
-                            $distanse = Math.min($dist1,$dist2,$dist3,$dist4);
-                            $minDistanse = 30+$dist(topX,topY,$cordCenterMoovObjX,$cordCenterMoovObjY);
-                            //console.log($minDistanse,$distanse,key);
-                            if($('#'+idObj).hasClass('B')){
-                                $minDistanse = 90;
-                            }
-                            if($('#'+idObj).hasClass('BM')){
-                                $minDistanse = 90;
-                            }
-                            if($('#'+idObj).hasClass('CM')){
-                                $minDistanse = 90;
-                            }
-                            if($('#'+idObj).hasClass('C')){
-                                $minDistanse = 90;
-                            }
-                            if($('#'+idObj).hasClass('CB')){
-                                $minDistanse = 90;
-                            }
-                            //console.log(key,$pos1,$pos2,$pos3,$pos4,$pos5,$pos6,$pos7,$pos8);
-                            if($distanse < $resultDistanse && $distanse < $minDistanse){
-                                $resultDistanse = $distanse;
-                                // перезависывем переменные
-                                // здесь так же нужно перезаписать глобальные переменные разрешенных позиций клейки для объекта
-                                if(appendedObj.size < 1){
-                                    $idFinedObjOLD = key;
-                                    $idFinedObjNew = key;
-                                }
-                                else{
-                                    $idFinedObjOLD = $idFinedObjNew;
-                                    $idFinedObjNew = key;
-                                    $resPos1 = $pos1; // правая грань верхний угол
-                                    $resPos2 = $pos2; // верхняя грань правый угол
-                                    $resPos3 = $pos3; //  верхняя грань левый угол
-                                    $resPos4 = $pos4; //  левая грань верхний угол
-                                    $resPos5 = $pos5; //   левая грань нижний угол
-                                    $resPos6 = $pos6; //   нижняя грань левый угол
-                                    $resPos7 = $pos7; //  нижняя грань правый угол
-                                    $resPos8 = $pos8; //  правая грань нижний угол
-                                    
-                                }
-                            }
-                        }
-                        if($resultDistanse < 9999){
-                            $updateCord = function(){
-                                objAdd = document.getElementById(idObj);
-                                topY = objAdd.getBoundingClientRect().top;
-                                topX = objAdd.getBoundingClientRect().left;
-                                dovnY = topY + $('#'+idObj).height();
-                                dovnX = topX + $('#'+idObj).width();
-                                groupMain.set(idObj,[topX,topY,dovnX,dovnY]);
-                                // добавляем в массив размещенных обхектов id размещенного модуля
-                                appendedObj.set(idObj,[topX,topY,dovnX,dovnY]);
-                            }
-                            element1 = document.getElementById($idFinedObjNew);  
-                            var rect1 = element1.getBoundingClientRect(); // объект к которому клеим
-
-                            element2 = element1 = document.getElementById(idObj); 
-                            var rect2 = element2.getBoundingClientRect(); // объект который клеим
-                            //console.log($idFinedObjNew);
-                            $resultDist1 = 9999;
-                            $resultDist2 = 9999;
-                            $resultDist3 = 9999;
-                            $resultDist4 = 9999;
-                            $resultDist5 = 9999;
-                            $resultDist6 = 9999;
-                            $resultDist7 = 9999;
-                            $resultDist8 = 9999;
-                            $distanse1Vert = 9999;
-                            $distanse1Horisont = 9999;
-                            $distanse2Vert = 9999;
-                            $distanse2Horisont = 9999;
-                            $distanse3Vert = 9999;
-                            $distanse3Horisont = 9999;
-                            $distanse4Vert = 9999;
-                            $distanse4Horisont = 9999;
-                            $distanse5Vert = 9999;
-                            $distanse5Horisont = 9999;
-                            $distanse6Vert = 9999;
-                            $distanse6Horisont = 9999;
-                            $distanse7Vert = 9999;
-                            $distanse7Horisont = 9999;
-                            $distanse8Vert = 9999;
-                            $distanse8Horisont = 9999;
-                            if($resPos1){
-                                $distanse1Vert = rect1.top - rect2.top;
-                                $distanse1Horisont = rect1.right - rect2.left;
-                                $resultDist1 = Math.sqrt($distanse1Vert*$distanse1Vert+$distanse1Horisont*$distanse1Horisont);
-                            }
-                            if($resPos2){
-                                $distanse2Vert = rect1.top - rect2.bottom;
-                                $distanse2Horisont = rect1.right - rect2.right;
-                                $resultDist2 = Math.sqrt($distanse2Vert*$distanse2Vert+$distanse2Horisont*$distanse2Horisont);
-                            }
-                            if($resPos3){
-                                $distanse3Vert = rect1.top - rect2.bottom;
-                                $distanse3Horisont = rect1.left - rect2.left;
-                                $resultDist3 = Math.sqrt($distanse3Vert*$distanse3Vert+$distanse3Horisont*$distanse3Horisont);
-                            }
-                            if($resPos4){
-                                $distanse4Vert = rect1.top - rect2.top;
-                                $distanse4Horisont = rect1.left - rect2.right;
-                                $resultDist4 = Math.sqrt($distanse4Vert*$distanse4Vert+$distanse4Horisont*$distanse4Horisont);
-                            }
-                            if($resPos5){
-                                $distanse5Vert = rect1.bottom - rect2.bottom;
-                                $distanse5Horisont = rect1.left  - rect2.right;
-                                $resultDist5 = Math.sqrt($distanse5Vert*$distanse5Vert+$distanse5Horisont*$distanse5Horisont);
-                            }
-                            if($resPos6){
-                                $distanse6Vert = rect1.bottom -  rect2.top;
-                                $distanse6Horisont =  rect1.left - rect2.left;
-                                $resultDist6 = Math.sqrt($distanse6Vert*$distanse6Vert+$distanse6Horisont*$distanse6Horisont);
-                            }
-                            if($resPos7){
-                                $distanse7Vert = rect1.bottom - rect2.top;
-                                $distanse7Horisont = rect1.right - rect2.right;
-                                $resultDist7 = Math.sqrt($distanse7Vert*$distanse7Vert+$distanse7Horisont*$distanse7Horisont);
-                            }
-                            if($resPos8){
-                                $distanse8Vert = rect1.bottom - rect2.bottom;
-                                $distanse8Horisont = rect1.right - rect2.left;
-                                $resultDist8 = Math.sqrt($distanse8Vert*$distanse8Vert+$distanse8Horisont*$distanse8Horisont);
-                            }
-                            $resultDistanse = Math.min($resultDist1,$resultDist2,$resultDist3,$resultDist4,$resultDist5,$resultDist6,$resultDist7,$resultDist8);
-                            $resultPos = 0;
-                            if($resultDistanse == $resultDist1){
-                                $resultPos = 1
-                            }
-                            if($resultDistanse == $resultDist2){
-                                $resultPos = 2
-                            }
-                            if($resultDistanse == $resultDist3){
-                                $resultPos = 3
-                            }
-                            if($resultDistanse == $resultDist4){
-                                $resultPos = 4
-                            }
-                            if($resultDistanse == $resultDist5){
-                                $resultPos = 5
-                            }
-                            if($resultDistanse == $resultDist6){
-                                $resultPos = 6
-                            }
-                            if($resultDistanse == $resultDist7){
-                                $resultPos = 7
-                            }
-                            if($resultDistanse == $resultDist8){
-                                $resultPos = 8
-                            }
-                            if($resultPos == 1){
-                                $('#'+idObj).offset({top: rect1.top, left: rect2.left - (rect2.left-rect1.right)+1});
-                                $updateCord();
-                            }
-                            
-                            if($resultPos == 2){
-                                $('#'+idObj).offset({top: rect2.top-(rect2.bottom-rect1.top)-1, left: rect1.right-(rect2.right-rect2.left)});
-                                $updateCord();
-                            }
-                            if($resultPos == 3){
-                                $('#'+idObj).offset({top: rect2.top-(rect2.bottom-rect1.top)-1, left: rect1.left});
-                                $updateCord();
-                            }
-                            if($resultPos == 4){
-                                $('#'+idObj).offset({top: rect2.top+(rect1.top - rect2.top), left: rect2.left+(rect1.left - rect2.right)-1});
-                                $updateCord();
-                            }
-                            if($resultPos == 5){
-                                $('#'+idObj).offset({top: rect2.top-(rect2.bottom-rect1.bottom), left: rect2.left+(rect1.left - rect2.right)-1});
-                                $updateCord();
-                            }
-                            if($resultPos == 6){
-                                $('#'+idObj).offset({top: rect1.bottom+1, left: rect1.left});
-                                $updateCord();
-                            }
-                            if($resultPos == 7){
-                                $('#'+idObj).offset({top: rect1.bottom+1, left: rect1.right-(rect2.right-rect2.left)});
-                                $updateCord();
-                            }
-                            if($resultPos == 8){
-                                $('#'+idObj).offset({top: rect2.top+(rect1.bottom - rect2.bottom), left: rect2.left - (rect2.left-rect1.right)+1});
-                                $updateCord();
-                            }
-                            $(this).unbind("click");
-                            $(this).unbind("mousemove");
-                        }
-                        else {
-                            var rect3 = obj.getBoundingClientRect(); // объект к которому клеим
-                            element4 = document.getElementById($idFinedObj);
-                            var rect4 = element4.getBoundingClientRect(); // объект к которому клеим
-                            // if((rect3.right < rect4.right && rect4.left < rect3.right) || (rect4.top < rect3.top && rect4.bottom > rect3.top )){
-                            //     appendedObj.delete(idObj);
-                            //     console.log(3);
-                            //     $(obj).remove();
-                            //     $(this).unbind("click");
-                            //     $(this).unbind("mousemove");
-                            // }
-                            // else{
-                                // if((rect4.left < rect3.left && rect4.right > rect3.left) || (rect4.top < rect3.bottom && rect4.bottom > rect3.bottom )){
-                                //     appendedObj.delete(idObj);
-                                //     console.log(2);
-                                //     $(this).unbind("mousemove");
-                                //     $(this).unbind("click");
-
-                                $(obj).remove();
-                                // }
-                                // else {
-                                // открепляем событие на клик от текущего модуля
-                                $(this).unbind("mousemove");
-                                $(this).unbind("click");
-                                //}
-                        
-                                //}
-                        }
-                        $('#'+idObj).css({
-                            'z-index':'999'
-                        });
-                        $(this).unbind("mousemove");
+                        //console.log(idObj);
+                        $resPosAndIdF = $findMinDistObj(idObj); // найти ближайший
+                        $resultPos = $resPosAndIdF[2];
+                        $findeObj = $resPosAndIdF[0];
+                        //console.log(idObj,$findeObj,$resultPos);
+                        $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
+                        // открепляем событие на клик от текущего модуля
                         $(this).unbind("click");
-                    }// end block add
+                        }
                     $(this).unbind("mousemove");
-                    $(this).unbind("click");
+                    $('#'+idObj).css({
+                        'z-index':'999'
+                    });
+
                 });
             }
         }
@@ -1613,7 +870,7 @@ $(document).ready(function(){
         topX = objAdd.getBoundingClientRect().left;
         dovnY = objAdd.getBoundingClientRect().bottom;
         dovnX = objAdd.getBoundingClientRect().right;
-        console.log(appendedObj.get($id));
+        console.log(objAdd);
         console.log(topY,topX,dovnY,dovnX);
         groupMain.set($id,[topX,topY,dovnX,dovnY]);
         // добавляем в массив размещенных обхектов id размещенного модуля

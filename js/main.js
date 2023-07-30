@@ -235,6 +235,7 @@ $(document).ready(function(){
         $deltaY = $mouseD_y-$elemCordY;
         return [$deltaX,$deltaY];
     };
+    /// Основная функция размещения объектов
     $spawnElem = function($numberObj,$id,$e){
         $offsetClick = $calculateMouseOffset($e);
         $deltaX = $offsetClick[0];
@@ -446,16 +447,26 @@ $(document).ready(function(){
         $pos7 = true;
         $pos8 = true;
 
-        $tarElemRect = document.getElementById($targetId).getBoundingClientRect();
-        $lCordX = $tarElemRect.left;  
-        $rCordX = $tarElemRect.right; 
-        $tCordY = $tarElemRect.top;
-        $bCordY = $tarElemRect.bottom;
+        // $tarElemRect = document.getElementById($targetId).getBoundingClientRect();
+        // $lCordX = $tarElemRect.left;  
+        // $rCordX = $tarElemRect.right; 
+        // $tCordY = $tarElemRect.top;
+        // $bCordY = $tarElemRect.bottom;
+
+        // $lCordX = $('#'+$targetId).position().left;
+        // $rCordX = $('#'+$targetId).position().left+$('#'+$targetId).width();
+        // $tCordY = $('#'+$targetId).position().top;
+        // $bCordY = $('#'+$targetId).position().top+$('#'+$targetId).height();
+        
         for ($id of appendedObj.keys()) {
             if($id == $targetId || $id == $ourId){
                 continue;
             }
             ///pos1
+            $lCordX = appendedObj.get($targetId)[0];
+            $rCordX = appendedObj.get($targetId)[2];
+            $tCordY = appendedObj.get($targetId)[1];
+            $bCordY = appendedObj.get($targetId)[3];
             $lX = appendedObj.get($id)[0];
             $rX = appendedObj.get($id)[2];
             $tY = appendedObj.get($id)[1];
@@ -472,7 +483,14 @@ $(document).ready(function(){
                     $pos1 = false;
                 }
             }
-
+            $lCordX = appendedObj.get($targetId)[0];
+            $rCordX = appendedObj.get($targetId)[2];
+            $tCordY = appendedObj.get($targetId)[1];
+            $bCordY = appendedObj.get($targetId)[3];
+            $lX = appendedObj.get($id)[0];
+            $rX = appendedObj.get($id)[2];
+            $tY = appendedObj.get($id)[1];
+            $bY = appendedObj.get($id)[3];
             $d1 = $tCordY-$bY;
             $d2 = $rCordX-$rX;
             $d3 = $rCordX-$lX;
@@ -482,7 +500,14 @@ $(document).ready(function(){
                     $pos2 = false;
                 }
             }
-
+            $lCordX = appendedObj.get($targetId)[0];
+            $rCordX = appendedObj.get($targetId)[2];
+            $tCordY = appendedObj.get($targetId)[1];
+            $bCordY = appendedObj.get($targetId)[3];
+            $lX = appendedObj.get($id)[0];
+            $rX = appendedObj.get($id)[2];
+            $tY = appendedObj.get($id)[1];
+            $bY = appendedObj.get($id)[3];
             $d1 = $tCordY-$bY;
             $d2 = $lX-$lCordX;
             $d3 = $lCordX-$rX;
@@ -492,7 +517,14 @@ $(document).ready(function(){
                     $pos3 = false;
                 }
             }
-
+            $lCordX = appendedObj.get($targetId)[0];
+            $rCordX = appendedObj.get($targetId)[2];
+            $tCordY = appendedObj.get($targetId)[1];
+            $bCordY = appendedObj.get($targetId)[3];
+            $lX = appendedObj.get($id)[0];
+            $rX = appendedObj.get($id)[2];
+            $tY = appendedObj.get($id)[1];
+            $bY = appendedObj.get($id)[3];
             $d1 = $tY - $tCordY; 
             $d2 = $bY - $tCordY; 
             $d3 = $lCordX - $rX; 
@@ -502,39 +534,77 @@ $(document).ready(function(){
                     $pos4 = false;
                 }
             }
+            $lCordX = appendedObj.get($targetId)[0];
+            $rCordX = appendedObj.get($targetId)[2];
+            $tCordY = appendedObj.get($targetId)[1];
+            $bCordY = appendedObj.get($targetId)[3];
+            $lX = appendedObj.get($id)[0];
+            $rX = appendedObj.get($id)[2];
+            $tY = appendedObj.get($id)[1];
+            $bY = appendedObj.get($id)[3];
             $d1 = $bY - $bCordY; 
             $d2 = $bY - $tCordY; 
             $d3 = $lCordX - $rX; 
             $d4 = $lCordX-$lX;
             $d5 = $tY - $bCordY;
-            if($d4 > 0.5){
+            if($d4 > 0.5 && $d2 > 0){
                 if($id!=$ourId && ($d1 <= $ourHeight-5 && $d3 <= $ourWidth-5)||($d5 < 0 && $d3 <= $ourWidth-5)){
                     $pos5 = false;
                 }
             }
+            $lCordX = appendedObj.get($targetId)[0];
+            $rCordX = appendedObj.get($targetId)[2];
+            $tCordY = appendedObj.get($targetId)[1];
+            $bCordY = appendedObj.get($targetId)[3];
+            $lX = appendedObj.get($id)[0];
+            $rX = appendedObj.get($id)[2];
+            $tY = appendedObj.get($id)[1];
+            $bY = appendedObj.get($id)[3];
             $d1 = $tY-$bCordY;
             $d2 = $lX-$lCordX;
             $d3 = $lCordX-$rX;
             $d5 = $bCordY-$bY;
-            if($d3 < -0.5 && $d5 < -0.5){
-                if($id!=$ourId && $d2 >= 0 && $d2 <= $ourWidth-5 && $d1 <= $ourHeight-5){
+            
+            if($d3 <= 0.0 && $d5 < -0.5){
+                if($id!=$ourId && $d2 >= -0.5 && $d2 <= $ourWidth-3 && $d1 <= $ourHeight-5){
                     $pos6 = false;
-                    console.log($id,$targetId,$d1,$d2,$d3,$d5,$pos6)
                 }
+                if($id!=$ourId && $d2 < 1 && $rX-$lCordX > -1 && $d1 <= $ourHeight-5){
+                    $pos6 = false;
+                } 
             }
             //alert(1);
             
             //console.log($id,$targetId,$d3,$d5)
+            $lCordX = appendedObj.get($targetId)[0];
+            $rCordX = appendedObj.get($targetId)[2];
+            $tCordY = appendedObj.get($targetId)[1];
+            $bCordY = appendedObj.get($targetId)[3];
+            $lX = appendedObj.get($id)[0];
+            $rX = appendedObj.get($id)[2];
+            $tY = appendedObj.get($id)[1];
+            $bY = appendedObj.get($id)[3];
             $d1 = $tY-$bCordY;
             $d2 = $rCordX-$rX;
             $d3 = $rCordX-$lX;
             $d4 = $tCordY-$tY;
             $d5 = $bCordY-$bY;
-            if($d3 > 0.5 && $d4 <= -0.5 && $d5 < -0.5){
-                if($id!=$ourId && $d2 >= 0 && $d2 <= $ourWidth-5 && $d1 <= $ourHeight-5){
+            if($d3 > -0.1 && $d4 <= 0.1 && $d5 < -1){
+                if($id!=$ourId && $d2 >= -0.5 && $d2 <= $ourWidth-3 && $d1 <= $ourHeight){
+                    $pos7 = false;
+                }
+                if($id!=$ourId && $d2 < -1.5 && $rCordX-$lX > 1.5 && $d1 <= $ourHeight){
                     $pos7 = false;
                 }
             }
+            $lCordX = appendedObj.get($targetId)[0];
+            $rCordX = appendedObj.get($targetId)[2];
+            $tCordY = appendedObj.get($targetId)[1];
+            $bCordY = appendedObj.get($targetId)[3];
+            $lX = appendedObj.get($id)[0];
+            $rX = appendedObj.get($id)[2];
+            $tY = appendedObj.get($id)[1];
+            $bY = appendedObj.get($id)[3];
             $d1 = $bCordY - $bY; 
             $d2 = $bY - $tCordY; 
             $d3 = $lX - $rCordX;
@@ -612,9 +682,6 @@ $(document).ready(function(){
         $containerRX = rectcont.right-$('#menu').width();
         return $containerRX;
     };
-
-    
-    /// Основная функция размещения объектов
     $appendMainFunc = function($numberObj,id,e){
         if (e.which == 1){
             $spawnElem($numberObj,id,e);
@@ -671,6 +738,7 @@ $(document).ready(function(){
             });
         };
     };
+    // крепим события на добавление
     $(".B").mousedown(function(e){
         $appendMainFunc(1,idObject,e);
     });

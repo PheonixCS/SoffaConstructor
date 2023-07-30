@@ -37,7 +37,8 @@ body {
     left:0;
 }
 .canvas{
-    position: absolute;
+    position: relative;
+    float: left;
     width: 85%;
     height: 100%;
     left:0;
@@ -49,7 +50,7 @@ body {
     right: 30px;
     top: 50%;
     margin-top: -56px;
-    z-index: 99;
+    z-index: 999;
 }
 .scale svg{
     display: flex;
@@ -61,7 +62,7 @@ body {
     height: 61px;
     width: 112px;
     text-align: center;
-    z-index: 99;
+    z-index: 999;
 }
 .RotAndDel svg{
     float: left;

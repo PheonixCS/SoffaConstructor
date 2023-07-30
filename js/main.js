@@ -1,4 +1,3 @@
-
 $(document).ready(function(){
     $('#board').css({
         'height':document.documentElement.clientHeight
@@ -24,22 +23,50 @@ $(document).ready(function(){
     });
     
     $baseScale = 100;
+
+    // меняем масштаб.
+    $basescale = 0.05;
     $('#'+'plusScale').mousedown(function(){
-        $baseScale = $baseScale + 3;
-        $('.canvas').css({
-            'zoom': $baseScale + '%',
-        });
-        //$('.canvas-container').offset({top:$('.canvas-container').offset().top*100/$baseScale,left:$('.canvas-container').offset().left*100/$baseScale});
-        //$moovblModul.offset({top: ($e.pageY-$deltaY)*100/$baseScale, left: ($e.pageX-$deltaX)*100/$baseScale});
+        $basescale = $basescale + 0.005;
+        if(appendedObj.size>0){
+            for($key of appendedObj.keys()){
+                $updateObjSize($key);
+                $updateCord($key);
+                $setPositionObetcs
+            }
+            for($key of appendedObj.keys()){
+                $resPosAndIdF = $findMinDistObj($key);
+                //console.log($resPosAndIdF);
+                $resultPos = $resPosAndIdF[2];
+                $findeObj = $resPosAndIdF[0];
+                $setPositionObetcs($key,$findeObj,$resultPos);
+            }
+            for($key of appendedObj.keys()){
+                $resPosAndIdF = $findMinDistObj($key);
+                //console.log($resPosAndIdF);
+                $resultPos = $resPosAndIdF[2];
+                $findeObj = $resPosAndIdF[0];
+                $setPositionObetcs($key,$findeObj,$resultPos);
+            }
+        }
     });
     $('#'+'minusScale').mousedown(function(){
-        $baseScale = $baseScale - 3;
-        $('.canvas').css({
-            'zoom': $baseScale + '%',
-        });
+        $basescale = $basescale - 0.005;
+        if(appendedObj.size>0){
+            for($key of appendedObj.keys()){
+                $updateObjSize($key);
+                $updateCord($key);
+            }
+            for($key of appendedObj.keys()){
+                $resPosAndIdF = $findMinDistObj($key);
+                //console.log($resPosAndIdF);
+                $resultPos = $resPosAndIdF[2];
+                $findeObj = $resPosAndIdF[0];
+                $setPositionObetcs($key,$findeObj,$resultPos);
+            }
+        }
         //$('appended-modul').offset({top:$('appended-modul').offset().top*100/$baseScale,left:$('appended-modul').offset().left*100/$baseScale});
     });
-    
     /* БЛОК ПЕРЕМЕННЫЕ*/
     // глобальные переменные для вычситывания индекса добавляемого модуля
     numberIdObjecy = 0;
@@ -1047,6 +1074,7 @@ $(document).ready(function(){
                     $('#'+idObj).css({
                         'z-index':'9999'
                     });
+                    //top: (e.pageY-$deltaY)*100/$baseScale, left: (e.pageX-$deltaX)*100/$baseScale
                     $moovblModul.offset({top: e.pageY-$deltaY, left: e.pageX-$deltaX});
                 }).click(function (e) {
                     $rightPosModul = $moovblModul.offset().left+$moovblModul.width();
@@ -1091,7 +1119,6 @@ $(document).ready(function(){
         }
     });
     $updateObjSize = function($idUpdObj){
-        $basescale = 0.05;
         if($('#'+$idUpdObj).hasClass('appendedB')){
             $bOriginWidth = 101;
             $bOriginHeight = 303;
@@ -1155,4 +1182,36 @@ $(document).ready(function(){
         // добавляем в массив размещенных обхектов id размещенного модуля
         appendedObj.set($id,[topX,topY,dovnX,dovnY]);
     }
+
+
+
+    // перемещение объектов по рабочей поверхности ////////
+    ///////////////////////////////////////////////////////
+
+
+    $(".canvas").mousedown(function(e1){
+        console.log($(e1.target).hasClass('canvas'));
+        if($(e1.target).hasClass('canvas')){
+            $cordX0 = e1.pageX;
+            $cordY0 = e1.pageY;
+            $(document).mousemove(function (e) {
+                $cordX1 = e.pageX;
+                $cordY1 = e.pageY;
+                $deltaX = $cordX1-$cordX0;
+                $deltaY = $cordY1-$cordY0;
+                for($key of appendedObj.keys()){
+                    $currentX = $('#'+$key).offset().left;
+                    $currentY = $('#'+$key).offset().top;
+                    $('#'+$key).offset({top: appendedObj.get($key)[1]+$deltaY, left: appendedObj.get($key)[0]+$deltaX});
+                }
+            }).click(function(){
+                for($key of appendedObj.keys()){
+                    $updateCord($key);
+                }
+                $(this).unbind("click");
+                $(this).unbind("mousemove");
+            });
+        }
+    });
+    ////////////////////////////////////////////////////////
 });

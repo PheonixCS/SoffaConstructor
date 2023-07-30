@@ -19,6 +19,9 @@ $(document).ready(function(){
             'border-color':'black',
         });
     });
+    $('.RotAndDel').css({
+        'display':'none'
+    });
     
     
     /* БЛОК ПЕРЕМЕННЫЕ*/
@@ -101,7 +104,7 @@ $(document).ready(function(){
             '<path d="M0 183.72L0 18.77C0 13.79 1.97001 9.02 5.48001 5.5C8.99001 1.98 13.74 0 18.7 0H81.8C86.76 0 91.52 1.98 95.02 5.5C98.52 9.02 100.5 13.79 100.5 18.77L100.5 183.72C100.5 188.7 98.53 193.47 95.02 196.99C91.51 200.51 86.76 202.49 81.8 202.49H18.7C13.74 202.49 8.98001 200.51 5.48001 196.99C1.97001 193.47 0 188.7 0 183.72Z" fill="white"/>'+
             '</mask>'+
             '<g mask="url(#mask1_47_240)">'+
-            '<path "modul-border" d="M0 183.72L0 18.77C0 13.79 1.97001 9.02 5.48001 5.5C8.99001 1.98 13.74 0 18.7 0H81.8C86.76 0 91.52 1.98 95.02 5.5C98.52 9.02 100.5 13.79 100.5 18.77L100.5 183.72C100.5 188.7 98.53 193.47 95.02 196.99C91.51 200.51 86.76 202.49 81.8 202.49H18.7C13.74 202.49 8.98001 200.51 5.48001 196.99C1.97001 193.47 0 188.7 0 183.72Z" stroke="black" stroke-width="8.99"/>'+
+            '<path class="modul-border" d="M0 183.72L0 18.77C0 13.79 1.97001 9.02 5.48001 5.5C8.99001 1.98 13.74 0 18.7 0H81.8C86.76 0 91.52 1.98 95.02 5.5C98.52 9.02 100.5 13.79 100.5 18.77L100.5 183.72C100.5 188.7 98.53 193.47 95.02 196.99C91.51 200.51 86.76 202.49 81.8 202.49H18.7C13.74 202.49 8.98001 200.51 5.48001 196.99C1.97001 193.47 0 188.7 0 183.72Z" stroke="black" stroke-width="8.99"/>'+
             '</g>'+
             '<path d="M59.41 120.59V118.81C59.41 117.02 59.12 115.71 58.55 114.88C57.97 114.05 57.11 113.63 55.94 113.63C54.77 113.63 53.96 114.05 53.45 114.89C52.94 115.73 52.69 117.18 52.69 119.23V120.58H59.41V120.59ZM48.35 120.59V118.51C48.35 115.25 49.01 112.74 50.33 110.96C51.65 109.18 53.52 108.3 55.94 108.3C61.15 108.3 63.75 111.74 63.75 118.62V125.9H38.76V110.12H43.13V120.61H48.34L48.35 120.59Z" fill="black"/>'+
             '<path d="M63.75 92.97L44.15 98.9901V99.14C48.14 98.92 50.8 98.8201 52.13 98.8201H63.75V103.55H38.76V96.34L57.87 90.4301V90.33L38.76 84.06V76.8501H63.75V81.79H51.92C51.36 81.79 50.72 81.79 49.99 81.76C49.26 81.74 47.32 81.67 44.18 81.53V81.6801L63.75 88.12V92.97Z" fill="black"/>'+
@@ -129,7 +132,7 @@ $(document).ready(function(){
             '<path d="M0 283.48L0 18.75C0 13.77 1.98 8.99999 5.5 5.48999C9.02 1.96999 13.79 0 18.77 0H183.73C188.71 0 193.48 1.97999 197 5.48999C200.52 9.00999 202.5 13.78 202.5 18.75L202.5 283.48C202.5 288.46 200.52 293.23 197 296.74C193.48 300.26 188.71 302.23 183.73 302.23H18.77C13.79 302.23 9.02 300.25 5.5 296.74C1.98 293.22 0 288.45 0 283.48Z" fill="white"/>'+
             '</mask>'+
             '<g mask="url(#mask1_48_386)">'+
-            '<path "modul-border" d="M0 283.48L0 18.75C0 13.77 1.98 8.99999 5.5 5.48999C9.02 1.96999 13.79 0 18.77 0H183.73C188.71 0 193.48 1.97999 197 5.48999C200.52 9.00999 202.5 13.78 202.5 18.75L202.5 283.48C202.5 288.46 200.52 293.23 197 296.74C193.48 300.26 188.71 302.23 183.73 302.23H18.77C13.79 302.23 9.02 300.25 5.5 296.74C1.98 293.22 0 288.45 0 283.48Z" stroke="black" stroke-width="9.01"/>'+
+            '<path class="modul-border" d="M0 283.48L0 18.75C0 13.77 1.98 8.99999 5.5 5.48999C9.02 1.96999 13.79 0 18.77 0H183.73C188.71 0 193.48 1.97999 197 5.48999C200.52 9.00999 202.5 13.78 202.5 18.75L202.5 283.48C202.5 288.46 200.52 293.23 197 296.74C193.48 300.26 188.71 302.23 183.73 302.23H18.77C13.79 302.23 9.02 300.25 5.5 296.74C1.98 293.22 0 288.45 0 283.48Z" stroke="black" stroke-width="9.01"/>'+
             '</g>'+
             '<path d="M93.8199 148.59C93.8199 150.58 94.5699 152.12 96.0699 153.22C97.5699 154.31 99.6599 154.86 102.33 154.86C107.9 154.86 110.69 152.77 110.69 148.59C110.69 146.84 110.25 144.71 109.37 142.22H113.81C114.66 144.27 115.09 146.56 115.09 149.09C115.09 152.72 113.99 155.5 111.78 157.43C109.58 159.35 106.41 160.32 102.29 160.32C99.6899 160.32 97.4199 159.85 95.4599 158.9C93.5099 157.95 92.0099 156.6 90.9699 154.83C89.9299 153.06 89.4099 150.98 89.4099 148.6C89.4099 146.22 89.9999 143.74 91.1699 141.29L95.4799 143C95.0399 143.93 94.6499 144.87 94.3199 145.82C93.9899 146.76 93.8199 147.69 93.8199 148.6V148.59Z" fill="black"/>'+
             '<path d="M193.26 177.43V179.1H182.52C181.63 179.1 180.78 179.07 179.99 179.02C180.13 179.16 180.29 179.33 180.44 179.5C180.6 179.68 181.27 180.5 182.45 181.95L181.27 182.86L178.18 178.87V177.43H193.25H193.26Z" fill="black"/>'+
@@ -157,7 +160,7 @@ $(document).ready(function(){
             '<path d="M18.77 0H183.73C188.71 0 193.48 1.98 197 5.5C200.52 9.02 202.5 13.79 202.5 18.77V183.73C202.5 188.71 200.52 193.48 197 197C193.48 200.52 188.71 202.5 183.73 202.5H18.77C13.79 202.5 9.02 200.52 5.5 197C1.98 193.48 0 188.71 0 183.73V18.77C0 13.79 1.98 9.02 5.5 5.5C9.02 1.98 13.79 0 18.77 0Z" fill="white"/>'+
             '</mask>'+
             '<g mask="url(#mask1_52_448)">'+
-            '<path "modul-border" d="M18.77 0H183.73C188.71 0 193.48 1.98 197 5.5C200.52 9.02 202.5 13.79 202.5 18.77V183.73C202.5 188.71 200.52 193.48 197 197C193.48 200.52 188.71 202.5 183.73 202.5H18.77C13.79 202.5 9.02 200.52 5.5 197C1.98 193.48 0 188.71 0 183.73V18.77C0 13.79 1.98 9.02 5.5 5.5C9.02 1.98 13.79 0 18.77 0Z" stroke="black" stroke-width="9.01"/>'+
+            '<path class="modul-border" d="M18.77 0H183.73C188.71 0 193.48 1.98 197 5.5C200.52 9.02 202.5 13.79 202.5 18.77V183.73C202.5 188.71 200.52 193.48 197 197C193.48 200.52 188.71 202.5 183.73 202.5H18.77C13.79 202.5 9.02 200.52 5.5 197C1.98 193.48 0 188.71 0 183.73V18.77C0 13.79 1.98 9.02 5.5 5.5C9.02 1.98 13.79 0 18.77 0Z" stroke="black" stroke-width="9.01"/>'+
             '</g>'+
             '<path d="M87.24 93.82C85.25 93.82 83.71 94.57 82.61 96.07C81.52 97.57 80.97 99.66 80.97 102.33C80.97 107.9 83.06 110.69 87.24 110.69C88.99 110.69 91.12 110.25 93.61 109.37V113.81C91.56 114.66 89.27 115.09 86.74 115.09C83.11 115.09 80.33 113.99 78.4 111.78C76.48 109.58 75.51 106.41 75.51 102.29C75.51 99.69 75.98 97.42 76.93 95.46C77.88 93.51 79.23 92.01 81 90.97C82.77 89.93 84.85 89.41 87.23 89.41C89.61 89.41 92.09 90 94.54 91.17L92.83 95.48C91.9 95.04 90.96 94.65 90.01 94.32C89.07 93.99 88.14 93.82 87.23 93.82H87.24Z" fill="black"/>'+
             '<path d="M109.5 114.75L103.48 95.15H103.33C103.55 99.14 103.65 101.8 103.65 103.13V114.75H98.92V89.76H106.13L112.04 108.87H112.14L118.41 89.76H125.62V114.75H120.68V102.92C120.68 102.36 120.68 101.72 120.71 100.99C120.73 100.26 120.8 98.32 120.94 95.18H120.79L114.35 114.75H109.5Z" fill="black"/>'+
@@ -185,7 +188,7 @@ $(document).ready(function(){
             '<path d="M19.3 0.369999H284.01C288.99 0.369999 293.76 2.35 297.28 5.86C300.8 9.38 302.78 14.14 302.78 19.12V283.87C302.78 288.84 300.8 293.61 297.28 297.13C293.76 300.65 288.99 302.62 284.01 302.62H19.3C14.32 302.62 9.55003 300.64 6.03003 297.13C2.51003 293.61 0.530029 288.85 0.530029 283.87V19.12C0.530029 14.15 2.51003 9.38 6.03003 5.86C9.55003 2.34 14.32 0.369999 19.3 0.369999Z" fill="white"/>'+
             '</mask>'+
             '<g mask="url(#mask1_0_1)">'+
-            '<path d="M19.3 0.369999H284.01C288.99 0.369999 293.76 2.35 297.28 5.86C300.8 9.37 302.78 14.14 302.78 19.12V283.87C302.78 288.84 300.8 293.61 297.28 297.13C293.76 300.65 288.99 302.62 284.01 302.62H19.3C14.32 302.62 9.55003 300.64 6.03003 297.13C2.51003 293.61 0.530029 288.85 0.530029 283.87V19.12C0.530029 14.15 2.51003 9.38 6.03003 5.86C9.55003 2.34 14.32 0.369999 19.3 0.369999Z" stroke="black" stroke-width="9"/>'+
+            '<path class="modul-border" d="M19.3 0.369999H284.01C288.99 0.369999 293.76 2.35 297.28 5.86C300.8 9.37 302.78 14.14 302.78 19.12V283.87C302.78 288.84 300.8 293.61 297.28 297.13C293.76 300.65 288.99 302.62 284.01 302.62H19.3C14.32 302.62 9.55003 300.64 6.03003 297.13C2.51003 293.61 0.530029 288.85 0.530029 283.87V19.12C0.530029 14.15 2.51003 9.38 6.03003 5.86C9.55003 2.34 14.32 0.369999 19.3 0.369999Z" stroke="black" stroke-width="9"/>'+
             '</g>'+
             '<path d="M142.93 144.44C140.94 144.44 139.4 145.19 138.3 146.69C137.21 148.19 136.66 150.28 136.66 152.95C136.66 158.52 138.75 161.31 142.93 161.31C144.68 161.31 146.81 160.87 149.3 159.99V164.43C147.25 165.28 144.96 165.71 142.43 165.71C138.8 165.71 136.02 164.61 134.09 162.4C132.17 160.2 131.2 157.03 131.2 152.91C131.2 150.31 131.67 148.04 132.62 146.08C133.57 144.13 134.92 142.63 136.69 141.59C138.46 140.55 140.54 140.03 142.92 140.03C145.3 140.03 147.78 140.62 150.23 141.79L148.52 146.1C147.59 145.66 146.65 145.27 145.7 144.94C144.76 144.61 143.83 144.44 142.92 144.44H142.93Z" fill="black"/>'+
             '<path d="M159.92 161.02H161.7C163.49 161.02 164.8 160.73 165.63 160.16C166.46 159.58 166.88 158.72 166.88 157.55C166.88 156.38 166.46 155.57 165.62 155.06C164.78 154.55 163.33 154.3 161.28 154.3H159.93V161.02H159.92ZM159.92 149.96H162C165.26 149.96 167.77 150.62 169.55 151.94C171.33 153.26 172.21 155.13 172.21 157.55C172.21 162.76 168.77 165.36 161.89 165.36H154.61V140.37H170.39V144.74H159.9V149.95L159.92 149.96Z" fill="black"/>'+
@@ -568,7 +571,8 @@ $(document).ready(function(){
                 if($id!=$ourId && $d2 >= -0.5 && $d2 <= $ourWidth-3 && $d1 <= $ourHeight-5){
                     $pos6 = false;
                 }
-                if($id!=$ourId && $d2 < 1 && $rX-$lCordX > -1 && $d1 <= $ourHeight-5){
+                // был фикс бага с клейкой.
+                if($id!=$ourId && $d2 < 1 && $rX-$lCordX > 1 && $d1 <= $ourHeight-5){
                     $pos6 = false;
                 } 
             }
@@ -615,7 +619,7 @@ $(document).ready(function(){
                 }
             }
         }
-        console.log($targetId,[$pos1,$pos2,$pos3,$pos4,$pos5,$pos6,$pos7,$pos8]);
+        //console.log($targetId,[$pos1,$pos2,$pos3,$pos4,$pos5,$pos6,$pos7,$pos8]);
         return([$pos1,$pos2,$pos3,$pos4,$pos5,$pos6,$pos7,$pos8]);
     };
     $setPositionObetcs = function($idOur,$idTar,$posTar){
@@ -629,8 +633,8 @@ $(document).ready(function(){
 
         element2 = element1 = document.getElementById($idOur); 
         var rect2 = element2.getBoundingClientRect(); // объект который клеим
-        console.log($idOur,$idTar,$resultPos);
-        console.log($('#'+$idOur).offset());
+        //console.log($idOur,$idTar,$resultPos);
+        //console.log($('#'+$idOur).offset());
         if($resultPos == 1){
 
             $('#'+$idOur).offset({top: rect1.top, left: rect2.left - (rect2.left-rect1.right)});
@@ -673,7 +677,7 @@ $(document).ready(function(){
 
         }
         $updateCord($idOur);
-        console.log($('#'+$idOur).offset());
+        //console.log($('#'+$idOur).offset());
     };
     $updateSize = function(){
         let objContainer = document.getElementById('container');
@@ -682,7 +686,7 @@ $(document).ready(function(){
         return $containerRX;
     };
     $getCenterDistanse = function($id1,$id2){
-        console.log($id1,$id2)
+        //console.log($id1,$id2)
         $elem1 = document.getElementById($id1);
         $elem1Rect = $elem1.getBoundingClientRect();
         $elem2 = document.getElementById($id2);
@@ -772,10 +776,27 @@ $(document).ready(function(){
                         }
                         
                     }
+
                     // условия создания объекта если на доске что-то есть.
                     $(this).unbind("mousemove");
+                    if(selectObj != 0){
+                        $('#'+selectObj).children().children('.modul-border').css({
+                            'stroke':'black'
+                        });
+                    }
+                    selectObj = $moovblModul.attr('id');
+                    if(selectObj != 0){
+                        $('#'+selectObj).children().children('.modul-border').css({
+                            'stroke':'red'
+                        });
+                    }
+                    $('.RotAndDel').css({
+                        'display':'block'
+                    });
+                    
                 }
                 else{
+                    
                     $moovblModul.remove();
                     $(this).unbind("click");
                     $(this).unbind("mousemove");
@@ -805,30 +826,71 @@ $(document).ready(function(){
     selectObj = 0;
     $( '.canvas-UI' ).on( 'click', function( event1 ) {
         obj2 = event1.target;
-        idObj2 = $(obj2).attr('id');
-        if($(obj2).parent().parent().hasClass('appended-modul')){
-            //console.log(selectObj);
-            $(selectObj).children().children('.modul-border').css({
-                'stroke':'black'
-            });
-
-            selectObj = $(obj2).parent().parent().attr('id');
-            $('#'+selectObj).children().children('.modul-border').css({
-                'stroke':'red'
-            });
-            selectObj = document.getElementById(selectObj);
-        }
-        else if($(obj2).parent().hasClass('appended-modul')){
-            //console.log(2);
+        $classObj =$(obj2).attr('class')
+        if($classObj == "RotAndDel-Rot" || $(obj2).parent().hasClass("RotAndDel-Rot")){
 
         }
-        else{
-            if($(obj2).attr('class')!="RotAndDel-Rot"){
-                $('.modul-border').css({
+        else if($classObj == "appended-modul") {
+            if(selectObj != 0){
+                $('#'+selectObj).children().children('.modul-border').css({
                     'stroke':'black'
                 });
-                selectObj = 0;
             }
+            selectObj = $(obj2).attr('id');
+            if(selectObj != 0){
+                $('#'+selectObj).children().children('.modul-border').css({
+                    'stroke':'red'
+                });
+            }
+            $('.RotAndDel').css({
+                'display':'block'
+            });
+        }
+        else if($(obj2).parent().hasClass("appended-modul")){
+            if(selectObj != 0){
+
+                $('#'+selectObj).children().children('.modul-border').css({
+                    'stroke':'black'
+                });
+            }
+            selectObj = $(obj2).parent().attr('id');
+            if(selectObj != 0){
+                $('#'+selectObj).children().children('.modul-border').css({
+                    'stroke':'red'
+                });
+            }
+            $('.RotAndDel').css({
+                'display':'block'
+            });
+        }
+        else if($(obj2).parent().parent().hasClass("appended-modul")){
+            if(selectObj != 0){
+
+                $('#'+selectObj).children().children('.modul-border').css({
+                    'stroke':'black'
+                });
+            }
+            selectObj = $(obj2).parent().parent().attr('id');
+            if(selectObj != 0){
+                $('#'+selectObj).children().children('.modul-border').css({
+                    'stroke':'red'
+                });
+            }
+            $('.RotAndDel').css({
+                'display':'block'
+            });
+        }
+        else {
+            if(selectObj != 0){
+
+                $('#'+selectObj).children().children('.modul-border').css({
+                    'stroke':'black'
+                });
+            }
+            selectObj = 0
+            $('.RotAndDel').css({
+                'display':'none'
+            });
         }
     });
 
@@ -837,28 +899,28 @@ $(document).ready(function(){
     $( '.canvas-UI' ).on( 'mousedown', function( event1 ) {
         obj = event1.target;
         classObj =$(obj).attr('class');
-        if(classObj == "RotAndDel-Rot" || $(obj).parent().parent().hasClass("RotAndDel-Rot")){
-            if($(selectObj).hasClass('appended-modul')){
+        if(classObj == "RotAndDel-Rot" || $(obj).parent().hasClass("RotAndDel-Rot")){
+            if($('#'+selectObj).hasClass('appended-modul') && !$('#'+selectObj).hasClass('appendedCM') && !$('#'+selectObj).hasClass('appendedCB')){
                 if (event1.which == 1 && selectObj!=0){
-                    idObj = $(selectObj).attr('id');
-                    if(!rotationObj.get($(selectObj).attr('id'))){
-                        $(selectObj).css({
+                    idObj = $('#'+selectObj).attr('id');
+                    if(!rotationObj.get($('#'+selectObj).attr('id'))){
+                        $('#'+selectObj).css({
                             'transform-origin':'center center',
                             'transform':'rotate(90deg)'
 
                         });
-                        //$(selectObj).click();
-                        $resPosAndIdF = $findMinDistObj(idObj); // найти ближайший
-                        $resultPos = $resPosAndIdF[2];
-                        $findeObj = $resPosAndIdF[0];
-                        $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
-                        console.log($('#'+idObj).offset(),idObj);
-                        // открепляем событие на клик от текущего модуля
-
-                        rotationObj.set($(selectObj).attr('id'),true);
+                        if(appendedObj.size > 1){
+                            $resPosAndIdF = $findMinDistObj(idObj); // найти ближайший
+                            $resultPos = $resPosAndIdF[2];
+                            $findeObj = $resPosAndIdF[0];
+                            $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
+                            //console.log($('#'+idObj).offset(),idObj);
+                            // открепляем событие на клик от текущего модуля
+                        }
+                        rotationObj.set($('#'+selectObj).attr('id'),true);
                     }
                     else{
-                        $(selectObj).css({
+                        $('#'+selectObj).css({
                             'transform-origin':'center center',
                             'transform':'rotate(0deg)'
                         });
@@ -868,20 +930,20 @@ $(document).ready(function(){
                             $findeObj = $resPosAndIdF[0];
                             $setPositionObetcs(idObj,$findeObj,$resultPos);
                         }
-                        rotationObj.set($(selectObj).attr('id'),false);
+                        rotationObj.set($('#'+selectObj).attr('id'),false);
                     }
                 }
             }
         }
-        if(classObj == "RotAndDel-Del" || $(obj).parent().parent().hasClass("RotAndDel-Del")){
-            if($(selectObj).hasClass('appended-modul')){
+        if(classObj == "RotAndDel-Del" || $(obj).parent().hasClass("RotAndDel-Del")){
+            if($('#'+selectObj).hasClass('appended-modul')){
                 if (event1.which == 1 && selectObj!=0){
-                    idObj = $(selectObj).attr('id');
+                    idObj = $('#'+selectObj).attr('id');
                     appendedObj.delete(idObj);
                     if(groupMain.has(idObj)){
                         groupMain.delete(idObj);
                     }
-                    $(selectObj).remove();
+                    $('#'+selectObj).remove();
                 }
             }
         }
@@ -907,13 +969,13 @@ $(document).ready(function(){
                 obj = document.getElementById(idObj);
             }
             if (event1.which == 1 && $(obj).hasClass('appended-modul')){
-                console.log($(obj).offset());
+                //console.log($(obj).offset());
                 $offsetClick = $calculateMouseOffsetMoovbl(event1,idObj);
                 $deltaX = $offsetClick[0];
                 $deltaY = $offsetClick[1];
                 $moovblModul = $('#'+idObj);
                 $(document).mousemove(function (e) {
-                    console.log(2);
+                    //console.log(2);
                     $('#'+idObj).css({
                         'z-index':'9999'
                     });

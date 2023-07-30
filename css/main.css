@@ -36,7 +36,12 @@ body {
     height: 100%;
     left:0;
 }
-
+.canvas{
+    position: absolute;
+    width: 85%;
+    height: 100%;
+    left:0;
+}
 .scale {
     height: 112px;
     width: 45px;

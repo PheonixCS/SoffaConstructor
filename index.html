@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="css/main.css">
     <script src="js/jquery-3.7.0.min.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/scale.js"></script>
 </header>
 <body oncontextmenu="return false;">
     <div id = "board">
@@ -11,7 +12,7 @@
             <div class="canvas-UI">
                 <div class="scale">
     
-                    <svg width="67" height="71" viewBox="0 0 67 71" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg id='plusScale' width="67" height="71" viewBox="0 0 67 71" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <mask id="mask0_60_330" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="67" height="71">
                     <path d="M47.28 70.5H18.74C13.77 70.5 9.01 68.53 5.49 65.03C1.98 61.53 0 56.77 0 51.82V18.68C0 13.72 1.97 8.97 5.49 5.47C9 1.97 13.77 0 18.74 0H47.28C52.25 0 57.01 1.97 60.52 5.47C64.03 8.97 66.01 13.73 66.01 18.68V51.81C66.01 56.77 64.04 61.52 60.52 65.02C57.01 68.52 52.24 70.49 47.28 70.49" fill="white"/>
                     </mask>
@@ -22,14 +23,14 @@
                     </svg>
                         
 
-                    <svg width="67" height="71" viewBox="0 0 67 71" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <mask id="mask0_60_331" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="67" height="71">
-                    <path d="M47.28 70.49H18.74C13.77 70.49 9.01 68.52 5.49 65.02C1.97 61.52 0 56.76 0 51.81V18.68C0 13.72 1.97 8.97 5.49 5.47C9 1.97 13.77 0 18.74 0H47.28C52.25 0 57.01 1.97 60.52 5.47C64.03 8.97 66.01 13.73 66.01 18.68V51.81C66.01 56.77 64.04 61.52 60.52 65.02C57.01 68.52 52.24 70.49 47.28 70.49Z" fill="white"/>
-                    </mask>
-                    <g mask="url(#mask0_60_331)">
-                    <path d="M47.28 70.49H18.74C13.77 70.49 9.01 68.52 5.49 65.02C1.98 61.52 0 56.76 0 51.81V18.68C0 13.72 1.97 8.97 5.49 5.47C9 1.97 13.77 0 18.74 0H47.28C52.25 0 57.01 1.97 60.53 5.47C64.04 8.97 66.02 13.73 66.02 18.68V51.81C66.02 56.77 64.05 61.52 60.53 65.02C57.02 68.52 52.25 70.49 47.28 70.49Z" stroke="#EF3A37" stroke-width="7.48"/>
-                    </g>
-                    <path d="M55.9002 34.97C55.9002 37.25 53.9802 39.09 51.6102 39.09H14.4502C12.0802 39.09 10.1602 37.24 10.1602 34.97C10.1602 32.7 12.0802 30.85 14.4502 30.85H51.6102C53.9802 30.85 55.9002 32.7 55.9002 34.97Z" fill="black"/>
+                    <svg id='minusScale' width="67" height="71" viewBox="0 0 67 71" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <mask id="mask0_60_331" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="67" height="71">
+                        <path d="M47.28 70.49H18.74C13.77 70.49 9.01 68.52 5.49 65.02C1.97 61.52 0 56.76 0 51.81V18.68C0 13.72 1.97 8.97 5.49 5.47C9 1.97 13.77 0 18.74 0H47.28C52.25 0 57.01 1.97 60.52 5.47C64.03 8.97 66.01 13.73 66.01 18.68V51.81C66.01 56.77 64.04 61.52 60.52 65.02C57.01 68.52 52.24 70.49 47.28 70.49Z" fill="white"/>
+                        </mask>
+                        <g mask="url(#mask0_60_331)">
+                        <path d="M47.28 70.49H18.74C13.77 70.49 9.01 68.52 5.49 65.02C1.98 61.52 0 56.76 0 51.81V18.68C0 13.72 1.97 8.97 5.49 5.47C9 1.97 13.77 0 18.74 0H47.28C52.25 0 57.01 1.97 60.53 5.47C64.04 8.97 66.02 13.73 66.02 18.68V51.81C66.02 56.77 64.05 61.52 60.53 65.02C57.02 68.52 52.25 70.49 47.28 70.49Z" stroke="#EF3A37" stroke-width="7.48"/>
+                        </g>
+                        <path d="M55.9002 34.97C55.9002 37.25 53.9802 39.09 51.6102 39.09H14.4502C12.0802 39.09 10.1602 37.24 10.1602 34.97C10.1602 32.7 12.0802 30.85 14.4502 30.85H51.6102C53.9802 30.85 55.9002 32.7 55.9002 34.97Z" fill="black"/>
                     </svg>
                         
                         
@@ -64,7 +65,8 @@
                     </dl>  
                 </div>
             </div>
-            
+            <div class="canvas">    
+            </div>
             <div id = "menu">
                 <div class = menu-container>
                     <svg  class = "modul B" width="50" height="120" viewBox="0 0 50 120" fill="none" xmlns="http://www.w3.org/2000/svg">

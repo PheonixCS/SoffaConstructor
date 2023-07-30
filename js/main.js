@@ -235,7 +235,6 @@ $(document).ready(function(){
         $deltaY = $mouseD_y-$elemCordY;
         return [$deltaX,$deltaY];
     };
-    /// Основная функция размещения объектов
     $spawnElem = function($numberObj,$id,$e){
         $offsetClick = $calculateMouseOffset($e);
         $deltaX = $offsetClick[0];
@@ -682,6 +681,29 @@ $(document).ready(function(){
         $containerRX = rectcont.right-$('#menu').width();
         return $containerRX;
     };
+    $getCenterDistanse = function($id1,$id2){
+        console.log($id1,$id2)
+        $elem1 = document.getElementById($id1);
+        $elem1Rect = $elem1.getBoundingClientRect();
+        $elem2 = document.getElementById($id2);
+        $elem2Rect = $elem2.getBoundingClientRect();
+
+        $centerE1X = $elem1Rect.left + ($elem1Rect.right - $elem1Rect.left)/2;
+        $centerE1Y = $elem1Rect.top + ($elem1Rect.bottom - $elem1Rect.top)/2;
+
+        $centerE2X = $elem2Rect.left + ($elem2Rect.right - $elem2Rect.left)/2;
+        $centerE2Y = $elem2Rect.top + ($elem2Rect.bottom - $elem2Rect.top)/2;
+
+        return Math.sqrt(($centerE1X-$centerE2X)*($centerE1X-$centerE2X) + ($centerE1Y-$centerE2Y)*($centerE1Y-$centerE2Y));
+
+    };
+    $minDist = function($id1,$id2){
+        $minD1 = $('#'+$id1).width()/2 + $('#'+$id2).width()/2 + 30;
+        $minD2 = $('#'+$id1).height()/2 + $('#'+$id2).height()/2 + 30;
+        return Math.sqrt($minD1*$minD1 + $minD2*$minD2);
+    } 
+
+    /// Основная функция размещения объектов
     $appendMainFunc = function($numberObj,id,e){
         if (e.which == 1){
             $spawnElem($numberObj,id,e);
@@ -693,48 +715,71 @@ $(document).ready(function(){
                 // пока клавиша зажата и мышь движется меняем динамично смещение модуля
                 $moovblModul.offset({top: e.pageY-$deltaY, left: e.pageX-$deltaX});
             }).click(function (e) {
-                // запускаем логику если кнопка отжата
-                objAdd = document.getElementById(idObject);
-                topY = objAdd.getBoundingClientRect().top;
-                topX = objAdd.getBoundingClientRect().left;
-                dovnY = topY + $('#'+idObject).height();
-                dovnX = topX + $('#'+idObject).width();
+                $rightPosModul = $moovblModul.offset().left+$moovblModul.width();
+                $rightPosUI = $('.canvas-UI').width();
+                if( $rightPosModul < $rightPosUI){
+                    // запускаем логику если кнопка отжата
+                    objAdd = document.getElementById(idObject);
+                    topY = objAdd.getBoundingClientRect().top;
+                    topX = objAdd.getBoundingClientRect().left;
+                    dovnY = topY + $('#'+idObject).height();
+                    dovnX = topX + $('#'+idObject).width();
 
-                // условие создание объекта если на доске ничего нет.
-                if(groupMain.size == 0){
-                    // основная логика
-                    // добавляем объект высчитывем координаты его углов
-                    // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
-                    groupMain.set(idObject,[topX,topY,dovnX,dovnY]);
-                    // добавляем в массив размещенных обхектов id размещенного модуля
-                    appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
-                    // генерируем новый id для следующего модуля
-                    numberIdObjecy = numberIdObjecy + 1;
-                    idObject = "appended-modul" + numberIdObjecy;
-                    // открепляем событие на клик от текущего модуля
-                    $(this).unbind("click");
+                    // условие создание объекта если на доске ничего нет.
+                    if(groupMain.size == 0){
+                        // основная логика
+                        // добавляем объект высчитывем координаты его углов
+                        // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
+                        groupMain.set(idObject,[topX,topY,dovnX,dovnY]);
+                        // добавляем в массив размещенных обхектов id размещенного модуля
+                        appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
+                        // генерируем новый id для следующего модуля
+                        numberIdObjecy = numberIdObjecy + 1;
+                        idObject = "appended-modul" + numberIdObjecy;
+                        // открепляем событие на клик от текущего модуля
+                        $(this).unbind("click");
+                    }
+                    // если на доске что-то есть.
+                    else{
+                        /*ну а теперь самое сложно... наверное :D*/
+                        // вычисление расстояний и поиск минимального
+                        // основная логика
+                        $resPosAndIdF = $findMinDistObj(idObject);
+                        //console.log($resPosAndIdF);
+                        $resultPos = $resPosAndIdF[2];
+                        $findeObj = $resPosAndIdF[0];
+                        $resultDistanse = $getCenterDistanse($findeObj,idObject);
+                        $resMinDist = $minDist($findeObj,idObject);
+                        if($resultDistanse < $resMinDist){
+                            // далее нужна функция стыковки объектов
+                            $setPositionObetcs(idObject,$findeObj,$resultPos);
+                            // увеличиваем индекс
+                            numberIdObjecy = numberIdObjecy + 1;
+                            idObject = "appended-modul" + numberIdObjecy;
+                            rotationObj.set(idObject,false);
+                            // открепляем событие на клик от текущего модуля
+                            $(this).unbind("click");
+                       
+                            
+                        }
+                        else {
+                            $updateCord(idObject);
+                            numberIdObjecy = numberIdObjecy + 1;
+                            idObject = "appended-modul" + numberIdObjecy;
+                            rotationObj.set(idObject,false);
+                            // открепляем событие на клик от текущего модуля
+                            $(this).unbind("click");
+                        }
+                        
+                    }
+                    // условия создания объекта если на доске что-то есть.
+                    $(this).unbind("mousemove");
                 }
-                // если на доске что-то есть.
                 else{
-                    /*ну а теперь самое сложно... наверное :D*/
-                    // вычисление расстояний и поиск минимального
-                    // основная логика
-                    $resPosAndIdF = $findMinDistObj(idObject);
-                    //console.log($resPosAndIdF);
-                    $resultPos = $resPosAndIdF[2];
-                    $findeObj = $resPosAndIdF[0];
-                    // далее нужна функция стыковки объектов
-                    $setPositionObetcs(idObject,$findeObj,$resultPos);
-                    // увеличиваем индекс
-                    numberIdObjecy = numberIdObjecy + 1;
-                    idObject = "appended-modul" + numberIdObjecy;
-                    rotationObj.set(idObject,false);
-                    // открепляем событие на клик от текущего модуля
+                    $moovblModul.remove();
                     $(this).unbind("click");
-                    
+                    $(this).unbind("mousemove");
                 }
-                // условия создания объекта если на доске что-то есть.
-                $(this).unbind("mousemove");
             });
         };
     };
@@ -788,7 +833,7 @@ $(document).ready(function(){
     });
 
     
-
+    // логика перемещения объектов
     $( '.canvas-UI' ).on( 'mousedown', function( event1 ) {
         obj = event1.target;
         classObj =$(obj).attr('class');
@@ -874,23 +919,42 @@ $(document).ready(function(){
                     });
                     $moovblModul.offset({top: e.pageY-$deltaY, left: e.pageX-$deltaX});
                 }).click(function (e) {
-                    if(appendedObj.size == 1){
-                        $(this).unbind("click");
+                    $rightPosModul = $moovblModul.offset().left+$moovblModul.width();
+                    $rightPosUI = $('.canvas-UI').width();
+                    if( $rightPosModul < $rightPosUI){
+                        if(appendedObj.size == 1){
+                            $(this).unbind("click");
+                        }
+                        else{
+                            //console.log(idObj);
+                            $resPosAndIdF = $findMinDistObj(idObj); // найти ближайший
+                            $resultPos = $resPosAndIdF[2];
+                            $findeObj = $resPosAndIdF[0];
+                            $resultDistanse = $getCenterDistanse($findeObj,idObj);
+                            $resMinDist = $minDist($findeObj,idObj);
+                            if($resultDistanse < $resMinDist){
+                                //console.log(idObj,$findeObj,$resultPos);
+                                $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
+                                // открепляем событие на клик от текущего модуля
+                                $(this).unbind("click");
+                            }
+                            else{
+                                $updateCord(idObj);
+                                $(this).unbind("click"); 
+                            }
+                        }
+                        $(this).unbind("mousemove");
+                        $('#'+idObj).css({
+                            'z-index':'999'
+                        });
                     }
                     else{
-                        //console.log(idObj);
-                        $resPosAndIdF = $findMinDistObj(idObj); // найти ближайший
-                        $resultPos = $resPosAndIdF[2];
-                        $findeObj = $resPosAndIdF[0];
-                        //console.log(idObj,$findeObj,$resultPos);
-                        $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
-                        // открепляем событие на клик от текущего модуля
+                        appendedObj.delete($moovblModul.attr('id'));
+                        groupMain.delete($moovblModul.attr('id'));
+                        $moovblModul.remove();
                         $(this).unbind("click");
-                        }
-                    $(this).unbind("mousemove");
-                    $('#'+idObj).css({
-                        'z-index':'999'
-                    });
+                        $(this).unbind("mousemove");
+                    }                    {}
 
                 });
             }

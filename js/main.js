@@ -32,22 +32,9 @@ $(document).ready(function(){
             for($key of appendedObj.keys()){
                 $updateObjSize($key);
                 $updateCord($key);
-                $setPositionObetcs
             }
-            for($key of appendedObj.keys()){
-                $resPosAndIdF = $findMinDistObj($key);
-                //console.log($resPosAndIdF);
-                $resultPos = $resPosAndIdF[2];
-                $findeObj = $resPosAndIdF[0];
-                $setPositionObetcs($key,$findeObj,$resultPos);
-            }
-            for($key of appendedObj.keys()){
-                $resPosAndIdF = $findMinDistObj($key);
-                //console.log($resPosAndIdF);
-                $resultPos = $resPosAndIdF[2];
-                $findeObj = $resPosAndIdF[0];
-                $setPositionObetcs($key,$findeObj,$resultPos);
-            }
+            $startConnect();
+            
         }
     });
     $('#'+'minusScale').mousedown(function(){
@@ -57,13 +44,7 @@ $(document).ready(function(){
                 $updateObjSize($key);
                 $updateCord($key);
             }
-            for($key of appendedObj.keys()){
-                $resPosAndIdF = $findMinDistObj($key);
-                //console.log($resPosAndIdF);
-                $resultPos = $resPosAndIdF[2];
-                $findeObj = $resPosAndIdF[0];
-                $setPositionObetcs($key,$findeObj,$resultPos);
-            }
+            $startConnect();
         }
         //$('appended-modul').offset({top:$('appended-modul').offset().top*100/$baseScale,left:$('appended-modul').offset().left*100/$baseScale});
     });
@@ -76,7 +57,6 @@ $(document).ready(function(){
 
     $idFinedObjOLD = "appended-modul0";
     // коллекции объектов
-
     // коллекция скомпонованных объектов (главная ветка)
     const groupMain = new Map();
     // коллекция скомпонованных объектов (побочная ветка)
@@ -85,7 +65,87 @@ $(document).ready(function(){
     var appendedObj = new Map();
     // храним информацию о повороте объетов
     var rotationObj = new Map();
+    // храним позиционку объектов.
+    var groupsPositionsStr = new Map();
+    var groupsPositionsRev = new Map();
+    var BaseObjMap = new Map();// список объектов без родителей.
+    // структура данных готова и строится гуд образом, но пока мне не известны элементы без родительских.
+    $saveGropsPositions = function($id1,$id2,$pos){
+        // работа с прямой структурой // будут ли у нас каждый раз создаваться новые словари.?
+        if(BaseObjMap.has($id2)){
+            BaseObjMap.delete($id2);
+        }
+        if(!groupsPositionsStr.has($id1)){
+            $childrens = new Map();
+            $childrens.set($id2,$pos);
+            groupsPositionsStr.set($id1,$childrens);
+            // взять всех его дочерние элементы и удалить их из реверсивной структуры. 
+            //console.log($childrens);
+            if(groupsPositionsStr.has($id2)){
+                $childrens = groupsPositionsStr.get($id2);
+                //console.log($childrens);
+                for(let $key of $childrens.keys()){
+                    BaseObjMap.set($key,'1');
+                    groupsPositionsRev.delete($key);
+                }
+            }
+            if(groupsPositionsStr.has($id2)){
+                groupsPositionsStr.delete($id2);
+            }
+        }
+        else{
+            $childrens = groupsPositionsStr.get($id1);
+            $childrens.set($id2,$pos);
+            groupsPositionsStr.set($id1,$childrens);
+            // взять всех его дочерние элементы и удалить их из реверсивной структуры. 
+            //console.log($childrens);
+            if(groupsPositionsStr.has($id2)){
+                $childrens = groupsPositionsStr.get($id2);
+                //console.log($childrens);
+                for(let $key of $childrens.keys()){
+                    BaseObjMap.set($key,'1');
+                    groupsPositionsRev.delete($key);
+                }
+            }
+            if(groupsPositionsStr.has($id2)){
+                groupsPositionsStr.delete($id2);
+            }
+        }
+        $parrentId = groupsPositionsRev.get($id2);
+        // работа с обратной структурой
+        if(groupsPositionsRev.has($id2)){
 
+            $childrens = groupsPositionsStr.get($parrentId);
+            $childrens.delete($id2);
+            if($childrens.size != 0){
+                groupsPositionsStr.set($parrentId,$childrens);
+            }
+            else {
+                groupsPositionsStr.delete($parrentId);
+            }
+        }
+        groupsPositionsRev.set($id2,$id1); 
+    };
+    // рекурсивный конструктор, востанавливающий соединения объектов его нужно запустить для всех элементов без родителей.
+    $recursiveСonstructor = function($id){
+        if(groupsPositionsStr.has($id)){
+            $childrens = groupsPositionsStr.get($id);
+            for(let $child of $childrens.keys()){
+                $setPositionObetcs($child,$id,$childrens.get($child));
+                //$recursiveСonstructor($child);
+            }
+            for(let $child of $childrens.keys()){
+                //$setPositionObetcs($child,$id,$childrens.get($child));
+                $recursiveСonstructor($child);
+            }
+        }
+        //return true;
+    };
+    $startConnect = function(){
+        for(let $key of BaseObjMap.keys()){
+            $recursiveСonstructor($key);
+        }
+    };
     //arr.set('key5','value5');
     //console.log(arr);
 
@@ -667,6 +727,7 @@ $(document).ready(function(){
         return([$pos1,$pos2,$pos3,$pos4,$pos5,$pos6,$pos7,$pos8]);
     };
     $setPositionObetcs = function($idOur,$idTar,$posTar){
+        //$saveGropsPositions($idTar,$idOur,$resultPos);
         // $idOur - объект который атачим
         // $idTar - объект к которому атачим
         // $posTar - куда собственно атачим
@@ -781,6 +842,7 @@ $(document).ready(function(){
                         groupMain.set(idObject,[topX,topY,dovnX,dovnY]);
                         // добавляем в массив размещенных обхектов id размещенного модуля
                         appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
+                        BaseObjMap.set(idObject,'1');
                         // генерируем новый id для следующего модуля
                         numberIdObjecy = numberIdObjecy + 1;
                         idObject = "appended-modul" + numberIdObjecy;
@@ -796,9 +858,15 @@ $(document).ready(function(){
                         //console.log($resPosAndIdF);
                         $resultPos = $resPosAndIdF[2];
                         $findeObj = $resPosAndIdF[0];
+                        
                         $resultDistanse = $getCenterDistanse($findeObj,idObject);
                         $resMinDist = $minDist($findeObj,idObject);
                         if($resultDistanse < $resMinDist){
+                            //////////////////////////////
+                            $saveGropsPositions($findeObj,idObject,$resultPos);
+                            console.log(groupsPositionsStr,' REV:',groupsPositionsRev,'base',BaseObjMap);
+                            //функция работающая c groupsPositions
+                            //////////////////////////////
                             // далее нужна функция стыковки объектов
                             $setPositionObetcs(idObject,$findeObj,$resultPos);
                             // увеличиваем индекс
@@ -811,6 +879,7 @@ $(document).ready(function(){
                             
                         }
                         else {
+                            BaseObjMap.set(idObject,'1');
                             $updateCord(idObject);
                             numberIdObjecy = numberIdObjecy + 1;
                             idObject = "appended-modul" + numberIdObjecy;
@@ -848,8 +917,12 @@ $(document).ready(function(){
             });
         };
     };
+
     // крепим события на добавление
     $(".B").mousedown(function(e){
+        $appendMainFunc(1,idObject,e);
+    });
+    $(".B").bind('touchstart', function(e){
         $appendMainFunc(1,idObject,e);
     });
     $(".BM").mousedown(function(e){
@@ -1088,9 +1161,15 @@ $(document).ready(function(){
                             $resPosAndIdF = $findMinDistObj(idObj); // найти ближайший
                             $resultPos = $resPosAndIdF[2];
                             $findeObj = $resPosAndIdF[0];
+                            
                             $resultDistanse = $getCenterDistanse($findeObj,idObj);
                             $resMinDist = $minDist($findeObj,idObj);
                             if($resultDistanse < $resMinDist){
+                                //////////////////////////////
+                                $saveGropsPositions($findeObj,idObj,$resultPos);
+                                console.log(groupsPositionsStr,groupsPositionsRev);
+                                //функция работающая c groupsPositions
+                                //////////////////////////////
                                 //console.log(idObj,$findeObj,$resultPos);
                                 $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
                                 // открепляем событие на клик от текущего модуля
@@ -1112,7 +1191,7 @@ $(document).ready(function(){
                         $moovblModul.remove();
                         $(this).unbind("click");
                         $(this).unbind("mousemove");
-                    }                    {}
+                    }              
 
                 });
             }
@@ -1187,8 +1266,6 @@ $(document).ready(function(){
 
     // перемещение объектов по рабочей поверхности ////////
     ///////////////////////////////////////////////////////
-
-
     $(".canvas").mousedown(function(e1){
         console.log($(e1.target).hasClass('canvas'));
         if($(e1.target).hasClass('canvas')){

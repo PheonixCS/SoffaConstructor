@@ -42,6 +42,7 @@ body {
     width: 85%;
     height: 100%;
     left:0;
+    overflow: hidden;
 }
 .scale {
     height: 112px;
@@ -50,7 +51,7 @@ body {
     right: 30px;
     top: 50%;
     margin-top: -56px;
-    z-index: 999;
+    z-index: 9999;
 }
 .scale svg{
     display: flex;
@@ -62,7 +63,7 @@ body {
     height: 61px;
     width: 112px;
     text-align: center;
-    z-index: 999;
+    z-index: 9999;
 }
 .RotAndDel svg{
     float: left;

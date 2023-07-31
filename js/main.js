@@ -23,26 +23,95 @@ $(document).ready(function(){
     });
     
     $baseScale = 100;
-
+    $minConstDist = 30;
+    $mainObj = 0; // нужно сделать обнуление переменной в случае если объект записанный туда перестал быть базовым.
     // меняем масштаб.
+    $baseWidth = 101;
+    $baseHeight = 303;
     $basescale = 0.05;
     $('#'+'plusScale').mousedown(function(){
-        $basescale = $basescale + 0.005;
+        $basescale = $basescale + 0.0025;
+        $mainObj = 0;
         if(appendedObj.size>0){
             for($key of appendedObj.keys()){
-                $updateObjSize($key);
-                $updateCord($key);
+                if(BaseObjMap.has($key) && $mainObj != 0){
+                    $mainObj = $key;
+                    $oldH = $('#'+$key).height();
+                    $oldW = $('#'+$key).width();
+                    $updateObjSize($key);
+                    $newH = $('#'+$key).height();
+                    $newW = $('#'+$key).width();
+                    $minConstDist = $minConstDist*($newH/$oldH);
+                    $updateCord($key);
+                    break;
+                }
+            }
+
+            for($key of appendedObj.keys()){
+                if($key != $mainObj && BaseObjMap.has($key)){
+                    // получить старые координаты центра
+                    $oldH = $('#'+$key).height();
+                    $oldW = $('#'+$key).width();
+                    $updateObjSize($key);
+                    $newH = $('#'+$key).height();
+                    $newW = $('#'+$key).width();
+                    $keyNewOffsetTop = $('#'+$key).offset().top;
+                    $keyNewOffsetLeft = $('#'+$key).offset().left;
+                    $('#'+$key).offset({top:$keyNewOffsetTop*($newH/$oldH),left:$keyNewOffsetLeft*($newW/$oldW)});
+                    // получить новые координаты центра
+                    // имеем старые и новые координаты центра main объекта, расстояние между центрами должно быть
+                    // какое? такое же как было, чтобы это сделать, можно сместить объекты ниже и правее на величину увеличения
+                    $updateCord($key);
+                }
+                else{
+                    $updateObjSize($key);
+                    //$updateCord($key);
+                }
             }
             $startConnect();
             
         }
     });
     $('#'+'minusScale').mousedown(function(){
-        $basescale = $basescale - 0.005;
+        $basescale = $basescale - 0.0025;
         if(appendedObj.size>0){
             for($key of appendedObj.keys()){
-                $updateObjSize($key);
-                $updateCord($key);
+                if(BaseObjMap.has($key) && $mainObj != 0){
+                    $mainObj = $key;
+                    $oldH = $('#'+$key).height();
+                    $oldW = $('#'+$key).width();
+                    $updateObjSize($key);
+                    $newH = $('#'+$key).height();
+                    $newW = $('#'+$key).width();
+                    $minConstDist = $minConstDist*($newH/$oldH);
+                    $updateCord($key);
+                    break;
+                }
+            }
+
+            for($key of appendedObj.keys()){
+                if($key != $mainObj && BaseObjMap.has($key)){
+                    // получить старые координаты центра
+                    $oldH = $('#'+$key).height();
+                    $oldW = $('#'+$key).width();
+                    $updateObjSize($key);
+                    $newH = $('#'+$key).height();
+                    $newW = $('#'+$key).width();
+                    $keyNewOffsetTop = $('#'+$key).offset().top;
+                    $keyNewOffsetLeft = $('#'+$key).offset().left;
+
+                    
+                    
+                    $('#'+$key).offset({top:$keyNewOffsetTop*($newH/$oldH),left:$keyNewOffsetLeft*($newW/$oldW)});
+                    // получить новые координаты центра
+                    // имеем старые и новые координаты центра main объекта, расстояние между центрами должно быть
+                    // какое? такое же как было, чтобы это сделать, можно сместить объекты ниже и правее на величину увеличения
+                    $updateCord($key);
+                }
+                else{
+                    $updateObjSize($key);
+                    //$updateCord($key);
+                }
             }
             $startConnect();
         }
@@ -73,6 +142,9 @@ $(document).ready(function(){
     $saveGropsPositions = function($id1,$id2,$pos){
         // работа с прямой структурой 
         if(BaseObjMap.has($id2)){
+            if($mainObj == $id2){
+                $mainObj = 0;
+            }
             BaseObjMap.delete($id2);
         }
         if(!groupsPositionsStr.has($id1)){
@@ -169,6 +241,9 @@ $(document).ready(function(){
     $clearMapsWhenDelete = function($id){
         if(BaseObjMap.has($id))
         {
+            if($mainObj == $id){
+                $mainObj = 0;
+            }
             BaseObjMap.delete($id);
         }
         if(groupsPositionsStr.has($id)){
@@ -872,8 +947,8 @@ $(document).ready(function(){
 
     };
     $minDist = function($id1,$id2){
-        $minD1 = $('#'+$id1).width()/2 + $('#'+$id2).width()/2 + 30;
-        $minD2 = $('#'+$id1).height()/2 + $('#'+$id2).height()/2 + 30;
+        $minD1 = $('#'+$id1).width()/2 + $('#'+$id2).width()/2 + $minConstDist;
+        $minD2 = $('#'+$id1).height()/2 + $('#'+$id2).height()/2 + $minConstDist;
         return Math.sqrt($minD1*$minD1 + $minD2*$minD2);
     } 
 
@@ -1289,9 +1364,6 @@ $(document).ready(function(){
         // добавляем в массив размещенных обхектов id размещенного модуля
         appendedObj.set($id,[topX,topY,dovnX,dovnY]);
     }
-
-
-
     // перемещение объектов по рабочей поверхности ////////
     ///////////////////////////////////////////////////////
     $(".canvas").mousedown(function(e1){

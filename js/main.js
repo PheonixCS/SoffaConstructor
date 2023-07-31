@@ -71,7 +71,7 @@ $(document).ready(function(){
     var BaseObjMap = new Map();// список объектов без родителей.
     // структура данных готова и строится гуд образом, но пока мне не известны элементы без родительских.
     $saveGropsPositions = function($id1,$id2,$pos){
-        // работа с прямой структурой // будут ли у нас каждый раз создаваться новые словари.?
+        // работа с прямой структурой 
         if(BaseObjMap.has($id2)){
             BaseObjMap.delete($id2);
         }
@@ -95,37 +95,103 @@ $(document).ready(function(){
         }
         else{
             $childrens = groupsPositionsStr.get($id1);
-            $childrens.set($id2,$pos);
-            groupsPositionsStr.set($id1,$childrens);
-            // взять всех его дочерние элементы и удалить их из реверсивной структуры. 
-            //console.log($childrens);
-            if(groupsPositionsStr.has($id2)){
-                $childrens = groupsPositionsStr.get($id2);
-                //console.log($childrens);
-                for(let $key of $childrens.keys()){
-                    BaseObjMap.set($key,'1');
-                    groupsPositionsRev.delete($key);
-                }
+            if($childrens.has($id2)){
+                $childrens.set($id2,$pos);
+                groupsPositionsStr.set($id1,$childrens);
             }
-            if(groupsPositionsStr.has($id2)){
-                groupsPositionsStr.delete($id2);
+            else{
+                //alert(1);
+                $childrens.set($id2,$pos);
+                groupsPositionsStr.set($id1,$childrens);
+                // взять всех его дочерние элементы и удалить их из реверсивной структуры. 
+                //console.log($childrens);
+                if(groupsPositionsStr.has($id2)){
+                    $childrens = groupsPositionsStr.get($id2);
+                    //console.log($childrens);
+                    for(let $key of $childrens.keys()){
+                        BaseObjMap.set($key,'1');
+                        groupsPositionsRev.delete($key);
+                    }
+                }
+                if(groupsPositionsStr.has($id2)){
+                    groupsPositionsStr.delete($id2);
+                }
             }
         }
         $parrentId = groupsPositionsRev.get($id2);
-        // работа с обратной структурой
-        if(groupsPositionsRev.has($id2)){
+        if($parrentId != $id1){
+            // работа с обратной структурой
+            if(groupsPositionsRev.has($id2)){
 
-            $childrens = groupsPositionsStr.get($parrentId);
-            $childrens.delete($id2);
-            if($childrens.size != 0){
-                groupsPositionsStr.set($parrentId,$childrens);
+                $childrens = groupsPositionsStr.get($parrentId);
+                $childrens.delete($id2);
+                if($childrens.size != 0){
+                    groupsPositionsStr.set($parrentId,$childrens);
+                }
+                else {
+                    groupsPositionsStr.delete($parrentId);
+                }
+            }
+            groupsPositionsRev.set($id2,$id1);
+        } 
+    };
+    $baseObjBind = function($id){
+        if(groupsPositionsRev.has($id)){
+            // чистка предыдущего родителя
+            $parent = groupsPositionsRev.get($id);
+            $children = groupsPositionsStr.get($parent);
+            $children.delete($id);
+            if($children.size != 0){
+                groupsPositionsStr.set($parent,$children);
             }
             else {
-                groupsPositionsStr.delete($parrentId);
+                groupsPositionsStr.delete($parent);
             }
+            // чистка потомков
+            if(groupsPositionsStr.has($id)){
+                $children = groupsPositionsStr.get($id);
+                for(let $key of $children.keys()){
+                    groupsPositionsRev.delete($key);
+                }
+                groupsPositionsStr.delete($id);
+            }
+            
+            // удаляем его родителей
+            groupsPositionsRev.delete($id);
+            // устанавливаем в качестве базового
+            BaseObjMap.set($id,'1');
         }
-        groupsPositionsRev.set($id2,$id1); 
-    };
+        else{
+            BaseObjMap.set($id,'1');
+        }
+
+    }
+    $clearMapsWhenDelete = function($id){
+        if(BaseObjMap.has($id))
+        {
+            BaseObjMap.delete($id);
+        }
+        if(groupsPositionsStr.has($id)){
+            alert(1);
+            $childrens = groupsPositionsStr.get($id);
+            for(let $key of $childrens.keys()){
+                groupsPositionsRev.delete($key);
+            }
+            groupsPositionsStr.delete($id);
+        }
+        if(groupsPositionsRev.has($id)){
+            $parent = groupsPositionsRev.get($id);
+            $childrens = groupsPositionsStr.get($parent);
+            $childrens.delete($id);
+            if($childrens.size != 0){
+                groupsPositionsStr.set($parent,$childrens);
+            }
+            else {
+                groupsPositionsStr.delete($parent);
+            }
+            groupsPositionsRev.delete($id);
+        }
+    }
     // рекурсивный конструктор, востанавливающий соединения объектов его нужно запустить для всех элементов без родителей.
     $recursiveСonstructor = function($id){
         if(groupsPositionsStr.has($id)){
@@ -356,7 +422,6 @@ $(document).ready(function(){
         $moovblModul.css({
             'cursor': 'grabbing'
         });
-        console.log($e.pageY,$e.pageX);
         // смещаем его так, чтобы он был ровно поверх модуля но который нажали
         $moovblModul.offset({top: ($e.pageY-$deltaY)*100/$baseScale, left: ($e.pageX-$deltaX)*100/$baseScale});
         // отображаем модуль
@@ -864,7 +929,6 @@ $(document).ready(function(){
                         if($resultDistanse < $resMinDist){
                             //////////////////////////////
                             $saveGropsPositions($findeObj,idObject,$resultPos);
-                            console.log(groupsPositionsStr,' REV:',groupsPositionsRev,'base',BaseObjMap);
                             //функция работающая c groupsPositions
                             //////////////////////////////
                             // далее нужна функция стыковки объектов
@@ -920,9 +984,6 @@ $(document).ready(function(){
 
     // крепим события на добавление
     $(".B").mousedown(function(e){
-        $appendMainFunc(1,idObject,e);
-    });
-    $(".B").bind('touchstart', function(e){
         $appendMainFunc(1,idObject,e);
     });
     $(".BM").mousedown(function(e){
@@ -1028,7 +1089,14 @@ $(document).ready(function(){
                             $resPosAndIdF = $findMinDistObj(idObj); // найти ближайший
                             $resultPos = $resPosAndIdF[2];
                             $findeObj = $resPosAndIdF[0];
-                            $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
+                            $resMinDist = $minDist($findeObj,idObj);
+                            if($resultDistanse < $resMinDist){
+                                $saveGropsPositions($findeObj,idObj,$resultPos);
+                                $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
+                            }
+                            else{
+                                $updateCord(idObj);
+                            }
                             //console.log($('#'+idObj).offset(),idObj);
                             // открепляем событие на клик от текущего модуля
                         }
@@ -1043,7 +1111,14 @@ $(document).ready(function(){
                         if($resPosAndIdF){
                             $resultPos = $resPosAndIdF[2];
                             $findeObj = $resPosAndIdF[0];
-                            $setPositionObetcs(idObj,$findeObj,$resultPos);
+                            $resMinDist = $minDist($findeObj,idObj);
+                            if($resultDistanse < $resMinDist){
+                                $saveGropsPositions($findeObj,idObj,$resultPos);
+                                $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
+                            }
+                            else{
+                                $updateCord(idObj);
+                            }
                         }
                         rotationObj.set($('#'+selectObj).attr('id'),false);
                     }
@@ -1058,6 +1133,10 @@ $(document).ready(function(){
                     if(groupMain.has(idObj)){
                         groupMain.delete(idObj);
                     }
+                    $clearMapsWhenDelete(selectObj);
+                    console.log(selectObj);
+                    console.log(groupsPositionsStr);
+                    console.log(groupsPositionsRev);
                     $('#'+selectObj).remove();
                 }
             }
@@ -1066,136 +1145,87 @@ $(document).ready(function(){
     // логика перемещения объектов
     $( '.canvas' ).on( 'mousedown', function( event1 ) {
         obj = event1.target;
-        classObj =$(obj).attr('class');
-        if(classObj == "RotAndDel-Rot" || $(obj).parent().hasClass("RotAndDel-Rot")){
-            if($('#'+selectObj).hasClass('appended-modul') && !$('#'+selectObj).hasClass('appendedCM') && !$('#'+selectObj).hasClass('appendedCB')){
-                if (event1.which == 1 && selectObj!=0){
-                    idObj = $('#'+selectObj).attr('id');
-                    if(!rotationObj.get($('#'+selectObj).attr('id'))){
-                        $('#'+selectObj).css({
-                            'transform-origin':'center center',
-                            'transform':'rotate(90deg)'
-
-                        });
-                        if(appendedObj.size > 1){
-                            $resPosAndIdF = $findMinDistObj(idObj); // найти ближайший
-                            $resultPos = $resPosAndIdF[2];
-                            $findeObj = $resPosAndIdF[0];
-                            $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
-                            //console.log($('#'+idObj).offset(),idObj);
-                            // открепляем событие на клик от текущего модуля
-                        }
-                        rotationObj.set($('#'+selectObj).attr('id'),true);
+        if(!$(obj).hasClass("appended-modul")){
+            $moovObj = $(obj).parent().parent();
+            //console.log($moovObj);
+            idObj = $moovObj.attr('id');
+            obj = document.getElementById(idObj);
+        }
+        idObj = $(obj).attr('id');
+        //console.log(idObj);
+        if(!idObj){
+            // блок кода если кликнули по имени блока
+            // нужно получить сам модуль
+            idObj = $(event1.target).parent().attr('id');
+            obj = document.getElementById(idObj);
+        }
+        if(!idObj){
+            // блок кода если кликнули по имени блока
+            // нужно получить сам модуль
+            idObj = $(event1.target).parent().parent().attr('id');
+            obj = document.getElementById(idObj);
+        }
+        if (event1.which == 1 && $(obj).hasClass('appended-modul')){
+            //console.log($(obj).offset());
+            $offsetClick = $calculateMouseOffsetMoovbl(event1,idObj);
+            $deltaX = $offsetClick[0];
+            $deltaY = $offsetClick[1];
+            $moovblModul = $('#'+idObj);
+            $(document).mousemove(function (e) {
+                //console.log(2);
+                $('#'+idObj).css({
+                    'z-index':'9999'
+                });
+                //top: (e.pageY-$deltaY)*100/$baseScale, left: (e.pageX-$deltaX)*100/$baseScale
+                $moovblModul.offset({top: e.pageY-$deltaY, left: e.pageX-$deltaX});
+            }).click(function (e) {
+                $rightPosModul = $moovblModul.offset().left+$moovblModul.width();
+                $rightPosUI = $('.canvas').width();
+                if( $rightPosModul < $rightPosUI){
+                    if(appendedObj.size == 1){
+                        $(this).unbind("click");
+                        $updateCord(idObj);
                     }
                     else{
-                        $('#'+selectObj).css({
-                            'transform-origin':'center center',
-                            'transform':'rotate(0deg)'
-                        });
+                        //console.log(idObj);
                         $resPosAndIdF = $findMinDistObj(idObj); // найти ближайший
-                        if($resPosAndIdF){
-                            $resultPos = $resPosAndIdF[2];
-                            $findeObj = $resPosAndIdF[0];
-                            $setPositionObetcs(idObj,$findeObj,$resultPos);
-                        }
-                        rotationObj.set($('#'+selectObj).attr('id'),false);
-                    }
-                }
-            }
-        }
-        if(classObj == "RotAndDel-Del" || $(obj).parent().hasClass("RotAndDel-Del")){
-            if($('#'+selectObj).hasClass('appended-modul')){
-                if (event1.which == 1 && selectObj!=0){
-                    idObj = $('#'+selectObj).attr('id');
-                    appendedObj.delete(idObj);
-                    if(groupMain.has(idObj)){
-                        groupMain.delete(idObj);
-                    }
-                    $('#'+selectObj).remove();
-                }
-            }
-        }
-        else{
-            if(!$(obj).hasClass("appended-modul")){
-                $moovObj = $(obj).parent().parent();
-                //console.log($moovObj);
-                idObj = $moovObj.attr('id');
-                obj = document.getElementById(idObj);
-            }
-            idObj = $(obj).attr('id');
-            //console.log(idObj);
-            if(!idObj){
-                // блок кода если кликнули по имени блока
-                // нужно получить сам модуль
-                idObj = $(event1.target).parent().attr('id');
-                obj = document.getElementById(idObj);
-            }
-            if(!idObj){
-                // блок кода если кликнули по имени блока
-                // нужно получить сам модуль
-                idObj = $(event1.target).parent().parent().attr('id');
-                obj = document.getElementById(idObj);
-            }
-            if (event1.which == 1 && $(obj).hasClass('appended-modul')){
-                //console.log($(obj).offset());
-                $offsetClick = $calculateMouseOffsetMoovbl(event1,idObj);
-                $deltaX = $offsetClick[0];
-                $deltaY = $offsetClick[1];
-                $moovblModul = $('#'+idObj);
-                $(document).mousemove(function (e) {
-                    //console.log(2);
-                    $('#'+idObj).css({
-                        'z-index':'9999'
-                    });
-                    //top: (e.pageY-$deltaY)*100/$baseScale, left: (e.pageX-$deltaX)*100/$baseScale
-                    $moovblModul.offset({top: e.pageY-$deltaY, left: e.pageX-$deltaX});
-                }).click(function (e) {
-                    $rightPosModul = $moovblModul.offset().left+$moovblModul.width();
-                    $rightPosUI = $('.canvas').width();
-                    if( $rightPosModul < $rightPosUI){
-                        if(appendedObj.size == 1){
+                        $resultPos = $resPosAndIdF[2];
+                        $findeObj = $resPosAndIdF[0];
+                        
+                        $resultDistanse = $getCenterDistanse($findeObj,idObj);
+                        $resMinDist = $minDist($findeObj,idObj);
+                        if($resultDistanse < $resMinDist){
+                            //////////////////////////////
+                            $saveGropsPositions($findeObj,idObj,$resultPos);
+                            //функция работающая c groupsPositions
+                            //////////////////////////////
+                            //console.log(idObj,$findeObj,$resultPos);
+                            $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
+                            // открепляем событие на клик от текущего модуля
                             $(this).unbind("click");
                         }
                         else{
-                            //console.log(idObj);
-                            $resPosAndIdF = $findMinDistObj(idObj); // найти ближайший
-                            $resultPos = $resPosAndIdF[2];
-                            $findeObj = $resPosAndIdF[0];
-                            
-                            $resultDistanse = $getCenterDistanse($findeObj,idObj);
-                            $resMinDist = $minDist($findeObj,idObj);
-                            if($resultDistanse < $resMinDist){
-                                //////////////////////////////
-                                $saveGropsPositions($findeObj,idObj,$resultPos);
-                                console.log(groupsPositionsStr,groupsPositionsRev);
-                                //функция работающая c groupsPositions
-                                //////////////////////////////
-                                //console.log(idObj,$findeObj,$resultPos);
-                                $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
-                                // открепляем событие на клик от текущего модуля
-                                $(this).unbind("click");
-                            }
-                            else{
-                                $updateCord(idObj);
-                                $(this).unbind("click"); 
-                            }
+                            $baseObjBind(idObj);
+                            $updateCord(idObj);
+                            $(this).unbind("click"); 
                         }
-                        $(this).unbind("mousemove");
-                        $('#'+idObj).css({
-                            'z-index':'999'
-                        });
                     }
-                    else{
-                        appendedObj.delete($moovblModul.attr('id'));
-                        groupMain.delete($moovblModul.attr('id'));
-                        $moovblModul.remove();
-                        $(this).unbind("click");
-                        $(this).unbind("mousemove");
-                    }              
+                    $(this).unbind("mousemove");
+                    $('#'+idObj).css({
+                        'z-index':'999'
+                    });
+                }
+                else{
+                    appendedObj.delete($moovblModul.attr('id'));
+                    groupMain.delete($moovblModul.attr('id'));
+                    $moovblModul.remove();
+                    $(this).unbind("click");
+                    $(this).unbind("mousemove");
+                }              
 
-                });
-            }
+            });
         }
+        
     });
     $updateObjSize = function($idUpdObj){
         if($('#'+$idUpdObj).hasClass('appendedB')){
@@ -1255,8 +1285,6 @@ $(document).ready(function(){
         topX = objAdd.getBoundingClientRect().left;
         dovnY = objAdd.getBoundingClientRect().bottom;
         dovnX = objAdd.getBoundingClientRect().right;
-        console.log(objAdd);
-        console.log(topY,topX,dovnY,dovnX);
         groupMain.set($id,[topX,topY,dovnX,dovnY]);
         // добавляем в массив размещенных обхектов id размещенного модуля
         appendedObj.set($id,[topX,topY,dovnX,dovnY]);
@@ -1267,7 +1295,6 @@ $(document).ready(function(){
     // перемещение объектов по рабочей поверхности ////////
     ///////////////////////////////////////////////////////
     $(".canvas").mousedown(function(e1){
-        console.log($(e1.target).hasClass('canvas'));
         if($(e1.target).hasClass('canvas')){
             $cordX0 = e1.pageX;
             $cordY0 = e1.pageY;

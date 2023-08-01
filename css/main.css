@@ -42,7 +42,6 @@ body {
     width: 85%;
     height: 100%;
     left:0;
-    overflow: hidden;
 }
 .scale {
     height: 112px;
@@ -129,6 +128,7 @@ body {
     align-items: center;
     justify-content: center;
     align-content: center;
+    z-index: 999;
 }
 .menu-container{
     display: flex;

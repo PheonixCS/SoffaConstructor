@@ -46,7 +46,7 @@ $(document).ready(function(){
                     break;
                 }
             }
-
+            $scale = 0;
             for($key of appendedObj.keys()){
                 if($key != $mainObj && BaseObjMap.has($key)){
                     // получить старые координаты центра
@@ -57,6 +57,7 @@ $(document).ready(function(){
                     $newW = $('#'+$key).width();
                     $keyNewOffsetTop = $('#'+$key).offset().top;
                     $keyNewOffsetLeft = $('#'+$key).offset().left;
+                    $scale = $newH/$oldH;
                     $('#'+$key).offset({top:$keyNewOffsetTop*($newH/$oldH),left:$keyNewOffsetLeft*($newW/$oldW)});
                     // получить новые координаты центра
                     // имеем старые и новые координаты центра main объекта, расстояние между центрами должно быть
@@ -68,8 +69,7 @@ $(document).ready(function(){
                     //$updateCord($key);
                 }
             }
-            $startConnect();
-            
+            $startConnect();              
         }
     });
     $('#'+'minusScale').mousedown(function(){
@@ -88,7 +88,6 @@ $(document).ready(function(){
                     break;
                 }
             }
-
             for($key of appendedObj.keys()){
                 if($key != $mainObj && BaseObjMap.has($key)){
                     // получить старые координаты центра
@@ -100,8 +99,6 @@ $(document).ready(function(){
                     $keyNewOffsetTop = $('#'+$key).offset().top;
                     $keyNewOffsetLeft = $('#'+$key).offset().left;
 
-                    
-                    
                     $('#'+$key).offset({top:$keyNewOffsetTop*($newH/$oldH),left:$keyNewOffsetLeft*($newW/$oldW)});
                     // получить новые координаты центра
                     // имеем старые и новые координаты центра main объекта, расстояние между центрами должно быть
@@ -172,7 +169,6 @@ $(document).ready(function(){
                 groupsPositionsStr.set($id1,$childrens);
             }
             else{
-                //alert(1);
                 $childrens.set($id2,$pos);
                 groupsPositionsStr.set($id1,$childrens);
                 // взять всех его дочерние элементы и удалить их из реверсивной структуры. 
@@ -268,7 +264,7 @@ $(document).ready(function(){
         }
     }
     // рекурсивный конструктор, востанавливающий соединения объектов его нужно запустить для всех элементов без родителей.
-    $recursiveСonstructor = function($id){
+    $recursiveConstructor = function($id){
         if(groupsPositionsStr.has($id)){
             $childrens = groupsPositionsStr.get($id);
             for(let $child of $childrens.keys()){
@@ -277,14 +273,14 @@ $(document).ready(function(){
             }
             for(let $child of $childrens.keys()){
                 //$setPositionObetcs($child,$id,$childrens.get($child));
-                $recursiveСonstructor($child);
+                $recursiveConstructor($child);
             }
         }
         //return true;
     };
     $startConnect = function(){
         for(let $key of BaseObjMap.keys()){
-            $recursiveСonstructor($key);
+            $recursiveConstructor($key);
         }
     };
     //arr.set('key5','value5');
@@ -962,11 +958,14 @@ $(document).ready(function(){
             // запускаем логику если мышь начала движение
             $(document).mousemove(function (e) {
                 // пока клавиша зажата и мышь движется меняем динамично смещение модуля
+                $('#'+idObject).css({
+                    'z-index':'9999'
+                });
                 $moovblModul.offset({top: (e.pageY-$deltaY)*100/$baseScale, left: (e.pageX-$deltaX)*100/$baseScale});
             }).click(function (e) {
                 $rightPosModul = $moovblModul.offset().left+$moovblModul.width();
                 $rightPosUI = $('.canvas').width();
-                if( $rightPosModul < $rightPosUI){
+                //if( $rightPosModul < $rightPosUI){
                     // запускаем логику если кнопка отжата
                     objAdd = document.getElementById(idObject);
                     topY = objAdd.getBoundingClientRect().top;
@@ -974,20 +973,28 @@ $(document).ready(function(){
                     dovnY = topY + $('#'+idObject).height();
                     dovnX = topX + $('#'+idObject).width();
 
+                    
                     // условие создание объекта если на доске ничего нет.
                     if(groupMain.size == 0){
-                        // основная логика
-                        // добавляем объект высчитывем координаты его углов
-                        // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
-                        groupMain.set(idObject,[topX,topY,dovnX,dovnY]);
-                        // добавляем в массив размещенных обхектов id размещенного модуля
-                        appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
-                        BaseObjMap.set(idObject,'1');
-                        // генерируем новый id для следующего модуля
-                        numberIdObjecy = numberIdObjecy + 1;
-                        idObject = "appended-modul" + numberIdObjecy;
-                        // открепляем событие на клик от текущего модуля
-                        $(this).unbind("click");
+                        if($rightPosModul > $rightPosUI){
+                            $moovblModul.remove();
+                            $(this).unbind("click");
+                            $(this).unbind("mousemove");
+                        }
+                        else{
+                            // основная логика
+                            // добавляем объект высчитывем координаты его углов
+                            // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
+                            groupMain.set(idObject,[topX,topY,dovnX,dovnY]);
+                            // добавляем в массив размещенных обхектов id размещенного модуля
+                            appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
+                            BaseObjMap.set(idObject,'1');
+                            // генерируем новый id для следующего модуля
+                            numberIdObjecy = numberIdObjecy + 1;
+                            idObject = "appended-modul" + numberIdObjecy;
+                            // открепляем событие на клик от текущего модуля
+                            $(this).unbind("click");
+                        }
                     }
                     // если на доске что-то есть.
                     else{
@@ -1001,36 +1008,50 @@ $(document).ready(function(){
                         
                         $resultDistanse = $getCenterDistanse($findeObj,idObject);
                         $resMinDist = $minDist($findeObj,idObject);
-                        if($resultDistanse < $resMinDist){
-                            //////////////////////////////
+                        if($rightPosModul > $rightPosUI){
                             $saveGropsPositions($findeObj,idObject,$resultPos);
-                            //функция работающая c groupsPositions
-                            //////////////////////////////
-                            // далее нужна функция стыковки объектов
                             $setPositionObetcs(idObject,$findeObj,$resultPos);
-                            // увеличиваем индекс
                             numberIdObjecy = numberIdObjecy + 1;
                             idObject = "appended-modul" + numberIdObjecy;
                             rotationObj.set(idObject,false);
-                            // открепляем событие на клик от текущего модуля
                             $(this).unbind("click");
-                       
-                            
                         }
-                        else {
-                            BaseObjMap.set(idObject,'1');
-                            $updateCord(idObject);
-                            numberIdObjecy = numberIdObjecy + 1;
-                            idObject = "appended-modul" + numberIdObjecy;
-                            rotationObj.set(idObject,false);
-                            // открепляем событие на клик от текущего модуля
-                            $(this).unbind("click");
+                        else{
+                            if($resultDistanse < $resMinDist){
+                                //////////////////////////////
+                                $saveGropsPositions($findeObj,idObject,$resultPos);
+                                //функция работающая c groupsPositions
+                                //////////////////////////////
+                                // далее нужна функция стыковки объектов
+                                $setPositionObetcs(idObject,$findeObj,$resultPos);
+                                // увеличиваем индекс
+                                numberIdObjecy = numberIdObjecy + 1;
+                                idObject = "appended-modul" + numberIdObjecy;
+                                rotationObj.set(idObject,false);
+                                // открепляем событие на клик от текущего модуля
+                                $(this).unbind("click");
+                        
+                                
+                            }
+                            else {
+                                BaseObjMap.set(idObject,'1');
+                                $updateCord(idObject);
+                                numberIdObjecy = numberIdObjecy + 1;
+                                idObject = "appended-modul" + numberIdObjecy;
+                                rotationObj.set(idObject,false);
+                                // открепляем событие на клик от текущего модуля
+                                $(this).unbind("click");
+                            }
                         }
                         
                     }
 
+
                     // условия создания объекта если на доске что-то есть.
                     $(this).unbind("mousemove");
+                    $moovblModul.css({
+                        'z-index':'999'
+                    });
                     if(selectObj != 0){
                         $('#'+selectObj).children().children('.modul-border').css({
                             'stroke':'black'
@@ -1046,13 +1067,14 @@ $(document).ready(function(){
                         'display':'block'
                     });
                     
-                }
-                else{
+                //}
+                // else{
                     
-                    $moovblModul.remove();
-                    $(this).unbind("click");
-                    $(this).unbind("mousemove");
-                }
+                //     $moovblModul.remove();
+                //     $(this).unbind("click");
+                //     $(this).unbind("mousemove");
+                // }
+                
             });
         };
     };
@@ -1061,17 +1083,71 @@ $(document).ready(function(){
     $(".B").mousedown(function(e){
         $appendMainFunc(1,idObject,e);
     });
+    $(".B").on('mouseout',function(){
+        $(this).children().children('.modul-border').css({
+            'stroke':'black'
+        });
+    });
+    $(".B").on('mouseover',function(){
+        $(this).children().children('.modul-border').css({
+            'stroke':'red'
+        });
+    });
+
     $(".BM").mousedown(function(e){
         $appendMainFunc(2,idObject,e);
     });
+    $(".BM").on('mouseout',function(){
+        $(this).children().children('.modul-border').css({
+            'stroke':'black'
+        });
+    });
+    $(".BM").on('mouseover',function(){
+        $(this).children().children('.modul-border').css({
+            'stroke':'red'
+        });
+    });
+
     $(".C").mousedown(function(e){
         $appendMainFunc(3,idObject,e);
     });
+    $(".C").on('mouseout',function(){
+        $(this).children().children('.modul-border').css({
+            'stroke':'black'
+        });
+    });
+    $(".C").on('mouseover',function(){
+        $(this).children().children('.modul-border').css({
+            'stroke':'red'
+        });
+    });
+
     $(".CM").mousedown(function(e){
         $appendMainFunc(4,idObject,e);
     });
+    $(".CM").on('mouseout',function(){
+        $(this).children().children('.modul-border').css({
+            'stroke':'black'
+        });
+    });
+    $(".CM").on('mouseover',function(){
+        $(this).children().children('.modul-border').css({
+            'stroke':'red'
+        });
+    });
+
     $(".CB").mousedown(function(e){
         $appendMainFunc(5,idObject,e);
+    });
+    $(".CB").on('mouseout',function(){
+        $(this).children().children('.modul-border').css({
+            'stroke':'black'
+        });
+    });
+    $(".CB").on('mouseover',function(){
+        $(this).children().children('.modul-border').css({
+            'stroke':'red'
+        });
     });
 
 

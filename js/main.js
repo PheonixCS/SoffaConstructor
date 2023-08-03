@@ -323,6 +323,30 @@ $(document).ready(function(){
             $countCost();
         }
     };
+
+    //////// данная функция формирует список объектов в группе.
+    $findObjects = new Map();
+    $constructMainGr = function($targetId){
+        if($targetId){
+            for(let key of appendedObj.keys()){
+                $resultDistanse = $getCenterDistanse(key,$targetId);
+                $resMinDist = $minDist(key,$targetId);
+                if($resultDistanse < $resMinDist && !$findObjects.has(key)){
+                    $findObjects.set(key,'1');
+                    $constructMainGr(key);
+                }
+            }
+        }
+    }
+    $controllerConstruct = function($targetId,$ourId){
+        $findObjects.clear();
+        $findObjects.set($ourId,'1');
+        if($targetId){
+            $findObjects.set($targetId,'1');
+        }
+        $constructMainGr($targetId);
+    };
+    ////////
     // mainGr - класс элементов из главной группы
     // функция контролирующая принадлежность к группе объекта
     $controlGroups = function($idOur,$idTarget){
@@ -356,7 +380,7 @@ $(document).ready(function(){
             $minLeft = 9999999999;
             $maxRight = 0;
             //console.log(groupMain);
-            for(let key of groupMain.keys()){
+            for(let key of $findObjects.keys()){
                 if(!rotationObj.get(key)){
                     $top = $('#'+key).offset().top;
                     $left = $('#'+key).offset().left;
@@ -1308,6 +1332,7 @@ $(document).ready(function(){
                             // добавляем в массив размещенных обхектов id размещенного модуля
                             appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
                             BaseObjMap.set(idObject,'1');
+                            $controllerConstruct(0,idObject);
                             $recountFun(idObject,0);
                             $counterModuls(idObject,1);
                             // генерируем новый id для следующего модуля
@@ -1335,6 +1360,7 @@ $(document).ready(function(){
                             // функция контролирующая принадлежность к группе объекта
                             $controlGroups(idObject,$findeObj);
                             rotationObj.set(idObject,false);
+                            $controllerConstruct($findeObj,idObject);/////!!!!!!
                             $recountFun(idObject,$findeObj);
                             $counterModuls(idObject,1);
                             numberIdObjecy = numberIdObjecy + 1;
@@ -1351,6 +1377,7 @@ $(document).ready(function(){
                                 // далее нужна функция стыковки объектов
                                 $setPositionObetcs(idObject,$findeObj,$resultPos);
                                 $controlGroups(idObject,$findeObj);
+                                $controllerConstruct($findeObj,idObject);////!!!!!!!
                                 $recountFun(idObject,$findeObj);
                                 $counterModuls(idObject,1);
                                 // увеличиваем индекс
@@ -1365,6 +1392,7 @@ $(document).ready(function(){
                             else {
                                 BaseObjMap.set(idObject,'1');
                                 $updateCord(idObject);
+                                $controllerConstruct(0,idObject);
                                 $recountFun(idObject,0);
                                 $counterModuls(idObject,1);
                                 numberIdObjecy = numberIdObjecy + 1;
@@ -1704,6 +1732,8 @@ $(document).ready(function(){
                     if(appendedObj.size == 1){
                         $(this).unbind("click");
                         $updateCord(idObj);
+                        $controllerConstruct(0,idObj);
+                        $recountFun(idObj,0);
                     }
                     else{
                         //console.log(idObj);
@@ -1721,7 +1751,7 @@ $(document).ready(function(){
                             //console.log(idObj,$findeObj,$resultPos);
                             $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
                             $controlGroups(idObj,$findeObj);
-                            console.log(idObj,$findeObj);
+                            $controllerConstruct($findeObj,idObj);
                             $recountFun(idObj,$findeObj);
                             // открепляем событие на клик от текущего модуля
                             
@@ -1732,6 +1762,7 @@ $(document).ready(function(){
                             $updateCord(idObj);
                             if(groupMain.size > 1){
                                 $controlGroups(idObj,0);
+                                $controllerConstruct(0,idObj);
                                 $recountFun(idObj,0);
                             }
                             $(this).unbind("click"); 

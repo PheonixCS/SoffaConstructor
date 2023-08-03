@@ -53,7 +53,7 @@ body {
     z-index: 9999;
 }
 .scale svg{
-    padding-top: 10px;
+    margin-top: 10px;
     height: 53px;
     width: 50px;
     display: flex;

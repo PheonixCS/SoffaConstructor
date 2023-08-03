@@ -21,7 +21,43 @@ $(document).ready(function(){
     $('.RotAndDel').css({
         'display':'none'
     });
-    
+    ////////// подсчет объектов
+        $countB = 0;
+        $countBM = 0;
+        $countC = 0;
+        $countCM = 0;
+        $countCB = 0;
+
+    $counterModuls = function($id,$command){
+        
+        if($command){
+            $delta = 1;
+        }
+        else {
+            $delta = -1; 
+        }
+        if($('#'+$id).hasClass('appendedB')){
+            $countB = $countB + $delta;
+            $('#countB').text($countB);
+        }
+        if($('#'+$id).hasClass('appendedBM')){
+            $countBM = $countBM + $delta;
+            $('#countBM').text($countBM);
+        }
+        if($('#'+$id).hasClass('appendedC')){
+            $countC = $countC + $delta;
+            $('#countC').text($countC);
+        }
+        if($('#'+$id).hasClass('appendedCM')){
+            $countCM = $countCM + $delta;
+            $('#countCM').text($countCM);
+        }
+        if($('#'+$id).hasClass('appendedCB')){
+            $countCB = $countCB + $delta;
+            $('#countCB').text($countCB);
+        }
+    };
+    /////////
     $baseScale = 100;
     $minConstDist = 30;
     $mainObj = 0; // нужно сделать обнуление переменной в случае если объект записанный туда перестал быть базовым.
@@ -349,7 +385,6 @@ $(document).ready(function(){
             $realwidth = ($maxRight-$minLeft);
             $realHeight = ($maxBottom-$minTop);
 
-            console.log($minTop,$minLeft,$maxRight,$maxBottom);
             $('#realDepth').text((($realHeight*1/$scaleH/35)*35).toFixed());
             $('#realWidth').text((($realwidth*1/$scaleW/35)*35).toFixed());
             $countCost();
@@ -1274,6 +1309,7 @@ $(document).ready(function(){
                             appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
                             BaseObjMap.set(idObject,'1');
                             $recountFun(idObject,0);
+                            $counterModuls(idObject,1);
                             // генерируем новый id для следующего модуля
                             numberIdObjecy = numberIdObjecy + 1;
                             idObject = "appended-modul" + numberIdObjecy;
@@ -1300,7 +1336,7 @@ $(document).ready(function(){
                             $controlGroups(idObject,$findeObj);
                             rotationObj.set(idObject,false);
                             $recountFun(idObject,$findeObj);
-                            
+                            $counterModuls(idObject,1);
                             numberIdObjecy = numberIdObjecy + 1;
                             idObject = "appended-modul" + numberIdObjecy;
                             
@@ -1316,7 +1352,7 @@ $(document).ready(function(){
                                 $setPositionObetcs(idObject,$findeObj,$resultPos);
                                 $controlGroups(idObject,$findeObj);
                                 $recountFun(idObject,$findeObj);
-                                
+                                $counterModuls(idObject,1);
                                 // увеличиваем индекс
                                 numberIdObjecy = numberIdObjecy + 1;
                                 idObject = "appended-modul" + numberIdObjecy;
@@ -1330,6 +1366,7 @@ $(document).ready(function(){
                                 BaseObjMap.set(idObject,'1');
                                 $updateCord(idObject);
                                 $recountFun(idObject,0);
+                                $counterModuls(idObject,1);
                                 numberIdObjecy = numberIdObjecy + 1;
                                 idObject = "appended-modul" + numberIdObjecy;
                                 rotationObj.set(idObject,false);
@@ -1615,6 +1652,7 @@ $(document).ready(function(){
                     }
                     $clearMapsWhenDelete(selectObj);
                     $recountFun(0,0);
+                    $counterModuls(selectObj,0);
                     //console.log(selectObj);
                     //console.log(groupsPositionsStr);
                     //console.log(groupsPositionsRev);

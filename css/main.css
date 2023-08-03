@@ -44,36 +44,41 @@ body {
     left:0;
 }
 .scale {
-    height: 112px;
+    height: 100px;
     width: 45px;
     position: absolute;
-    right: 30px;
+    right: 42px;
     top: 50%;
     margin-top: -56px;
     z-index: 9999;
 }
 .scale svg{
+    padding-top: 10px;
+    height: 53px;
+    width: 50px;
     display: flex;
 }
 .RotAndDel{
     position: absolute;
-    bottom: 5px;
+    bottom: 20px;
     left: 45%;
     height: 61px;
-    width: 112px;
+    width: 130px;
     text-align: center;
     z-index: 9999;
+    
 }
 .RotAndDel svg{
     float: left;
+    padding-left: 15px;
 }
 .RotAndDel-Rot {
     margin-top: 4px;
 }
 .info-menu{
     position: absolute;
-    width: 240px;
-    z-index: 99;
+    width: 300px;
+    z-index: 9999;
     top:20px;
     left: 20px;
 }
@@ -99,7 +104,7 @@ body {
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 1000;
-    font-size: 16px;
+    font-size: 18px;
     line-height: 18px;
     letter-spacing: 0.07em;
     color: rgba(0, 0, 0, 0.95);
@@ -108,7 +113,7 @@ body {
     font-family: 'Arial';
     font-style: normal;
     font-weight: 500;
-    font-size: 15px;
+    font-size: 18px;
     line-height: 17px;
     display: flex;
     align-items: center;
@@ -238,4 +243,37 @@ body {
     margin: 0 auto;
     margin-top:50px;
     margin-left: 48px;
+}
+
+
+.counter {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 1000;
+    font-size: 24px;
+}
+#countB {
+    position: absolute;
+    top: 11%;
+    right: 10%;
+}
+#countBM {
+    position: absolute;
+    top: 30%;
+    right: 10%;
+}
+#countC {
+    position: absolute;
+    top: 44%;
+    right: 10%;
+}
+#countCM {
+    position: absolute;
+    top: 58%;
+    right: 10%;
+}
+#countCB {
+    position: absolute;
+    top: 73%;
+    right: 10%;
 }

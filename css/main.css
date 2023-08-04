@@ -101,9 +101,9 @@ body {
 
 .information-block-nameFont{
     /* Глубина (см): */
-    font-family: 'Roboto';
+    font-family: 'Arial';
     font-style: normal;
-    font-weight: 1000;
+    font-weight: 700;
     font-size: 18px;
     line-height: 18px;
     letter-spacing: 0.07em;
@@ -247,7 +247,7 @@ body {
 
 
 .counter {
-    font-family: 'Roboto';
+    font-family: 'Arial';
     font-style: normal;
     font-weight: 1000;
     font-size: 24px;

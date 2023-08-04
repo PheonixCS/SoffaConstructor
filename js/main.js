@@ -1780,6 +1780,7 @@ $(document).ready(function(){
                     }
                     else{
                         //console.log(idObj);
+                        //alert(1);
                         $resPosAndIdF = $findMinDistObj(idObj); // найти ближайший
                         $resultPos = $resPosAndIdF[2];
                         $findeObj = $resPosAndIdF[0];
@@ -1801,13 +1802,16 @@ $(document).ready(function(){
                             $(this).unbind("click");
                         }
                         else{
+                            //alert(2);
                             $baseObjBind(idObj);
                             $updateCord(idObj);
                             if(groupMain.size > 1){
                                 $controlGroups(idObj,0);
-                                $controllerConstruct(0,idObj);
-                                $recountFun(idObj,0);
+                                //$controllerConstruct(0,idObj);
+                                
                             }
+                            $controllerConstruct(0,idObj);
+                            $recountFun(idObj,0);
                             $(this).unbind("click"); 
                         }
                     }

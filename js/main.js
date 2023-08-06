@@ -1908,7 +1908,6 @@ $(document).ready(function(){
                 $moovObj = $creatModul($id,$numberObj);
                 // добавляем на страницу(он скрыт)
                 $append($('.canvas'),$moovObj);
-                console.log($moovObj);
                 $updateObjSize($id);
                 
                 // получаем добавленный модуль
@@ -2380,6 +2379,478 @@ $(document).ready(function(){
                     'stroke':'red'
                 });
             });
+            // функция перемещения по рабочей поверхности
+            $(".canvas").on('mousedown touchstart',function(e1){
+                if($(e1.target).hasClass('canvas')){
+                    if(e1.handleObj.type == "mousedown"){
+                        $cordX0 = e1.pageX;
+                        $cordY0 = e1.pageY;
+                    }
+                    else {
+                        $cordX0 = e1.targetTouches[0].pageX;
+                        $cordY0 = e1.targetTouches[0].pageY;
+                    }
+                    $(document).on('mousemove touchmove',function (e) {
+                        ////
+                        if(e.handleObj.type == "mousemove"){
+                            $cordX1 = e.pageX;
+                            $cordY1 = e.pageY;
+                        }
+                        else{
+                            $cordX1 = e.targetTouches[0].pageX;
+                            $cordY1 = e.targetTouches[0].pageY;
+                        }
+                        /////
+                        $deltaX = $cordX1-$cordX0;
+                        $deltaY = $cordY1-$cordY0;
+                        for($key of appendedObj.keys()){
+                            $currentX = $('#'+$key).offset().left;
+                            $currentY = $('#'+$key).offset().top;
+                            $('#'+$key).offset({top: appendedObj.get($key)[1]+$deltaY, left: appendedObj.get($key)[0]+$deltaX});
+                        }
+                    }).on('click touchend', function(){
+                        //e.preventDefault();
+                        for($key of appendedObj.keys()){
+                            $updateCord($key);
+                        }
+                        $(this).unbind("click");
+                        $(this).unbind("touchend");
+                        $(this).unbind("touchmove");
+                        $(this).unbind("mousemove");
+                    });
+                }
+            });
+
+            // логика перемещения объектов
+            $( '.canvas' ).on( 'mousedown touchstart', function( event1 ) {
+                obj = event1.target;
+                if(!$(obj).hasClass("appended-modul")){
+                    $moovObj = $(obj).parent().parent();
+                    //console.log($moovObj);
+                    idObj = $moovObj.attr('id');
+                    obj = document.getElementById(idObj);
+                }
+                idObj = $(obj).attr('id');
+                //console.log(idObj);
+                if(!idObj){
+                    // блок кода если кликнули по имени блока
+                    // нужно получить сам модуль
+                    idObj = $(event1.target).parent().attr('id');
+                    obj = document.getElementById(idObj);
+                }
+                if(!idObj){
+                    // блок кода если кликнули по имени блока
+                    // нужно получить сам модуль
+                    idObj = $(event1.target).parent().parent().attr('id');
+                    obj = document.getElementById(idObj);
+                }
+
+                if (event1.which == 1 && event1.handleObj.type == "mousedown" && $(obj).hasClass('appended-modul')){
+                    //console.log($(obj).offset());
+                    $offsetClick = $calculateMouseOffsetMoovbl(event1,idObj);
+                    $deltaX = $offsetClick[0];
+                    $deltaY = $offsetClick[1];
+                    $moovblModul = $('#'+idObj);
+                    $(document).mousemove(function (e) {
+                        //console.log(2);
+                        $('#'+idObj).css({
+                            'z-index':'9999'
+                        });
+                        //top: (e.pageY-$deltaY)*100/$baseScale, left: (e.pageX-$deltaX)*100/$baseScale
+                        $moovblModul.offset({top: e.pageY-$deltaY, left: e.pageX-$deltaX});
+                    }).click(function (e) {
+                        $rightPosModul = $moovblModul.offset().left+$moovblModul.width();
+                        $rightPosUI = $('.canvas').width();
+                        if( $rightPosModul < $rightPosUI){
+                            if(appendedObj.size == 1){
+                                $(this).unbind("click");
+                                $updateCord(idObj);
+                                $controllerConstruct(0,idObj);
+                                $recountFun(idObj,0);
+                            }
+                            else{
+                                //console.log(idObj);
+                                //alert(1);
+                                $resPosAndIdF = $findMinDistObj(idObj); // найти ближайший
+                                $resultPos = $resPosAndIdF[2];
+                                $findeObj = $resPosAndIdF[0];
+                                
+                                $resultDistanse = $getCenterDistanse($findeObj,idObj);
+                                $resMinDist = $minDist($findeObj,idObj);
+                                if($resultDistanse < $resMinDist){
+                                    //////////////////////////////
+                                    $saveGropsPositions($findeObj,idObj,$resultPos);
+                                    //функция работающая c groupsPositions
+                                    //////////////////////////////
+                                    //console.log(idObj,$findeObj,$resultPos);
+                                    $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
+                                    $controllerConstruct($findeObj,idObj);
+                                    $recountFun(idObj,$findeObj);
+                                    // открепляем событие на клик от текущего модуля
+                                    
+                                    $(this).unbind("click");
+                                }
+                                else{
+                                    //alert(2);
+                                    $baseObjBind(idObj);
+                                    $updateCord(idObj);
+                                    if(appendedObj.size > 1){
+                                        //$controllerConstruct(0,idObj);
+                                        
+                                    }
+                                    $controllerConstruct(0,idObj);
+                                    $recountFun(idObj,0);
+                                    $(this).unbind("click"); 
+                                }
+                            }
+                            $(this).unbind("mousemove");
+                            $('#'+idObj).css({
+                                'z-index':'999'
+                            });
+                        }
+                        else{// здесь нужно переделать код
+                            idObj = $('#'+selectObj).attr('id');
+                            appendedObj.delete(idObj);
+                            $clearMapsWhenDelete(selectObj);
+                            $recountFun(0,0);
+                            //console.log(selectObj);
+                            //console.log(groupsPositionsStr);
+                            //console.log(groupsPositionsRev);
+                            $('#'+selectObj).remove();
+                            $(this).unbind("click");
+                            $(this).unbind("mousemove");
+                        }              
+
+                    });
+                }
+                if (event1.handleObj.type == "touchstart" && $(obj).hasClass('appended-modul')) {
+                    $offsetClick = $calculateMouseOffsetMoovbl(event1,idObj);
+                    $deltaX = $offsetClick[0];
+                    $deltaY = $offsetClick[1];
+                    $moovblModul = $('#'+idObj);
+                    $(document).on('touchmove', function (e) {
+                        $('#'+idObj).css({
+                            'z-index':'9999'
+                        });
+                        $moovblModul.offset({top: (e.targetTouches[0].pageY-$deltaY)*100/$baseScale, left: (e.targetTouches[0].pageX-$deltaX)*100/$baseScale});
+                    }).on('touchend',function (e) {
+                        e.preventDefault();
+
+                        $rightPosModul = $moovblModul.offset().left+$moovblModul.width();
+                        $rightPosUI = $('.canvas').width();
+                        if ($('body').width() < $('body').height()) { 
+                            $rightPosModul = $moovblModul.offset().top+$moovblModul.height();
+                            $rightPosUI = $('.canvas').height();
+                        }
+                        if( $rightPosModul < $rightPosUI){
+                            if(appendedObj.size == 1){
+                                $(this).off("touchend");
+                                $updateCord(idObj);
+                                $controllerConstruct(0,idObj);
+                                $recountFun(idObj,0);
+                            }
+                            else{
+                                $resPosAndIdF = $findMinDistObj(idObj);
+                                $resultPos = $resPosAndIdF[2];
+                                $findeObj = $resPosAndIdF[0];
+                                
+                                $resultDistanse = $getCenterDistanse($findeObj,idObj);
+                                $resMinDist = $minDist($findeObj,idObj);
+                                if($resultDistanse < $resMinDist){
+                                    //////////////////////////////
+                                    $saveGropsPositions($findeObj,idObj,$resultPos);
+                                    //////////////////////////////
+                                    $setPositionObetcs(idObj,$findeObj,$resultPos);
+                                    $controllerConstruct($findeObj,idObj);
+                                    $recountFun(idObj,$findeObj);
+                                    $(this).off("touchend");
+                                }
+                                else{
+                                    $baseObjBind(idObj);
+                                    $updateCord(idObj);
+                                    $controllerConstruct(0,idObj);
+                                    $recountFun(idObj,0);
+                                    $(this).off("touchend"); 
+                                }
+                            }
+                            $(this).off("touchmove");
+                            $('#'+idObj).css({
+                                'z-index':'999'
+                            });
+                        }
+                        else{
+                            idObj = $('#'+selectObj).attr('id');
+                            appendedObj.delete(idObj);
+                            $clearMapsWhenDelete(selectObj);
+                            $recountFun(0,0);
+                            $('#'+selectObj).remove();
+                            $(this).off("touchend");
+                            $(this).off("touchmove");
+                        }
+                        $(this).unbind("touchend");
+                        $(this).unbind("touchmove");           
+                    });
+                }
+            });
+
+            // логика выделения
+            $( '.canvas' ).on( 'click touchstart', function( event1 ) {
+                obj2 = event1.target;
+                $classObj =$(obj2).attr('class')
+                if($classObj == "RotAndDel-Rot" || $(obj2).parent().hasClass("RotAndDel-Rot")){
+        
+                }
+                else if($classObj == "appended-modul") {
+                    if(selectObj != 0){
+                        $('#'+selectObj).children().children('.modul-border').css({
+                            'stroke':'black'
+                        });
+                    }
+                    selectObj = $(obj2).attr('id');
+                    if(selectObj != 0){
+                        $('#'+selectObj).children().children('.modul-border').css({
+                            'stroke':'red'
+                        });
+                    }
+                    $('.RotAndDel').css({
+                        'display':'block'
+                    });
+                }
+                else if($(obj2).parent().hasClass("appended-modul")){
+                    if(selectObj != 0){
+        
+                        $('#'+selectObj).children().children('.modul-border').css({
+                            'stroke':'black'
+                        });
+                    }
+                    selectObj = $(obj2).parent().attr('id');
+                    if(selectObj != 0){
+                        $('#'+selectObj).children().children('.modul-border').css({
+                            'stroke':'red'
+                        });
+                    }
+                    $('.RotAndDel').css({
+                        'display':'block'
+                    });
+                }
+                else if($(obj2).parent().parent().hasClass("appended-modul")){
+                    if(selectObj != 0){
+        
+                        $('#'+selectObj).children().children('.modul-border').css({
+                            'stroke':'black'
+                        });
+                    }
+                    selectObj = $(obj2).parent().parent().attr('id');
+                    if(selectObj != 0){
+                        $('#'+selectObj).children().children('.modul-border').css({
+                            'stroke':'red'
+                        });
+                    }
+                    $('.RotAndDel').css({
+                        'display':'block'
+                    });
+                }
+                else {
+                    if(selectObj != 0){
+        
+                        $('#'+selectObj).children().children('.modul-border').css({
+                            'stroke':'black'
+                        });
+                    }
+                    selectObj = 0
+                    $('.RotAndDel').css({
+                        'display':'none'
+                    });
+                }
+            });
+            // логика удаления вращения
+            $( '.canvas-UI' ).on( 'mousedown touchstart', function( event1 ) {
+                obj = event1.target;
+                classObj =$(obj).attr('class');
+                if(classObj == "RotAndDel-Rot" || $(obj).parent().hasClass("RotAndDel-Rot")){
+                    if($('#'+selectObj).hasClass('appended-modul') && !$('#'+selectObj).hasClass('appendedCM') && !$('#'+selectObj).hasClass('appendedCB')){
+                        if (event1.which == 1 && selectObj!=0){
+                            idObj = $('#'+selectObj).attr('id');
+                            if(!rotationObj.get($('#'+selectObj).attr('id'))){
+                                if($('#'+selectObj).hasClass('appendedC')){
+                                    $('#'+selectObj).css({
+                                        'transform-origin':'center center',
+                                        'transform':'rotate(-90deg)'
+            
+                                    });
+                                }
+                                else{
+                                    $('#'+selectObj).css({
+                                        'transform-origin':'center center',
+                                        'transform':'rotate(90deg)'
+        
+                                    });
+                                }
+                                $resPosAndIdF = $findMinDistObj(idObj); //  
+                                if($resPosAndIdF){
+                                    $resultPos = $resPosAndIdF[2];
+                                    $findeObj = $resPosAndIdF[0];
+                                    $resMinDist = $minDist($findeObj,idObj);
+                                    if($resultDistanse < $resMinDist){
+                                        rotationObj.set($('#'+selectObj).attr('id'),true);
+                                        $saveGropsPositions($findeObj,idObj,$resultPos);
+                                        $setPositionObetcs(idObj,$findeObj,$resultPos); // 
+                                        $recountFun(idObj,$findeObj);
+                                    }
+                                    else{
+                                        rotationObj.set($('#'+selectObj).attr('id'),true);
+                                        $updateCord(idObj);
+                                        if(appendedObj.size > 1){
+                                            $recountFun(idObj,0);
+                                        }
+                                    }
+                                }
+                                else{
+                                    rotationObj.set($('#'+selectObj).attr('id'),true);
+                                    $updateCord(idObj);
+                                    if(appendedObj.size > 1){
+                                        $recountFun(idObj,0);
+                                    }
+                                }
+                                
+                            }
+                            else{
+                                $('#'+selectObj).css({
+                                    'transform-origin':'center center',
+                                    'transform':'rotate(0deg)'
+                                });
+                                $resPosAndIdF = $findMinDistObj(idObj); 
+                                if($resPosAndIdF){
+                                    $resultPos = $resPosAndIdF[2];
+                                    $findeObj = $resPosAndIdF[0];
+                                    $resMinDist = $minDist($findeObj,idObj);
+                                    if($resultDistanse < $resMinDist){
+                                        rotationObj.set($('#'+selectObj).attr('id'),false);
+                                        $saveGropsPositions($findeObj,idObj,$resultPos);
+                                        $setPositionObetcs(idObj,$findeObj,$resultPos); 
+                                        $recountFun(idObj,$findeObj);
+                                    }
+                                    else{
+                                        rotationObj.set($('#'+selectObj).attr('id'),false);
+                                        $updateCord(idObj);
+                                        if(appendedObj.size > 1){
+                                            $recountFun(idObj,0);
+                                        }
+                                        
+                                    }
+                                }
+                                else{
+                                    rotationObj.set($('#'+selectObj).attr('id'),false);
+                                    $updateCord(idObj);
+                                    if(appendedObj.size > 1){
+                                        $recountFun(idObj,0);
+                                    }
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+                if(classObj == "RotAndDel-Del" || $(obj).parent().hasClass("RotAndDel-Del")){
+                    if($('#'+selectObj).hasClass('appended-modul')){
+                        if (event1.which == 1 && selectObj!=0){
+                            idObj = $('#'+selectObj).attr('id');
+                            appendedObj.delete(idObj);
+                            if($('#'+idObj).hasClass('mainGr')){
+                                $('#'+idObj).removeClass('mainGr');
+                                groupMain.delete(idObj);
+                            }
+                            $clearMapsWhenDelete(selectObj);
+                            $recountFun(0,0);
+                            $counterModuls(selectObj,0);
+                            //console.log(selectObj);
+                            //console.log(groupsPositionsStr);
+                            //console.log(groupsPositionsRev);
+                            $('#'+selectObj).remove();
+                        }
+                    }
+                }
+            });
+
+            $('#'+'plusScale').on('mousedown touchstart',function(e){
+                e.preventDefault();
+                $basescale = $basescale + 0.0025;
+                $mainObj = 0;
+                if(appendedObj.size>0){
+                    for($key of appendedObj.keys()){
+                        if(BaseObjMap.has($key) && $mainObj != 0){
+                            $mainObj = $key;
+                            $oldH = $('#'+$key).height();
+                            $oldW = $('#'+$key).width();
+                            $updateObjSize($key);
+                            $newH = $('#'+$key).height();
+                            $newW = $('#'+$key).width();
+                            $minConstDist = $minConstDist*($newH/$oldH);
+                            $updateCord($key);
+                            break;
+                        }
+                    }
+                    $scale = 0;
+                    for($key of appendedObj.keys()){
+                        if($key != $mainObj && BaseObjMap.has($key)){
+                            $oldH = $('#'+$key).height();
+                            $oldW = $('#'+$key).width();
+                            $updateObjSize($key);
+                            $newH = $('#'+$key).height();
+                            $newW = $('#'+$key).width();
+                            $keyNewOffsetTop = $('#'+$key).offset().top;
+                            $keyNewOffsetLeft = $('#'+$key).offset().left;
+                            $scale = $newH/$oldH;
+                            $('#'+$key).offset({top:$keyNewOffsetTop*($newH/$oldH),left:$keyNewOffsetLeft*($newW/$oldW)});
+                            $updateCord($key);
+                        }
+                        else{
+                            $updateObjSize($key);
+                        }
+                    }
+                    $startConnect();            
+                }
+            });
+            $('#'+'minusScale').on('mousedown touchstart',function(e){
+                e.preventDefault();
+                $basescale = $basescale - 0.0025;
+                if(appendedObj.size>0){
+                    for($key of appendedObj.keys()){
+                        if(BaseObjMap.has($key) && $mainObj != 0){
+                            $mainObj = $key;
+                            $oldH = $('#'+$key).height();
+                            $oldW = $('#'+$key).width();
+                            $updateObjSize($key);
+                            $newH = $('#'+$key).height();
+                            $newW = $('#'+$key).width();
+                            $minConstDist = $minConstDist*($newH/$oldH);
+                            $updateCord($key);
+                            break;
+                        }
+                    }
+                    for($key of appendedObj.keys()){
+                        if($key != $mainObj && BaseObjMap.has($key)){
+                            $oldH = $('#'+$key).height();
+                            $oldW = $('#'+$key).width();
+                            $updateObjSize($key);
+                            $newH = $('#'+$key).height();
+                            $newW = $('#'+$key).width();
+                            $keyNewOffsetTop = $('#'+$key).offset().top;
+                            $keyNewOffsetLeft = $('#'+$key).offset().left;
+        
+                            $('#'+$key).offset({top:$keyNewOffsetTop*($newH/$oldH),left:$keyNewOffsetLeft*($newW/$oldW)});
+                            $updateCord($key);
+                        }
+                        else{
+                            $updateObjSize($key);
+                        }
+                    }
+                    $startConnect();
+                    //$recountFun(0,0);
+                }
+                //$('appended-modul').offset({top:$('appended-modul').offset().top*100/$baseScale,left:$('appended-modul').offset().left*100/$baseScale});
+            });
+
         }
         ////////////////////////////////////////////////////////
     };
@@ -2389,7 +2860,6 @@ $(document).ready(function(){
     window.addEventListener('resize', function() {
         $controllFunc();
     });
-
     $controllFunc2 = function(){
         if($('body').width() > $('body').height()){
             $('.scale').css({

@@ -680,59 +680,7 @@ $(document).ready(function(){
     {
         tar.append(elem);
     }
-    $calculateMouseOffset = function($e){
-        $mouseD_x = $e.pageX;
-        $mouseD_y = $e.pageY;
-        // считываем координаты блока на который нажали
-        $elemCordX = $e.currentTarget.getBoundingClientRect().left;
-        $elemCordY = $e.currentTarget.getBoundingClientRect().top;
-        $elemCordXR = $e.currentTarget.getBoundingClientRect().right;
-        // вычиляем смещение от позиции мыши для генерации нового объекта
-        $deltaX = $mouseD_x-$elemCordX;
-        $deltaY = $mouseD_y-$elemCordY;
-        return [$deltaX,$deltaY];
-    };
-    $calculateMouseOffsetMoovbl = function($e,$tarId){
-        $mouseD_x = $e.pageX;
-        $mouseD_y = $e.pageY;
-        $tar = document.getElementById($tarId);
-        // считываем координаты блока на который нажали
-        $elemCordX = $tar.getBoundingClientRect().left;
-        $elemCordY = $tar.getBoundingClientRect().top;
-        $elemCordXR = $tar.getBoundingClientRect().right;
-        // вычиляем смещение от позиции мыши для генерации нового объекта
-        $deltaX = $mouseD_x-$elemCordX;
-        $deltaY = $mouseD_y-$elemCordY;
-        return [$deltaX,$deltaY];
-    };
-    $spawnElem = function($numberObj,$id,$e){
-        $offsetClick = $calculateMouseOffset($e);
-        $deltaX = $offsetClick[0];
-        $deltaY = $offsetClick[1]; 
-        // получаем html код модуля
-        $moovObj = $creatModul($id,$numberObj);
-        // добавляем на страницу(он скрыт)
-        $append($('.canvas'),$moovObj)
-        $updateObjSize($id);
-        
-        // получаем добавленный модуль
-        $moovblModul = $('#'+$id);
-        $moovblModul.css({
-            'cursor': 'grabbing'
-        });
-        // смещаем его так, чтобы он был ровно поверх модуля но который нажали
-        $moovblModul.offset({top: ($e.pageY-$deltaY)*100/$baseScale, left: ($e.pageX-$deltaX)*100/$baseScale});
-        // отображаем модуль
-        
-        $moovblModul.show();
-        
-        $('body').css({
-            'pointer-events':'none'
-        });
-        $('#container').css({
-            'pointer-events':'auto'
-        });
-    };
+    
     $findMinDistObj = function($id){
         // данная функция запускается 
         // имеем $id - элемент который перетаскиваем
@@ -1172,133 +1120,295 @@ $(document).ready(function(){
         $minD1 = $('#'+$id1).width()/2 + $('#'+$id2).width()/2 + $minConstDist;
         $minD2 = $('#'+$id1).height()/2 + $('#'+$id2).height()/2 + $minConstDist;
         return Math.sqrt($minD1*$minD1 + $minD2*$minD2);
-    } 
-    /// Основная функция размещения объектов
-    $appendMainFunc = function($numberObj,id,e){
-        if (e.which == 1){
-            $spawnElem($numberObj,id,e);
-            $offsetClick = $calculateMouseOffset(e);
-            $deltaX = $offsetClick[0];
-            $deltaY = $offsetClick[1];
-            // запускаем логику если мышь начала движение
-            $(document).mousemove(function (e) {
-                // пока клавиша зажата и мышь движется меняем динамично смещение модуля
-                $('#'+idObject).css({
-                    'z-index':'9999'
-                });
-                $moovblModul.offset({top: (e.pageY-$deltaY)*100/$baseScale, left: (e.pageX-$deltaX)*100/$baseScale});
-            }).click(function (e) {
-                $rightPosModul = $moovblModul.offset().left+$moovblModul.width();
-                $rightPosUI = $('.canvas').width();
-                //if( $rightPosModul < $rightPosUI){
-                    // запускаем логику если кнопка отжата
-                    objAdd = document.getElementById(idObject);
-                    topY = objAdd.getBoundingClientRect().top;
-                    topX = objAdd.getBoundingClientRect().left;
-                    dovnY = topY + $('#'+idObject).height();
-                    dovnX = topX + $('#'+idObject).width();
+    }
 
-                    
-                    // условие создание объекта если на доске ничего нет.
-                    if(appendedObj.size == 0){
-                        if($rightPosModul > $rightPosUI){
-                            $moovblModul.offset({top: $('.canvas').height()/3, left: $rightPosUI/2});
+    $controllFunc = function(){
+        if(window.innerWidth > 1250) { // десктоп версия.
+            //удаляем все прикрепленные события.
+            $('*').unbind();
+            // функции завязанные на событие клика.
+            $calculateMouseOffset = function($e){
+                $mouseD_x = $e.pageX;
+                $mouseD_y = $e.pageY;
+                // считываем координаты блока на который нажали
+                $elemCordX = $e.currentTarget.getBoundingClientRect().left;
+                $elemCordY = $e.currentTarget.getBoundingClientRect().top;
+                $elemCordXR = $e.currentTarget.getBoundingClientRect().right;
+                // вычиляем смещение от позиции мыши для генерации нового объекта
+                $deltaX = $mouseD_x-$elemCordX;
+                $deltaY = $mouseD_y-$elemCordY;
+                return [$deltaX,$deltaY];
+            };
+            $calculateMouseOffsetMoovbl = function($e,$tarId){
+                $mouseD_x = $e.pageX;
+                $mouseD_y = $e.pageY;
+                $tar = document.getElementById($tarId);
+                // считываем координаты блока на который нажали
+                $elemCordX = $tar.getBoundingClientRect().left;
+                $elemCordY = $tar.getBoundingClientRect().top;
+                $elemCordXR = $tar.getBoundingClientRect().right;
+                // вычиляем смещение от позиции мыши для генерации нового объекта
+                $deltaX = $mouseD_x-$elemCordX;
+                $deltaY = $mouseD_y-$elemCordY;
+                return [$deltaX,$deltaY];
+            };
+            $spawnElem = function($numberObj,$id,$e){
+                $offsetClick = $calculateMouseOffset($e);
+                $deltaX = $offsetClick[0];
+                $deltaY = $offsetClick[1]; 
+                // получаем html код модуля
+                $moovObj = $creatModul($id,$numberObj);
+                // добавляем на страницу(он скрыт)
+                $append($('.canvas'),$moovObj)
+                $updateObjSize($id);
+                
+                // получаем добавленный модуль
+                $moovblModul = $('#'+$id);
+                $moovblModul.css({
+                    'cursor': 'grabbing'
+                });
+                // смещаем его так, чтобы он был ровно поверх модуля но который нажали
+                $moovblModul.offset({top: ($e.pageY-$deltaY)*100/$baseScale, left: ($e.pageX-$deltaX)*100/$baseScale});
+                // отображаем модуль
+                
+                $moovblModul.show();
+                
+                $('body').css({
+                    'pointer-events':'none'
+                });
+                $('#container').css({
+                    'pointer-events':'auto'
+                });
+            };
+            /// Основная функция размещения объектов
+            $appendMainFunc = function($numberObj,id,e){
+                if (e.which == 1){
+                    $spawnElem($numberObj,id,e);
+                    $offsetClick = $calculateMouseOffset(e);
+                    $deltaX = $offsetClick[0];
+                    $deltaY = $offsetClick[1];
+                    // запускаем логику если мышь начала движение
+                    $(document).mousemove(function (e) {
+                        // пока клавиша зажата и мышь движется меняем динамично смещение модуля
+                        $('#'+idObject).css({
+                            'z-index':'9999'
+                        });
+                        $moovblModul.offset({top: (e.pageY-$deltaY)*100/$baseScale, left: (e.pageX-$deltaX)*100/$baseScale});
+                    }).click(function (e) {
+                        $rightPosModul = $moovblModul.offset().left+$moovblModul.width();
+                        $rightPosUI = $('.canvas').width();
+                        //if( $rightPosModul < $rightPosUI){
+                            // запускаем логику если кнопка отжата
+                            objAdd = document.getElementById(idObject);
                             topY = objAdd.getBoundingClientRect().top;
                             topX = objAdd.getBoundingClientRect().left;
                             dovnY = topY + $('#'+idObject).height();
                             dovnX = topX + $('#'+idObject).width();
-                        }
-                  
-                        // основная логика
-                        // добавляем объект высчитывем координаты его углов
-                        // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
-                        rotationObj.set(idObject,false);
-                        $('#'+idObject).addClass("mainGr");
-                        // добавляем в массив размещенных обхектов id размещенного модуля
-                        appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
-                        BaseObjMap.set(idObject,'1');
-                        $controllerConstruct(0,idObject);
-                        $recountFun(idObject,0);
-                        $counterModuls(idObject,1);
-                        // генерируем новый id для следующего модуля
-                        numberIdObjecy = numberIdObjecy + 1;
-                        idObject = "appended-modul" + numberIdObjecy;
-                        // открепляем событие на клик от текущего модуля
-                        $(this).unbind("click");
+        
+                            
+                            // условие создание объекта если на доске ничего нет.
+                            if(appendedObj.size == 0){
+                                if($rightPosModul > $rightPosUI){
+                                    $moovblModul.offset({top: $('.canvas').height()/3, left: $rightPosUI/2});
+                                    topY = objAdd.getBoundingClientRect().top;
+                                    topX = objAdd.getBoundingClientRect().left;
+                                    dovnY = topY + $('#'+idObject).height();
+                                    dovnX = topX + $('#'+idObject).width();
+                                }
                         
-                    }
-                    // если на доске что-то есть.
-                    else{
-                        /*ну а теперь самое сложно... наверное :D*/
-                        // вычисление расстояний и поиск минимального
-                        // основная логика
-                        $resPosAndIdF = $findMinDistObj(idObject);
-                        //console.log($resPosAndIdF);
-                        $resultPos = $resPosAndIdF[2];
-                        $findeObj = $resPosAndIdF[0];
-                        
-                        $resultDistanse = $getCenterDistanse($findeObj,idObject);
-                        $resMinDist = $minDist($findeObj,idObject);
-                        if($rightPosModul > $rightPosUI){
-                            $saveGropsPositions($findeObj,idObject,$resultPos);
-                            $setPositionObetcs(idObject,$findeObj,$resultPos);
-                            // функция контролирующая принадлежность к группе объекта
-                            rotationObj.set(idObject,false);
-                            $controllerConstruct($findeObj,idObject);/////!!!!!!
-                            $recountFun(idObject,$findeObj);
-                            $counterModuls(idObject,1);
-                            numberIdObjecy = numberIdObjecy + 1;
-                            idObject = "appended-modul" + numberIdObjecy;
-                            $(this).unbind("click");
-                        }
-                        else{
-                            if($resultDistanse < $resMinDist){
-                                //////////////////////////////
-                                $saveGropsPositions($findeObj,idObject,$resultPos);
-                                //функция работающая c groupsPositions
-                                //////////////////////////////
-                                // далее нужна функция стыковки объектов
-                                $setPositionObetcs(idObject,$findeObj,$resultPos);
-                                $controllerConstruct($findeObj,idObject);////!!!!!!!
-                                $recountFun(idObject,$findeObj);
-                                $counterModuls(idObject,1);
-                                // увеличиваем индекс
-                                numberIdObjecy = numberIdObjecy + 1;
-                                idObject = "appended-modul" + numberIdObjecy;
+                                // основная логика
+                                // добавляем объект высчитывем координаты его углов
+                                // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
                                 rotationObj.set(idObject,false);
-                                // открепляем событие на клик от текущего модуля
-                                $(this).unbind("click");
-                        
-                                
-                            }
-                            else {
+                                $('#'+idObject).addClass("mainGr");
+                                // добавляем в массив размещенных обхектов id размещенного модуля
+                                appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
                                 BaseObjMap.set(idObject,'1');
-                                $updateCord(idObject);
                                 $controllerConstruct(0,idObject);
                                 $recountFun(idObject,0);
                                 $counterModuls(idObject,1);
+                                // генерируем новый id для следующего модуля
                                 numberIdObjecy = numberIdObjecy + 1;
                                 idObject = "appended-modul" + numberIdObjecy;
-                                rotationObj.set(idObject,false);
                                 // открепляем событие на клик от текущего модуля
                                 $(this).unbind("click");
+                                
                             }
-                        }
+                            // если на доске что-то есть.
+                            else{
+                                /*ну а теперь самое сложно... наверное :D*/
+                                // вычисление расстояний и поиск минимального
+                                // основная логика
+                                $resPosAndIdF = $findMinDistObj(idObject);
+                                //console.log($resPosAndIdF);
+                                $resultPos = $resPosAndIdF[2];
+                                $findeObj = $resPosAndIdF[0];
+                                
+                                $resultDistanse = $getCenterDistanse($findeObj,idObject);
+                                $resMinDist = $minDist($findeObj,idObject);
+                                if($rightPosModul > $rightPosUI){
+                                    $saveGropsPositions($findeObj,idObject,$resultPos);
+                                    $setPositionObetcs(idObject,$findeObj,$resultPos);
+                                    // функция контролирующая принадлежность к группе объекта
+                                    rotationObj.set(idObject,false);
+                                    $controllerConstruct($findeObj,idObject);/////!!!!!!
+                                    $recountFun(idObject,$findeObj);
+                                    $counterModuls(idObject,1);
+                                    numberIdObjecy = numberIdObjecy + 1;
+                                    idObject = "appended-modul" + numberIdObjecy;
+                                    $(this).unbind("click");
+                                }
+                                else{
+                                    if($resultDistanse < $resMinDist){
+                                        //////////////////////////////
+                                        $saveGropsPositions($findeObj,idObject,$resultPos);
+                                        //функция работающая c groupsPositions
+                                        //////////////////////////////
+                                        // далее нужна функция стыковки объектов
+                                        $setPositionObetcs(idObject,$findeObj,$resultPos);
+                                        $controllerConstruct($findeObj,idObject);////!!!!!!!
+                                        $recountFun(idObject,$findeObj);
+                                        $counterModuls(idObject,1);
+                                        // увеличиваем индекс
+                                        numberIdObjecy = numberIdObjecy + 1;
+                                        idObject = "appended-modul" + numberIdObjecy;
+                                        rotationObj.set(idObject,false);
+                                        // открепляем событие на клик от текущего модуля
+                                        $(this).unbind("click");
+                                
+                                        
+                                    }
+                                    else {
+                                        BaseObjMap.set(idObject,'1');
+                                        $updateCord(idObject);
+                                        $controllerConstruct(0,idObject);
+                                        $recountFun(idObject,0);
+                                        $counterModuls(idObject,1);
+                                        numberIdObjecy = numberIdObjecy + 1;
+                                        idObject = "appended-modul" + numberIdObjecy;
+                                        rotationObj.set(idObject,false);
+                                        // открепляем событие на клик от текущего модуля
+                                        $(this).unbind("click");
+                                    }
+                                }
+                                
+                            }
+        
+        
+                            // условия создания объекта если на доске что-то есть.
+                            $(this).unbind("mousemove");
+                            $moovblModul.css({
+                                'z-index':'999'
+                            });
+                            if(selectObj != 0){
+                                $('#'+selectObj).children().children('.modul-border').css({
+                                    'stroke':'black'
+                                });
+                            }
+                            selectObj = $moovblModul.attr('id');
+                            if(selectObj != 0){
+                                $('#'+selectObj).children().children('.modul-border').css({
+                                    'stroke':'red'
+                                });
+                            }
+                            $('.RotAndDel').css({
+                                'display':'block'
+                            });
+                            
+                        //}
+                        // else{
+                            
+                        //     $moovblModul.remove();
+                        //     $(this).unbind("click");
+                        //     $(this).unbind("mousemove");
+                        // }
                         
-                    }
-
-
-                    // условия создания объекта если на доске что-то есть.
-                    $(this).unbind("mousemove");
-                    $moovblModul.css({
-                        'z-index':'999'
                     });
+                };
+            };
+            // крепим события на добавление
+            $(".B").mousedown(function(e){
+                $appendMainFunc(1,idObject,e);
+            });
+            $(".B").on('mouseout',function(){
+                $(this).children().children('.modul-border').css({
+                    'stroke':'black'
+                });
+            });
+            $(".B").on('mouseover',function(){
+                $(this).children().children('.modul-border').css({
+                    'stroke':'red'
+                });
+            });
+
+            $(".BM").mousedown(function(e){
+                $appendMainFunc(2,idObject,e);
+            });
+            $(".BM").on('mouseout',function(){
+                $(this).children().children('.modul-border').css({
+                    'stroke':'black'
+                });
+            });
+            $(".BM").on('mouseover',function(){
+                $(this).children().children('.modul-border').css({
+                    'stroke':'red'
+                });
+            });
+
+            $(".C").mousedown(function(e){
+                $appendMainFunc(3,idObject,e);
+            });
+            $(".C").on('mouseout',function(){
+                $(this).children().children('.modul-border').css({
+                    'stroke':'black'
+                });
+            });
+            $(".C").on('mouseover',function(){
+                $(this).children().children('.modul-border').css({
+                    'stroke':'red'
+                });
+            });
+
+            $(".CM").mousedown(function(e){
+                $appendMainFunc(4,idObject,e);
+            });
+            $(".CM").on('mouseout',function(){
+                $(this).children().children('.modul-border').css({
+                    'stroke':'black'
+                });
+            });
+            $(".CM").on('mouseover',function(){
+                $(this).children().children('.modul-border').css({
+                    'stroke':'red'
+                });
+            });
+
+            $(".CB").mousedown(function(e){
+                $appendMainFunc(5,idObject,e);
+            });
+            $(".CB").on('mouseout',function(){
+                $(this).children().children('.modul-border').css({
+                    'stroke':'black'
+                });
+            });
+            $(".CB").on('mouseover',function(){
+                $(this).children().children('.modul-border').css({
+                    'stroke':'red'
+                });
+            });
+            $( '.canvas' ).on( 'click', function( event1 ) {
+                obj2 = event1.target;
+                $classObj =$(obj2).attr('class')
+                if($classObj == "RotAndDel-Rot" || $(obj2).parent().hasClass("RotAndDel-Rot")){
+
+                }
+                else if($classObj == "appended-modul") {
                     if(selectObj != 0){
                         $('#'+selectObj).children().children('.modul-border').css({
                             'stroke':'black'
                         });
                     }
-                    selectObj = $moovblModul.attr('id');
+                    selectObj = $(obj2).attr('id');
                     if(selectObj != 0){
                         $('#'+selectObj).children().children('.modul-border').css({
                             'stroke':'red'
@@ -1307,483 +1417,394 @@ $(document).ready(function(){
                     $('.RotAndDel').css({
                         'display':'block'
                     });
-                    
-                //}
-                // else{
-                    
-                //     $moovblModul.remove();
-                //     $(this).unbind("click");
-                //     $(this).unbind("mousemove");
-                // }
+                }
+                else if($(obj2).parent().hasClass("appended-modul")){
+                    if(selectObj != 0){
+
+                        $('#'+selectObj).children().children('.modul-border').css({
+                            'stroke':'black'
+                        });
+                    }
+                    selectObj = $(obj2).parent().attr('id');
+                    if(selectObj != 0){
+                        $('#'+selectObj).children().children('.modul-border').css({
+                            'stroke':'red'
+                        });
+                    }
+                    $('.RotAndDel').css({
+                        'display':'block'
+                    });
+                }
+                else if($(obj2).parent().parent().hasClass("appended-modul")){
+                    if(selectObj != 0){
+
+                        $('#'+selectObj).children().children('.modul-border').css({
+                            'stroke':'black'
+                        });
+                    }
+                    selectObj = $(obj2).parent().parent().attr('id');
+                    if(selectObj != 0){
+                        $('#'+selectObj).children().children('.modul-border').css({
+                            'stroke':'red'
+                        });
+                    }
+                    $('.RotAndDel').css({
+                        'display':'block'
+                    });
+                }
+                else {
+                    if(selectObj != 0){
+
+                        $('#'+selectObj).children().children('.modul-border').css({
+                            'stroke':'black'
+                        });
+                    }
+                    selectObj = 0
+                    $('.RotAndDel').css({
+                        'display':'none'
+                    });
+                }
+            });
+            // вращение удаление
+            $( '.canvas-UI' ).on( 'mousedown', function( event1 ) {
+                obj = event1.target;
+                classObj =$(obj).attr('class');
+                if(classObj == "RotAndDel-Rot" || $(obj).parent().hasClass("RotAndDel-Rot")){
+                    if($('#'+selectObj).hasClass('appended-modul') && !$('#'+selectObj).hasClass('appendedCM') && !$('#'+selectObj).hasClass('appendedCB')){
+                        if (event1.which == 1 && selectObj!=0){
+                            idObj = $('#'+selectObj).attr('id');
+                            if(!rotationObj.get($('#'+selectObj).attr('id'))){
+                                if($('#'+selectObj).hasClass('appendedC')){
+                                    $('#'+selectObj).css({
+                                        'transform-origin':'center center',
+                                        'transform':'rotate(-90deg)'
+            
+                                    });
+                                }
+                                else{
+                                    $('#'+selectObj).css({
+                                        'transform-origin':'center center',
+                                        'transform':'rotate(90deg)'
+
+                                    });
+                                }
+                                $resPosAndIdF = $findMinDistObj(idObj); // найти ближайший
+                                if($resPosAndIdF){
+                                    $resultPos = $resPosAndIdF[2];
+                                    $findeObj = $resPosAndIdF[0];
+                                    $resMinDist = $minDist($findeObj,idObj);
+                                    if($resultDistanse < $resMinDist){
+                                        rotationObj.set($('#'+selectObj).attr('id'),true);
+                                        $saveGropsPositions($findeObj,idObj,$resultPos);
+                                        $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
+                                        $recountFun(idObj,$findeObj);
+                                    }
+                                    else{
+                                        rotationObj.set($('#'+selectObj).attr('id'),true);
+                                        $updateCord(idObj);
+                                        if(appendedObj.size > 1){
+                                            $recountFun(idObj,0);
+                                        }
+                                    }
+                                    //console.log($('#'+idObj).offset(),idObj);
+                                    // открепляем событие на клик от текущего модуля
+                                }
+                                else{
+                                    rotationObj.set($('#'+selectObj).attr('id'),true);
+                                    $updateCord(idObj);
+                                    if(appendedObj.size > 1){
+                                        $recountFun(idObj,0);
+                                    }
+                                }
+                                
+                            }
+                            else{
+                                $('#'+selectObj).css({
+                                    'transform-origin':'center center',
+                                    'transform':'rotate(0deg)'
+                                });
+                                $resPosAndIdF = $findMinDistObj(idObj); // найти ближайший
+                                if($resPosAndIdF){
+                                    $resultPos = $resPosAndIdF[2];
+                                    $findeObj = $resPosAndIdF[0];
+                                    $resMinDist = $minDist($findeObj,idObj);
+                                    if($resultDistanse < $resMinDist){
+                                        rotationObj.set($('#'+selectObj).attr('id'),false);
+                                        $saveGropsPositions($findeObj,idObj,$resultPos);
+                                        $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
+                                        $recountFun(idObj,$findeObj);
+                                        //lert(2);
+                                    }
+                                    else{
+                                        rotationObj.set($('#'+selectObj).attr('id'),false);
+                                        $updateCord(idObj);
+                                        if(appendedObj.size > 1){
+                                            $recountFun(idObj,0);
+                                        }
+                                        
+                                    }
+                                }
+                                else{
+                                    rotationObj.set($('#'+selectObj).attr('id'),false);
+                                    $updateCord(idObj);
+                                    if(appendedObj.size > 1){
+                                        $recountFun(idObj,0);
+                                    }
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+                if(classObj == "RotAndDel-Del" || $(obj).parent().hasClass("RotAndDel-Del")){
+                    if($('#'+selectObj).hasClass('appended-modul')){
+                        if (event1.which == 1 && selectObj!=0){
+                            idObj = $('#'+selectObj).attr('id');
+                            appendedObj.delete(idObj);
+                            if($('#'+idObj).hasClass('mainGr')){
+                                $('#'+idObj).removeClass('mainGr');
+                                appendedObj.delete(idObj);
+                            }
+                            $clearMapsWhenDelete(selectObj);
+                            $recountFun(0,0);
+                            $counterModuls(selectObj,0);
+                            //console.log(selectObj);
+                            //console.log(groupsPositionsStr);
+                            //console.log(groupsPositionsRev);
+                            $('#'+selectObj).remove();
+                        }
+                    }
+                }
+            });
+            // логика перемещения объектов
+            $( '.canvas' ).on( 'mousedown', function( event1 ) {
+                obj = event1.target;
+                if(!$(obj).hasClass("appended-modul")){
+                    $moovObj = $(obj).parent().parent();
+                    //console.log($moovObj);
+                    idObj = $moovObj.attr('id');
+                    obj = document.getElementById(idObj);
+                }
+                idObj = $(obj).attr('id');
+                //console.log(idObj);
+                if(!idObj){
+                    // блок кода если кликнули по имени блока
+                    // нужно получить сам модуль
+                    idObj = $(event1.target).parent().attr('id');
+                    obj = document.getElementById(idObj);
+                }
+                if(!idObj){
+                    // блок кода если кликнули по имени блока
+                    // нужно получить сам модуль
+                    idObj = $(event1.target).parent().parent().attr('id');
+                    obj = document.getElementById(idObj);
+                }
+                if (event1.which == 1 && $(obj).hasClass('appended-modul')){
+                    //console.log($(obj).offset());
+                    $offsetClick = $calculateMouseOffsetMoovbl(event1,idObj);
+                    $deltaX = $offsetClick[0];
+                    $deltaY = $offsetClick[1];
+                    $moovblModul = $('#'+idObj);
+                    $(document).mousemove(function (e) {
+                        //console.log(2);
+                        $('#'+idObj).css({
+                            'z-index':'9999'
+                        });
+                        //top: (e.pageY-$deltaY)*100/$baseScale, left: (e.pageX-$deltaX)*100/$baseScale
+                        $moovblModul.offset({top: e.pageY-$deltaY, left: e.pageX-$deltaX});
+                    }).click(function (e) {
+                        $rightPosModul = $moovblModul.offset().left+$moovblModul.width();
+                        $rightPosUI = $('.canvas').width();
+                        if( $rightPosModul < $rightPosUI){
+                            if(appendedObj.size == 1){
+                                $(this).unbind("click");
+                                $updateCord(idObj);
+                                $controllerConstruct(0,idObj);
+                                $recountFun(idObj,0);
+                            }
+                            else{
+                                //console.log(idObj);
+                                //alert(1);
+                                $resPosAndIdF = $findMinDistObj(idObj); // найти ближайший
+                                $resultPos = $resPosAndIdF[2];
+                                $findeObj = $resPosAndIdF[0];
+                                
+                                $resultDistanse = $getCenterDistanse($findeObj,idObj);
+                                $resMinDist = $minDist($findeObj,idObj);
+                                if($resultDistanse < $resMinDist){
+                                    //////////////////////////////
+                                    $saveGropsPositions($findeObj,idObj,$resultPos);
+                                    //функция работающая c groupsPositions
+                                    //////////////////////////////
+                                    //console.log(idObj,$findeObj,$resultPos);
+                                    $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
+                                    $controllerConstruct($findeObj,idObj);
+                                    $recountFun(idObj,$findeObj);
+                                    // открепляем событие на клик от текущего модуля
+                                    
+                                    $(this).unbind("click");
+                                }
+                                else{
+                                    //alert(2);
+                                    $baseObjBind(idObj);
+                                    $updateCord(idObj);
+                                    if(appendedObj.size > 1){
+                                        //$controllerConstruct(0,idObj);
+                                        
+                                    }
+                                    $controllerConstruct(0,idObj);
+                                    $recountFun(idObj,0);
+                                    $(this).unbind("click"); 
+                                }
+                            }
+                            $(this).unbind("mousemove");
+                            $('#'+idObj).css({
+                                'z-index':'999'
+                            });
+                        }
+                        else{// здесь нужно переделать код
+                            idObj = $('#'+selectObj).attr('id');
+                            appendedObj.delete(idObj);
+                            $clearMapsWhenDelete(selectObj);
+                            $recountFun(0,0);
+                            //console.log(selectObj);
+                            //console.log(groupsPositionsStr);
+                            //console.log(groupsPositionsRev);
+                            $('#'+selectObj).remove();
+                            $(this).unbind("click");
+                            $(this).unbind("mousemove");
+                        }              
+
+                    });
+                }
                 
             });
-        };
-    };
-
-    // крепим события на добавление
-    $(".B").mousedown(function(e){
-        $appendMainFunc(1,idObject,e);
-    });
-    $(".B").on('mouseout',function(){
-        $(this).children().children('.modul-border').css({
-            'stroke':'black'
-        });
-    });
-    $(".B").on('mouseover',function(){
-        $(this).children().children('.modul-border').css({
-            'stroke':'red'
-        });
-    });
-
-    $(".BM").mousedown(function(e){
-        $appendMainFunc(2,idObject,e);
-    });
-    $(".BM").on('mouseout',function(){
-        $(this).children().children('.modul-border').css({
-            'stroke':'black'
-        });
-    });
-    $(".BM").on('mouseover',function(){
-        $(this).children().children('.modul-border').css({
-            'stroke':'red'
-        });
-    });
-
-    $(".C").mousedown(function(e){
-        $appendMainFunc(3,idObject,e);
-    });
-    $(".C").on('mouseout',function(){
-        $(this).children().children('.modul-border').css({
-            'stroke':'black'
-        });
-    });
-    $(".C").on('mouseover',function(){
-        $(this).children().children('.modul-border').css({
-            'stroke':'red'
-        });
-    });
-
-    $(".CM").mousedown(function(e){
-        $appendMainFunc(4,idObject,e);
-    });
-    $(".CM").on('mouseout',function(){
-        $(this).children().children('.modul-border').css({
-            'stroke':'black'
-        });
-    });
-    $(".CM").on('mouseover',function(){
-        $(this).children().children('.modul-border').css({
-            'stroke':'red'
-        });
-    });
-
-    $(".CB").mousedown(function(e){
-        $appendMainFunc(5,idObject,e);
-    });
-    $(".CB").on('mouseout',function(){
-        $(this).children().children('.modul-border').css({
-            'stroke':'black'
-        });
-    });
-    $(".CB").on('mouseover',function(){
-        $(this).children().children('.modul-border').css({
-            'stroke':'red'
-        });
-    });
-    $( '.canvas' ).on( 'click', function( event1 ) {
-        obj2 = event1.target;
-        $classObj =$(obj2).attr('class')
-        if($classObj == "RotAndDel-Rot" || $(obj2).parent().hasClass("RotAndDel-Rot")){
-
-        }
-        else if($classObj == "appended-modul") {
-            if(selectObj != 0){
-                $('#'+selectObj).children().children('.modul-border').css({
-                    'stroke':'black'
-                });
-            }
-            selectObj = $(obj2).attr('id');
-            if(selectObj != 0){
-                $('#'+selectObj).children().children('.modul-border').css({
-                    'stroke':'red'
-                });
-            }
-            $('.RotAndDel').css({
-                'display':'block'
+            // перемещение объектов по рабочей поверхности ////////
+            ///////////////////////////////////////////////////////
+            $(".canvas").mousedown(function(e1){
+                if($(e1.target).hasClass('canvas')){
+                    $cordX0 = e1.pageX;
+                    $cordY0 = e1.pageY;
+                    $(document).mousemove(function (e) {
+                        $cordX1 = e.pageX;
+                        $cordY1 = e.pageY;
+                        $deltaX = $cordX1-$cordX0;
+                        $deltaY = $cordY1-$cordY0;
+                        for($key of appendedObj.keys()){
+                            $currentX = $('#'+$key).offset().left;
+                            $currentY = $('#'+$key).offset().top;
+                            $('#'+$key).offset({top: appendedObj.get($key)[1]+$deltaY, left: appendedObj.get($key)[0]+$deltaX});
+                        }
+                    }).click(function(){
+                        for($key of appendedObj.keys()){
+                            $updateCord($key);
+                        }
+                        $(this).unbind("click");
+                        $(this).unbind("mousemove");
+                    });
+                }
             });
-        }
-        else if($(obj2).parent().hasClass("appended-modul")){
-            if(selectObj != 0){
-
-                $('#'+selectObj).children().children('.modul-border').css({
-                    'stroke':'black'
-                });
-            }
-            selectObj = $(obj2).parent().attr('id');
-            if(selectObj != 0){
-                $('#'+selectObj).children().children('.modul-border').css({
-                    'stroke':'red'
-                });
-            }
-            $('.RotAndDel').css({
-                'display':'block'
+            // логика масштабирования.
+            $('#'+'plusScale').mousedown(function(){
+                $basescale = $basescale + 0.0025;
+                $mainObj = 0;
+                if(appendedObj.size>0){
+                    for($key of appendedObj.keys()){
+                        if(BaseObjMap.has($key) && $mainObj != 0){
+                            $mainObj = $key;
+                            $oldH = $('#'+$key).height();
+                            $oldW = $('#'+$key).width();
+                            $updateObjSize($key);
+                            $newH = $('#'+$key).height();
+                            $newW = $('#'+$key).width();
+                            $minConstDist = $minConstDist*($newH/$oldH);
+                            $updateCord($key);
+                            break;
+                        }
+                    }
+                    $scale = 0;
+                    for($key of appendedObj.keys()){
+                        if($key != $mainObj && BaseObjMap.has($key)){
+                            // получить старые координаты центра
+                            $oldH = $('#'+$key).height();
+                            $oldW = $('#'+$key).width();
+                            $updateObjSize($key);
+                            $newH = $('#'+$key).height();
+                            $newW = $('#'+$key).width();
+                            $keyNewOffsetTop = $('#'+$key).offset().top;
+                            $keyNewOffsetLeft = $('#'+$key).offset().left;
+                            $scale = $newH/$oldH;
+                            $('#'+$key).offset({top:$keyNewOffsetTop*($newH/$oldH),left:$keyNewOffsetLeft*($newW/$oldW)});
+                            // получить новые координаты центра
+                            // имеем старые и новые координаты центра main объекта, расстояние между центрами должно быть
+                            // какое? такое же как было, чтобы это сделать, можно сместить объекты ниже и правее на величину увеличения
+                            $updateCord($key);
+                        }
+                        else{
+                            $updateObjSize($key);
+                            //$updateCord($key);
+                        }
+                    }
+                    $startConnect();
+                    //$recountFun(0,0);              
+                }
             });
-        }
-        else if($(obj2).parent().parent().hasClass("appended-modul")){
-            if(selectObj != 0){
+            $('#'+'minusScale').mousedown(function(){
+                $basescale = $basescale - 0.0025;
+                if(appendedObj.size>0){
+                    for($key of appendedObj.keys()){
+                        if(BaseObjMap.has($key) && $mainObj != 0){
+                            $mainObj = $key;
+                            $oldH = $('#'+$key).height();
+                            $oldW = $('#'+$key).width();
+                            $updateObjSize($key);
+                            $newH = $('#'+$key).height();
+                            $newW = $('#'+$key).width();
+                            $minConstDist = $minConstDist*($newH/$oldH);
+                            $updateCord($key);
+                            break;
+                        }
+                    }
+                    for($key of appendedObj.keys()){
+                        if($key != $mainObj && BaseObjMap.has($key)){
+                            // получить старые координаты центра
+                            $oldH = $('#'+$key).height();
+                            $oldW = $('#'+$key).width();
+                            $updateObjSize($key);
+                            $newH = $('#'+$key).height();
+                            $newW = $('#'+$key).width();
+                            $keyNewOffsetTop = $('#'+$key).offset().top;
+                            $keyNewOffsetLeft = $('#'+$key).offset().left;
 
-                $('#'+selectObj).children().children('.modul-border').css({
-                    'stroke':'black'
-                });
-            }
-            selectObj = $(obj2).parent().parent().attr('id');
-            if(selectObj != 0){
-                $('#'+selectObj).children().children('.modul-border').css({
-                    'stroke':'red'
-                });
-            }
-            $('.RotAndDel').css({
-                'display':'block'
+                            $('#'+$key).offset({top:$keyNewOffsetTop*($newH/$oldH),left:$keyNewOffsetLeft*($newW/$oldW)});
+                            // получить новые координаты центра
+                            // имеем старые и новые координаты центра main объекта, расстояние между центрами должно быть
+                            // какое? такое же как было, чтобы это сделать, можно сместить объекты ниже и правее на величину увеличения
+                            $updateCord($key);
+                        }
+                        else{
+                            $updateObjSize($key);
+                        }
+                    }
+                    $startConnect();
+                    //$recountFun(0,0);
+                }
+                //$('appended-modul').offset({top:$('appended-modul').offset().top*100/$baseScale,left:$('appended-modul').offset().left*100/$baseScale});
             });
         }
         else {
-            if(selectObj != 0){
+            if(window.innerWidth <= 1250){ // версия для планшетов и телефонов. здесь нужно учесть и события на клик и события на touch
+            // причем вне зависимости от интерфейса пользователя. справа или снизу расположено меню
+            // здесь нужно сделать отдельный код для aios и для android.
+            $('*').unbind(); // убираем все прикрепленные события.
 
-                $('#'+selectObj).children().children('.modul-border').css({
-                    'stroke':'black'
-                });
             }
-            selectObj = 0
-            $('.RotAndDel').css({
-                'display':'none'
-            });
         }
+        ////////////////////////////////////////////////////////
+    };
+    $controllFunc();
+    // каждый раз при изменении размера экрана нужно вызывать контрольную функцию, которая перезакрепляет события на всех элементах.
+    window.addEventListener('resize', function(event) {
+        $controllFunc();
     });
-    // вращение удаление
-    $( '.canvas-UI' ).on( 'mousedown', function( event1 ) {
-        obj = event1.target;
-        classObj =$(obj).attr('class');
-        if(classObj == "RotAndDel-Rot" || $(obj).parent().hasClass("RotAndDel-Rot")){
-            if($('#'+selectObj).hasClass('appended-modul') && !$('#'+selectObj).hasClass('appendedCM') && !$('#'+selectObj).hasClass('appendedCB')){
-                if (event1.which == 1 && selectObj!=0){
-                    idObj = $('#'+selectObj).attr('id');
-                    if(!rotationObj.get($('#'+selectObj).attr('id'))){
-                        if($('#'+selectObj).hasClass('appendedC')){
-                            $('#'+selectObj).css({
-                                'transform-origin':'center center',
-                                'transform':'rotate(-90deg)'
-    
-                            });
-                        }
-                        else{
-                            $('#'+selectObj).css({
-                                'transform-origin':'center center',
-                                'transform':'rotate(90deg)'
-
-                            });
-                        }
-                        $resPosAndIdF = $findMinDistObj(idObj); // найти ближайший
-                        if($resPosAndIdF){
-                            $resultPos = $resPosAndIdF[2];
-                            $findeObj = $resPosAndIdF[0];
-                            $resMinDist = $minDist($findeObj,idObj);
-                            if($resultDistanse < $resMinDist){
-                                rotationObj.set($('#'+selectObj).attr('id'),true);
-                                $saveGropsPositions($findeObj,idObj,$resultPos);
-                                $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
-                                $recountFun(idObj,$findeObj);
-                            }
-                            else{
-                                rotationObj.set($('#'+selectObj).attr('id'),true);
-                                $updateCord(idObj);
-                                if(appendedObj.size > 1){
-                                    $recountFun(idObj,0);
-                                }
-                            }
-                            //console.log($('#'+idObj).offset(),idObj);
-                            // открепляем событие на клик от текущего модуля
-                        }
-                        else{
-                            rotationObj.set($('#'+selectObj).attr('id'),true);
-                            $updateCord(idObj);
-                            if(appendedObj.size > 1){
-                                $recountFun(idObj,0);
-                            }
-                        }
-                        
-                    }
-                    else{
-                        $('#'+selectObj).css({
-                            'transform-origin':'center center',
-                            'transform':'rotate(0deg)'
-                        });
-                        $resPosAndIdF = $findMinDistObj(idObj); // найти ближайший
-                        if($resPosAndIdF){
-                            $resultPos = $resPosAndIdF[2];
-                            $findeObj = $resPosAndIdF[0];
-                            $resMinDist = $minDist($findeObj,idObj);
-                            if($resultDistanse < $resMinDist){
-                                rotationObj.set($('#'+selectObj).attr('id'),false);
-                                $saveGropsPositions($findeObj,idObj,$resultPos);
-                                $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
-                                $recountFun(idObj,$findeObj);
-                                //lert(2);
-                            }
-                            else{
-                                rotationObj.set($('#'+selectObj).attr('id'),false);
-                                $updateCord(idObj);
-                                if(appendedObj.size > 1){
-                                    $recountFun(idObj,0);
-                                }
-                                
-                            }
-                        }
-                        else{
-                            rotationObj.set($('#'+selectObj).attr('id'),false);
-                            $updateCord(idObj);
-                            if(appendedObj.size > 1){
-                                $recountFun(idObj,0);
-                            }
-                        }
-                        
-                    }
-                }
-            }
-        }
-        if(classObj == "RotAndDel-Del" || $(obj).parent().hasClass("RotAndDel-Del")){
-            if($('#'+selectObj).hasClass('appended-modul')){
-                if (event1.which == 1 && selectObj!=0){
-                    idObj = $('#'+selectObj).attr('id');
-                    appendedObj.delete(idObj);
-                    if($('#'+idObj).hasClass('mainGr')){
-                        $('#'+idObj).removeClass('mainGr');
-                        appendedObj.delete(idObj);
-                    }
-                    $clearMapsWhenDelete(selectObj);
-                    $recountFun(0,0);
-                    $counterModuls(selectObj,0);
-                    //console.log(selectObj);
-                    //console.log(groupsPositionsStr);
-                    //console.log(groupsPositionsRev);
-                    $('#'+selectObj).remove();
-                }
-            }
-        }
-    });
-    // логика перемещения объектов
-    $( '.canvas' ).on( 'mousedown', function( event1 ) {
-        obj = event1.target;
-        if(!$(obj).hasClass("appended-modul")){
-            $moovObj = $(obj).parent().parent();
-            //console.log($moovObj);
-            idObj = $moovObj.attr('id');
-            obj = document.getElementById(idObj);
-        }
-        idObj = $(obj).attr('id');
-        //console.log(idObj);
-        if(!idObj){
-            // блок кода если кликнули по имени блока
-            // нужно получить сам модуль
-            idObj = $(event1.target).parent().attr('id');
-            obj = document.getElementById(idObj);
-        }
-        if(!idObj){
-            // блок кода если кликнули по имени блока
-            // нужно получить сам модуль
-            idObj = $(event1.target).parent().parent().attr('id');
-            obj = document.getElementById(idObj);
-        }
-        if (event1.which == 1 && $(obj).hasClass('appended-modul')){
-            //console.log($(obj).offset());
-            $offsetClick = $calculateMouseOffsetMoovbl(event1,idObj);
-            $deltaX = $offsetClick[0];
-            $deltaY = $offsetClick[1];
-            $moovblModul = $('#'+idObj);
-            $(document).mousemove(function (e) {
-                //console.log(2);
-                $('#'+idObj).css({
-                    'z-index':'9999'
-                });
-                //top: (e.pageY-$deltaY)*100/$baseScale, left: (e.pageX-$deltaX)*100/$baseScale
-                $moovblModul.offset({top: e.pageY-$deltaY, left: e.pageX-$deltaX});
-            }).click(function (e) {
-                $rightPosModul = $moovblModul.offset().left+$moovblModul.width();
-                $rightPosUI = $('.canvas').width();
-                if( $rightPosModul < $rightPosUI){
-                    if(appendedObj.size == 1){
-                        $(this).unbind("click");
-                        $updateCord(idObj);
-                        $controllerConstruct(0,idObj);
-                        $recountFun(idObj,0);
-                    }
-                    else{
-                        //console.log(idObj);
-                        //alert(1);
-                        $resPosAndIdF = $findMinDistObj(idObj); // найти ближайший
-                        $resultPos = $resPosAndIdF[2];
-                        $findeObj = $resPosAndIdF[0];
-                        
-                        $resultDistanse = $getCenterDistanse($findeObj,idObj);
-                        $resMinDist = $minDist($findeObj,idObj);
-                        if($resultDistanse < $resMinDist){
-                            //////////////////////////////
-                            $saveGropsPositions($findeObj,idObj,$resultPos);
-                            //функция работающая c groupsPositions
-                            //////////////////////////////
-                            //console.log(idObj,$findeObj,$resultPos);
-                            $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
-                            $controllerConstruct($findeObj,idObj);
-                            $recountFun(idObj,$findeObj);
-                            // открепляем событие на клик от текущего модуля
-                            
-                            $(this).unbind("click");
-                        }
-                        else{
-                            //alert(2);
-                            $baseObjBind(idObj);
-                            $updateCord(idObj);
-                            if(appendedObj.size > 1){
-                                //$controllerConstruct(0,idObj);
-                                
-                            }
-                            $controllerConstruct(0,idObj);
-                            $recountFun(idObj,0);
-                            $(this).unbind("click"); 
-                        }
-                    }
-                    $(this).unbind("mousemove");
-                    $('#'+idObj).css({
-                        'z-index':'999'
-                    });
-                }
-                else{// здесь нужно переделать код
-                    idObj = $('#'+selectObj).attr('id');
-                    appendedObj.delete(idObj);
-                    $clearMapsWhenDelete(selectObj);
-                    $recountFun(0,0);
-                    //console.log(selectObj);
-                    //console.log(groupsPositionsStr);
-                    //console.log(groupsPositionsRev);
-                    $('#'+selectObj).remove();
-                    $(this).unbind("click");
-                    $(this).unbind("mousemove");
-                }              
-
-            });
-        }
-        
-    });
-    // перемещение объектов по рабочей поверхности ////////
-    ///////////////////////////////////////////////////////
-    $(".canvas").mousedown(function(e1){
-        if($(e1.target).hasClass('canvas')){
-            $cordX0 = e1.pageX;
-            $cordY0 = e1.pageY;
-            $(document).mousemove(function (e) {
-                $cordX1 = e.pageX;
-                $cordY1 = e.pageY;
-                $deltaX = $cordX1-$cordX0;
-                $deltaY = $cordY1-$cordY0;
-                for($key of appendedObj.keys()){
-                    $currentX = $('#'+$key).offset().left;
-                    $currentY = $('#'+$key).offset().top;
-                    $('#'+$key).offset({top: appendedObj.get($key)[1]+$deltaY, left: appendedObj.get($key)[0]+$deltaX});
-                }
-            }).click(function(){
-                for($key of appendedObj.keys()){
-                    $updateCord($key);
-                }
-                $(this).unbind("click");
-                $(this).unbind("mousemove");
-            });
-        }
-    });
-    // логика масштабирования.
-    $('#'+'plusScale').mousedown(function(){
-        $basescale = $basescale + 0.0025;
-        $mainObj = 0;
-        if(appendedObj.size>0){
-            for($key of appendedObj.keys()){
-                if(BaseObjMap.has($key) && $mainObj != 0){
-                    $mainObj = $key;
-                    $oldH = $('#'+$key).height();
-                    $oldW = $('#'+$key).width();
-                    $updateObjSize($key);
-                    $newH = $('#'+$key).height();
-                    $newW = $('#'+$key).width();
-                    $minConstDist = $minConstDist*($newH/$oldH);
-                    $updateCord($key);
-                    break;
-                }
-            }
-            $scale = 0;
-            for($key of appendedObj.keys()){
-                if($key != $mainObj && BaseObjMap.has($key)){
-                    // получить старые координаты центра
-                    $oldH = $('#'+$key).height();
-                    $oldW = $('#'+$key).width();
-                    $updateObjSize($key);
-                    $newH = $('#'+$key).height();
-                    $newW = $('#'+$key).width();
-                    $keyNewOffsetTop = $('#'+$key).offset().top;
-                    $keyNewOffsetLeft = $('#'+$key).offset().left;
-                    $scale = $newH/$oldH;
-                    $('#'+$key).offset({top:$keyNewOffsetTop*($newH/$oldH),left:$keyNewOffsetLeft*($newW/$oldW)});
-                    // получить новые координаты центра
-                    // имеем старые и новые координаты центра main объекта, расстояние между центрами должно быть
-                    // какое? такое же как было, чтобы это сделать, можно сместить объекты ниже и правее на величину увеличения
-                    $updateCord($key);
-                }
-                else{
-                    $updateObjSize($key);
-                    //$updateCord($key);
-                }
-            }
-            $startConnect();
-            //$recountFun(0,0);              
-        }
-    });
-    $('#'+'minusScale').mousedown(function(){
-        $basescale = $basescale - 0.0025;
-        if(appendedObj.size>0){
-            for($key of appendedObj.keys()){
-                if(BaseObjMap.has($key) && $mainObj != 0){
-                    $mainObj = $key;
-                    $oldH = $('#'+$key).height();
-                    $oldW = $('#'+$key).width();
-                    $updateObjSize($key);
-                    $newH = $('#'+$key).height();
-                    $newW = $('#'+$key).width();
-                    $minConstDist = $minConstDist*($newH/$oldH);
-                    $updateCord($key);
-                    break;
-                }
-            }
-            for($key of appendedObj.keys()){
-                if($key != $mainObj && BaseObjMap.has($key)){
-                    // получить старые координаты центра
-                    $oldH = $('#'+$key).height();
-                    $oldW = $('#'+$key).width();
-                    $updateObjSize($key);
-                    $newH = $('#'+$key).height();
-                    $newW = $('#'+$key).width();
-                    $keyNewOffsetTop = $('#'+$key).offset().top;
-                    $keyNewOffsetLeft = $('#'+$key).offset().left;
-
-                    $('#'+$key).offset({top:$keyNewOffsetTop*($newH/$oldH),left:$keyNewOffsetLeft*($newW/$oldW)});
-                    // получить новые координаты центра
-                    // имеем старые и новые координаты центра main объекта, расстояние между центрами должно быть
-                    // какое? такое же как было, чтобы это сделать, можно сместить объекты ниже и правее на величину увеличения
-                    $updateCord($key);
-                }
-                else{
-                    $updateObjSize($key);
-                }
-            }
-            $startConnect();
-            //$recountFun(0,0);
-        }
-        //$('appended-modul').offset({top:$('appended-modul').offset().top*100/$baseScale,left:$('appended-modul').offset().left*100/$baseScale});
-    });
-    ////////////////////////////////////////////////////////
 });

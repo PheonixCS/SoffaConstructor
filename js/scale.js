@@ -6,7 +6,7 @@ $(document).ready(function(){
         $('#board').css({
             'height':document.documentElement.clientHeight
         });
-    }, true);
+    });
 
     $('.RotAndDel').css({
         'display':'none'

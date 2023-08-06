@@ -1,29 +1,71 @@
 $(document).ready(function(){
-    // $calculateMouseOffset = function($e){
-    //     $mouseD_x = $e.pageX;
-    //     $mouseD_y = $e.pageY;
-    //     // считываем координаты блока на который нажали
-    //     $elemCordX = $e.currentTarget.getBoundingClientRect().left;
-    //     $elemCordY = $e.currentTarget.getBoundingClientRect().top;
-    //     $elemCordXR = $e.currentTarget.getBoundingClientRect().right;
-    //     // вычиляем смещение от позиции мыши для генерации нового объекта
-    //     $deltaX = $mouseD_x-$elemCordX;
-    //     $deltaY = $mouseD_y-$elemCordY;
-    //     return [$deltaX,$deltaY];
-    // };
-    // $(".canvas-UI").mousedown(function(e){
-    //     //alert(1);
-    //     $offsetClick = $calculateMouseOffset(e);
-    //     $deltaX = $offsetClick[0];
-    //     $deltaY = $offsetClick[1];
-    //     $baseScale = 100;
-    //     $(document).mousemove(function (e) {
-    //         // пока клавиша зажата и мышь движется меняем динамично смещение модуля
-    //         //alert(1);
-    //         $(".appended-modul").offset({top: (e.pageY-$deltaY)*100/$baseScale, left: (e.pageX-$deltaX)*100/$baseScale});
-    //     }).click(function(){
-    //         $(this).unbind("click");
-    //         $(this).unbind("mousemove");
-    //     });
-    // });
+    $('#board').css({
+        'height':document.documentElement.clientHeight
+    });
+    window.addEventListener('resize', function(event) {
+        $('#board').css({
+            'height':document.documentElement.clientHeight
+        });
+    }, true);
+
+    $('.RotAndDel').css({
+        'display':'none'
+    });
+
+    $(".modul").mouseover(function(e){ 
+        $(this).css({
+            'border-color':'red',
+        });
+    });
+    $(".modul").mouseout(function(e){ 
+        $(this).css({
+            'border-color':'black',
+        });
+    });
+
+    $rect = document.getElementsByClassName('B');
+    $rect = $rect[0].getBoundingClientRect();
+    $('#countB').offset({top: $rect.top-10,left: 'auto'});
+    $('#countB').css({
+        'width' : '16px',
+        'right':'16px',
+        'left':'auto'
+    });
+
+    $rect = document.getElementsByClassName('BM');
+    $rect = $rect[0].getBoundingClientRect();
+    $('#countBM').offset({top: $rect.top-10,left: 'auto'});
+    $('#countBM').css({
+        'width' : '16px',
+        'right':'16px',
+        'left':'auto'
+    });
+
+    $rect = document.getElementsByClassName('C');
+    $rect = $rect[0].getBoundingClientRect();
+    $('#countC').offset({top: $rect.top-10,left: 'auto'});
+    $('#countC').css({
+        'width' : '16px',
+        'right':'16px',
+        'left':'auto'
+    });
+
+    $rect = document.getElementsByClassName('CM');
+    $rect = $rect[0].getBoundingClientRect();
+    $('#countCM').offset({top: $rect.top-10,left: 'auto'});
+    $('#countCM').css({
+        'width' : '16px',
+        'right':'16px',
+        'left':'auto'
+    });
+
+    $rect = document.getElementsByClassName('CB');
+    $rect = $rect[0].getBoundingClientRect();
+    $('#countCB').offset({top: $rect.top-10,left: $rect.left + $('.CB').width+20});
+    $('#countCB').css({
+        'width' : '16px',
+        'right':'16px',
+        'left':'auto'
+    });
+
 });

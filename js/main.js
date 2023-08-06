@@ -1,166 +1,25 @@
 $(document).ready(function(){
-    $('#board').css({
-        'height':document.documentElement.clientHeight
-    });
-    window.addEventListener('resize', function(event) {
-        $('#board').css({
-            'height':document.documentElement.clientHeight
-        });
-    }, true);
 
-    $(".modul").mouseover(function(e){ 
-        $(this).css({
-            'border-color':'red',
-        });
-    });
-    $(".modul").mouseout(function(e){ 
-        $(this).css({
-            'border-color':'black',
-        });
-    });
-    $('.RotAndDel').css({
-        'display':'none'
-    });
+    // блок переменные.
     ////////// подсчет объектов
-        $countB = 0;
-        $countBM = 0;
-        $countC = 0;
-        $countCM = 0;
-        $countCB = 0;
-
-    $counterModuls = function($id,$command){
-        
-        if($command){
-            $delta = 1;
-        }
-        else {
-            $delta = -1; 
-        }
-        if($('#'+$id).hasClass('appendedB')){
-            $countB = $countB + $delta;
-            $('#countB').text($countB);
-        }
-        if($('#'+$id).hasClass('appendedBM')){
-            $countBM = $countBM + $delta;
-            $('#countBM').text($countBM);
-        }
-        if($('#'+$id).hasClass('appendedC')){
-            $countC = $countC + $delta;
-            $('#countC').text($countC);
-        }
-        if($('#'+$id).hasClass('appendedCM')){
-            $countCM = $countCM + $delta;
-            $('#countCM').text($countCM);
-        }
-        if($('#'+$id).hasClass('appendedCB')){
-            $countCB = $countCB + $delta;
-            $('#countCB').text($countCB);
-        }
-    };
+    $countB = 0;
+    $countBM = 0;
+    $countC = 0;
+    $countCM = 0;
+    $countCB = 0;
     /////////
     $baseScale = 100;
     $minConstDist = 30;
-    $mainObj = 0; // нужно сделать обнуление переменной в случае если объект записанный туда перестал быть базовым.
+    $mainObj = 0; 
     // меняем масштаб.
     $baseWidth = 101;
     $baseHeight = 303;
     $basescale = 0.05;
-    $('#'+'plusScale').mousedown(function(){
-        $basescale = $basescale + 0.0025;
-        $mainObj = 0;
-        if(appendedObj.size>0){
-            for($key of appendedObj.keys()){
-                if(BaseObjMap.has($key) && $mainObj != 0){
-                    $mainObj = $key;
-                    $oldH = $('#'+$key).height();
-                    $oldW = $('#'+$key).width();
-                    $updateObjSize($key);
-                    $newH = $('#'+$key).height();
-                    $newW = $('#'+$key).width();
-                    $minConstDist = $minConstDist*($newH/$oldH);
-                    $updateCord($key);
-                    break;
-                }
-            }
-            $scale = 0;
-            for($key of appendedObj.keys()){
-                if($key != $mainObj && BaseObjMap.has($key)){
-                    // получить старые координаты центра
-                    $oldH = $('#'+$key).height();
-                    $oldW = $('#'+$key).width();
-                    $updateObjSize($key);
-                    $newH = $('#'+$key).height();
-                    $newW = $('#'+$key).width();
-                    $keyNewOffsetTop = $('#'+$key).offset().top;
-                    $keyNewOffsetLeft = $('#'+$key).offset().left;
-                    $scale = $newH/$oldH;
-                    $('#'+$key).offset({top:$keyNewOffsetTop*($newH/$oldH),left:$keyNewOffsetLeft*($newW/$oldW)});
-                    // получить новые координаты центра
-                    // имеем старые и новые координаты центра main объекта, расстояние между центрами должно быть
-                    // какое? такое же как было, чтобы это сделать, можно сместить объекты ниже и правее на величину увеличения
-                    $updateCord($key);
-                }
-                else{
-                    $updateObjSize($key);
-                    //$updateCord($key);
-                }
-            }
-            $startConnect();
-            //$recountFun(0,0);              
-        }
-    });
-    $('#'+'minusScale').mousedown(function(){
-        $basescale = $basescale - 0.0025;
-        if(appendedObj.size>0){
-            for($key of appendedObj.keys()){
-                if(BaseObjMap.has($key) && $mainObj != 0){
-                    $mainObj = $key;
-                    $oldH = $('#'+$key).height();
-                    $oldW = $('#'+$key).width();
-                    $updateObjSize($key);
-                    $newH = $('#'+$key).height();
-                    $newW = $('#'+$key).width();
-                    $minConstDist = $minConstDist*($newH/$oldH);
-                    $updateCord($key);
-                    break;
-                }
-            }
-            for($key of appendedObj.keys()){
-                if($key != $mainObj && BaseObjMap.has($key)){
-                    // получить старые координаты центра
-                    $oldH = $('#'+$key).height();
-                    $oldW = $('#'+$key).width();
-                    $updateObjSize($key);
-                    $newH = $('#'+$key).height();
-                    $newW = $('#'+$key).width();
-                    $keyNewOffsetTop = $('#'+$key).offset().top;
-                    $keyNewOffsetLeft = $('#'+$key).offset().left;
-
-                    $('#'+$key).offset({top:$keyNewOffsetTop*($newH/$oldH),left:$keyNewOffsetLeft*($newW/$oldW)});
-                    // получить новые координаты центра
-                    // имеем старые и новые координаты центра main объекта, расстояние между центрами должно быть
-                    // какое? такое же как было, чтобы это сделать, можно сместить объекты ниже и правее на величину увеличения
-                    $updateCord($key);
-                }
-                else{
-                    $updateObjSize($key);
-                }
-            }
-            $startConnect();
-            //$recountFun(0,0);
-        }
-        //$('appended-modul').offset({top:$('appended-modul').offset().top*100/$baseScale,left:$('appended-modul').offset().left*100/$baseScale});
-    });
-    /* БЛОК ПЕРЕМЕННЫЕ*/
     // глобальные переменные для вычситывания индекса добавляемого модуля
     numberIdObjecy = 0;
     idObject = "appended-modul" + numberIdObjecy;
     $idFinedObjOLD = "appended-modul0";
     // коллекции объектов
-    // коллекция скомпонованных объектов (главная ветка)
-    const groupMain = new Map();
-    // коллекция скомпонованных объектов (побочная ветка)
-    const subMain = new Map();
     // массив размещенных объектовappend
     var appendedObj = new Map();
     // храним информацию о повороте объетов
@@ -201,6 +60,40 @@ $(document).ready(function(){
 
     $currentBHeight = 110;
     $currentBWidth = 35;
+    // логика выделения
+    selectObj = 0;
+    //////// список объектов в группе для подсчета размера блока.
+    $findObjects = new Map();
+    ////////////////////
+    $counterModuls = function($id,$command){
+        
+        if($command){
+            $delta = 1;
+        }
+        else {
+            $delta = -1; 
+        }
+        if($('#'+$id).hasClass('appendedB')){
+            $countB = $countB + $delta;
+            $('#countB').text($countB);
+        }
+        if($('#'+$id).hasClass('appendedBM')){
+            $countBM = $countBM + $delta;
+            $('#countBM').text($countBM);
+        }
+        if($('#'+$id).hasClass('appendedC')){
+            $countC = $countC + $delta;
+            $('#countC').text($countC);
+        }
+        if($('#'+$id).hasClass('appendedCM')){
+            $countCM = $countCM + $delta;
+            $('#countCM').text($countCM);
+        }
+        if($('#'+$id).hasClass('appendedCB')){
+            $countCB = $countCB + $delta;
+            $('#countCB').text($countCB);
+        }
+    };
     $currentSize = function(){
         $bOriginWidth = 35;
         $bOriginHeight = 110;
@@ -274,10 +167,6 @@ $(document).ready(function(){
         // добавляем в массив размещенных обхектов id размещенного модуля
         appendedObj.set($id,[topX,topY,dovnX,dovnY]);
     }
-
-
-    //////// данная функция формирует список объектов в группе.
-    $findObjects = new Map();
     $getDistObjects = function($id1,$id2){
         $elem = document.getElementById($id1);
         $elemRect = $elem.getBoundingClientRect();
@@ -362,6 +251,7 @@ $(document).ready(function(){
     };
     $constructMainGr = function($targetId){
         if($targetId){
+            $findObjects.set($targetId,'1');
             for(let key of appendedObj.keys()){
                 if($getDistObjects($targetId,key) < 30 && !$findObjects.has(key)){
                     $findObjects.set(key,'1');
@@ -372,38 +262,11 @@ $(document).ready(function(){
     }
     $controllerConstruct = function($targetId,$ourId){
         $findObjects.clear();
-        $findObjects.set($ourId,'1');
-        if($targetId){
-            $findObjects.set($targetId,'1');
-        }
-        $constructMainGr($targetId);
+        //$findObjects.set($ourId,'1');
+        $constructMainGr($ourId);
     };
     ////////
-    // mainGr - класс элементов из главной группы
-    // функция контролирующая принадлежность к группе объекта
-    $controlGroups = function($idOur,$idTarget){
-        if($idTarget){
-            if($('#'+$idTarget).hasClass('mainGr')){    
-                groupMain.set($idOur,'1');
-                $('#'+$idOur).addClass('mainGr');
-            }
-            else{
-                if($('#'+$idOur).hasClass('mainGr')){
-                    $('#'+$idOur).removeClass('mainGr');
-                    groupMain.delete($idOur);
-                }
-                subMain.set($idOur,'1');
-            }
-        }
-        else {
-            if($('#'+$idOur).hasClass('mainGr')){
-                $('#'+$idOur).removeClass('mainGr');
-                groupMain.delete($idOur);
-            }
-        }
-        
-    };
-    // данную функцию нужно вставлять после переопределения groupMain списка. так же если target не определен передать нужно 0.
+    // данную функцию нужно вставлять после переопределения $findObjects списка. так же если target не определен передать нужно 0.
     $recountFun = function($idOur,$TargetParent){
         if($idOur){
             // пересчет
@@ -411,7 +274,6 @@ $(document).ready(function(){
             $maxBottom = 0;
             $minLeft = 9999999999;
             $maxRight = 0;
-            //console.log(groupMain);
             for(let key of $findObjects.keys()){
                 if(!rotationObj.get(key)){
                     $top = $('#'+key).offset().top;
@@ -440,8 +302,6 @@ $(document).ready(function(){
             }
             $realwidth = ($maxRight-$minLeft);
             $realHeight = ($maxBottom-$minTop);
-            console.log($realwidth,$realHeight);
-            console.log((($realHeight*1/$scaleH/35)*35).toFixed());
             $('#realDepth').text((($realHeight*1/$scaleH/35)*35).toFixed());
             $('#realWidth').text((($realwidth*1/$scaleW/35)*35).toFixed());
             $countCost();
@@ -451,8 +311,7 @@ $(document).ready(function(){
             $maxBottom = 0;
             $minLeft = 9999999999;
             $maxRight = 0;
-            //console.log(groupMain);
-            for(let key of groupMain.keys()){
+            for(let key of $findObjects.keys()){
                 if(!rotationObj.get(key)){
                     $top = $('#'+key).offset().top;
                     $left = $('#'+key).offset().left;
@@ -665,20 +524,13 @@ $(document).ready(function(){
             $recursiveConstructor($key);
         }
     };
-    //arr.set('key5','value5');
-    //console.log(arr);
-
-
-    /* БЛОК ПЕРЕМЕННЫЕ*/
-
-    //// вспомогательные функции /////
+    
     $updateCord = function($id){
         objAdd = document.getElementById($id);
         topY = objAdd.getBoundingClientRect().top;
         topX = objAdd.getBoundingClientRect().left;
         dovnY = objAdd.getBoundingClientRect().bottom;
         dovnX = objAdd.getBoundingClientRect().right;
-        // groupMain.set($id,[topX,topY,dovnX,dovnY]);
         // добавляем в массив размещенных обхектов id размещенного модуля
         appendedObj.set($id,[topX,topY,dovnX,dovnY]);
     }
@@ -1321,7 +1173,6 @@ $(document).ready(function(){
         $minD2 = $('#'+$id1).height()/2 + $('#'+$id2).height()/2 + $minConstDist;
         return Math.sqrt($minD1*$minD1 + $minD2*$minD2);
     } 
-    
     /// Основная функция размещения объектов
     $appendMainFunc = function($numberObj,id,e){
         if (e.which == 1){
@@ -1349,7 +1200,7 @@ $(document).ready(function(){
 
                     
                     // условие создание объекта если на доске ничего нет.
-                    if(groupMain.size == 0){
+                    if(appendedObj.size == 0){
                         if($rightPosModul > $rightPosUI){
                             $moovblModul.offset({top: $('.canvas').height()/3, left: $rightPosUI/2});
                             topY = objAdd.getBoundingClientRect().top;
@@ -1361,7 +1212,6 @@ $(document).ready(function(){
                         // основная логика
                         // добавляем объект высчитывем координаты его углов
                         // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
-                        groupMain.set(idObject,'1');
                         rotationObj.set(idObject,false);
                         $('#'+idObject).addClass("mainGr");
                         // добавляем в массив размещенных обхектов id размещенного модуля
@@ -1393,7 +1243,6 @@ $(document).ready(function(){
                             $saveGropsPositions($findeObj,idObject,$resultPos);
                             $setPositionObetcs(idObject,$findeObj,$resultPos);
                             // функция контролирующая принадлежность к группе объекта
-                            $controlGroups(idObject,$findeObj);
                             rotationObj.set(idObject,false);
                             $controllerConstruct($findeObj,idObject);/////!!!!!!
                             $recountFun(idObject,$findeObj);
@@ -1410,7 +1259,6 @@ $(document).ready(function(){
                                 //////////////////////////////
                                 // далее нужна функция стыковки объектов
                                 $setPositionObetcs(idObject,$findeObj,$resultPos);
-                                $controlGroups(idObject,$findeObj);
                                 $controllerConstruct($findeObj,idObject);////!!!!!!!
                                 $recountFun(idObject,$findeObj);
                                 $counterModuls(idObject,1);
@@ -1542,10 +1390,6 @@ $(document).ready(function(){
             'stroke':'red'
         });
     });
-
-
-    // логика выделения
-    selectObj = 0;
     $( '.canvas' ).on( 'click', function( event1 ) {
         obj2 = event1.target;
         $classObj =$(obj2).attr('class')
@@ -1647,14 +1491,12 @@ $(document).ready(function(){
                                 rotationObj.set($('#'+selectObj).attr('id'),true);
                                 $saveGropsPositions($findeObj,idObj,$resultPos);
                                 $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
-                                $controlGroups(idObj,$findeObj);
                                 $recountFun(idObj,$findeObj);
                             }
                             else{
                                 rotationObj.set($('#'+selectObj).attr('id'),true);
                                 $updateCord(idObj);
-                                if(groupMain.size > 1){
-                                    $controlGroups(idObj,0);
+                                if(appendedObj.size > 1){
                                     $recountFun(idObj,0);
                                 }
                             }
@@ -1664,8 +1506,7 @@ $(document).ready(function(){
                         else{
                             rotationObj.set($('#'+selectObj).attr('id'),true);
                             $updateCord(idObj);
-                            if(groupMain.size > 1){
-                                $controlGroups(idObj,0);
+                            if(appendedObj.size > 1){
                                 $recountFun(idObj,0);
                             }
                         }
@@ -1685,15 +1526,13 @@ $(document).ready(function(){
                                 rotationObj.set($('#'+selectObj).attr('id'),false);
                                 $saveGropsPositions($findeObj,idObj,$resultPos);
                                 $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
-                                $controlGroups(idObj,$findeObj);
                                 $recountFun(idObj,$findeObj);
                                 //lert(2);
                             }
                             else{
                                 rotationObj.set($('#'+selectObj).attr('id'),false);
                                 $updateCord(idObj);
-                                if(groupMain.size > 1){
-                                    $controlGroups(idObj,0);
+                                if(appendedObj.size > 1){
                                     $recountFun(idObj,0);
                                 }
                                 
@@ -1702,8 +1541,7 @@ $(document).ready(function(){
                         else{
                             rotationObj.set($('#'+selectObj).attr('id'),false);
                             $updateCord(idObj);
-                            if(groupMain.size > 1){
-                                $controlGroups(idObj,0);
+                            if(appendedObj.size > 1){
                                 $recountFun(idObj,0);
                             }
                         }
@@ -1719,7 +1557,7 @@ $(document).ready(function(){
                     appendedObj.delete(idObj);
                     if($('#'+idObj).hasClass('mainGr')){
                         $('#'+idObj).removeClass('mainGr');
-                        groupMain.delete(idObj);
+                        appendedObj.delete(idObj);
                     }
                     $clearMapsWhenDelete(selectObj);
                     $recountFun(0,0);
@@ -1794,7 +1632,6 @@ $(document).ready(function(){
                             //////////////////////////////
                             //console.log(idObj,$findeObj,$resultPos);
                             $setPositionObetcs(idObj,$findeObj,$resultPos); // состыковать
-                            $controlGroups(idObj,$findeObj);
                             $controllerConstruct($findeObj,idObj);
                             $recountFun(idObj,$findeObj);
                             // открепляем событие на клик от текущего модуля
@@ -1805,8 +1642,7 @@ $(document).ready(function(){
                             //alert(2);
                             $baseObjBind(idObj);
                             $updateCord(idObj);
-                            if(groupMain.size > 1){
-                                $controlGroups(idObj,0);
+                            if(appendedObj.size > 1){
                                 //$controllerConstruct(0,idObj);
                                 
                             }
@@ -1823,10 +1659,6 @@ $(document).ready(function(){
                 else{// здесь нужно переделать код
                     idObj = $('#'+selectObj).attr('id');
                     appendedObj.delete(idObj);
-                    if($('#'+idObj).hasClass('mainGr')){
-                        $('#'+idObj).removeClass('mainGr');
-                        groupMain.delete(idObj);
-                    }
                     $clearMapsWhenDelete(selectObj);
                     $recountFun(0,0);
                     //console.log(selectObj);
@@ -1841,7 +1673,6 @@ $(document).ready(function(){
         }
         
     });
-    
     // перемещение объектов по рабочей поверхности ////////
     ///////////////////////////////////////////////////////
     $(".canvas").mousedown(function(e1){
@@ -1866,6 +1697,93 @@ $(document).ready(function(){
                 $(this).unbind("mousemove");
             });
         }
+    });
+    // логика масштабирования.
+    $('#'+'plusScale').mousedown(function(){
+        $basescale = $basescale + 0.0025;
+        $mainObj = 0;
+        if(appendedObj.size>0){
+            for($key of appendedObj.keys()){
+                if(BaseObjMap.has($key) && $mainObj != 0){
+                    $mainObj = $key;
+                    $oldH = $('#'+$key).height();
+                    $oldW = $('#'+$key).width();
+                    $updateObjSize($key);
+                    $newH = $('#'+$key).height();
+                    $newW = $('#'+$key).width();
+                    $minConstDist = $minConstDist*($newH/$oldH);
+                    $updateCord($key);
+                    break;
+                }
+            }
+            $scale = 0;
+            for($key of appendedObj.keys()){
+                if($key != $mainObj && BaseObjMap.has($key)){
+                    // получить старые координаты центра
+                    $oldH = $('#'+$key).height();
+                    $oldW = $('#'+$key).width();
+                    $updateObjSize($key);
+                    $newH = $('#'+$key).height();
+                    $newW = $('#'+$key).width();
+                    $keyNewOffsetTop = $('#'+$key).offset().top;
+                    $keyNewOffsetLeft = $('#'+$key).offset().left;
+                    $scale = $newH/$oldH;
+                    $('#'+$key).offset({top:$keyNewOffsetTop*($newH/$oldH),left:$keyNewOffsetLeft*($newW/$oldW)});
+                    // получить новые координаты центра
+                    // имеем старые и новые координаты центра main объекта, расстояние между центрами должно быть
+                    // какое? такое же как было, чтобы это сделать, можно сместить объекты ниже и правее на величину увеличения
+                    $updateCord($key);
+                }
+                else{
+                    $updateObjSize($key);
+                    //$updateCord($key);
+                }
+            }
+            $startConnect();
+            //$recountFun(0,0);              
+        }
+    });
+    $('#'+'minusScale').mousedown(function(){
+        $basescale = $basescale - 0.0025;
+        if(appendedObj.size>0){
+            for($key of appendedObj.keys()){
+                if(BaseObjMap.has($key) && $mainObj != 0){
+                    $mainObj = $key;
+                    $oldH = $('#'+$key).height();
+                    $oldW = $('#'+$key).width();
+                    $updateObjSize($key);
+                    $newH = $('#'+$key).height();
+                    $newW = $('#'+$key).width();
+                    $minConstDist = $minConstDist*($newH/$oldH);
+                    $updateCord($key);
+                    break;
+                }
+            }
+            for($key of appendedObj.keys()){
+                if($key != $mainObj && BaseObjMap.has($key)){
+                    // получить старые координаты центра
+                    $oldH = $('#'+$key).height();
+                    $oldW = $('#'+$key).width();
+                    $updateObjSize($key);
+                    $newH = $('#'+$key).height();
+                    $newW = $('#'+$key).width();
+                    $keyNewOffsetTop = $('#'+$key).offset().top;
+                    $keyNewOffsetLeft = $('#'+$key).offset().left;
+
+                    $('#'+$key).offset({top:$keyNewOffsetTop*($newH/$oldH),left:$keyNewOffsetLeft*($newW/$oldW)});
+                    // получить новые координаты центра
+                    // имеем старые и новые координаты центра main объекта, расстояние между центрами должно быть
+                    // какое? такое же как было, чтобы это сделать, можно сместить объекты ниже и правее на величину увеличения
+                    $updateCord($key);
+                }
+                else{
+                    $updateObjSize($key);
+                }
+            }
+            $startConnect();
+            //$recountFun(0,0);
+        }
+        //$('appended-modul').offset({top:$('appended-modul').offset().top*100/$baseScale,left:$('appended-modul').offset().left*100/$baseScale});
     });
     ////////////////////////////////////////////////////////
 });

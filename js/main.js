@@ -1097,7 +1097,12 @@ $(document).ready(function(){
     $updateSize = function(){
         let objContainer = document.getElementById('container');
         rectcont = objContainer.getBoundingClientRect();
-        $containerRX = rectcont.right-$('#menu').width();
+        if($('body').width() > $('body').height()){
+            $containerRX = rectcont.right-$('#menu').width();
+        }
+        else {
+            $containerRX = rectcont.right;
+        }
         return $containerRX;
     };
     $getCenterDistanse = function($id1,$id2){
@@ -1902,7 +1907,8 @@ $(document).ready(function(){
                 // получаем html код модуля
                 $moovObj = $creatModul($id,$numberObj);
                 // добавляем на страницу(он скрыт)
-                $append($('.canvas'),$moovObj)
+                $append($('.canvas'),$moovObj);
+                console.log($moovObj);
                 $updateObjSize($id);
                 
                 // получаем добавленный модуль
@@ -2086,7 +2092,7 @@ $(document).ready(function(){
                             'z-index':'9999'
                         });
                         $touch = e.originalEvent.touches[0] || $e.originalEvent.changedTouches[0];
-                        console.log($touch.pageY);
+                        //console.log($deltaY,$deltaX);
                         $('#'+idObject).offset({top: ($touch.pageY-$deltaY)*100/$baseScale, left: ($touch.pageX-$deltaX)*100/$baseScale});
                     
                     }).on('touchend',function (e) {
@@ -2303,12 +2309,9 @@ $(document).ready(function(){
             /////////////////////////////
             $('*').unbind(); // убираем все прикрепленные события.
 
-
-            $(".B").on('mousedown touchstart', function(e){
-                $calculateMouseOffset(e);
-            });
-
+            //alert(1);
             $(".B").on('mousedown touchstart',function(e){
+                //alert(1);
                 $appendMainFunc(1,idObject,e);
             });
             $(".B").on('mouseout',function(){

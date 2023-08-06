@@ -2386,7 +2386,7 @@ $(document).ready(function(){
     // êîíòðîëü ñòèëåé.
     $controllFunc();
     // êàæäûé ðàç ïðè èçìåíåíèè ðàçìåðà ýêðàíà íóæíî âûçûâàòü êîíòðîëüíóþ ôóíêöèþ, êîòîðàÿ ïåðåçàêðåïëÿåò ñîáûòèÿ íà âñåõ ýëåìåíòàõ.
-    window.addEventListener('resize', function(event) {
+    window.addEventListener('resize', function() {
         $controllFunc();
     });
 
@@ -2723,5 +2723,45 @@ $(document).ready(function(){
     $controllFunc2();
     window.addEventListener('resize', function() {
         $controllFunc2();
+        $mainObj = 0;
+        if(appendedObj.size>0){
+            for($key of appendedObj.keys()){
+                if(BaseObjMap.has($key) && $mainObj != 0){
+                    $mainObj = $key;
+                    $oldH = $('#'+$key).height();
+                    $oldW = $('#'+$key).width();
+                    $updateObjSize($key);
+                    $newH = $('#'+$key).height();
+                    $newW = $('#'+$key).width();
+                    $minConstDist = $minConstDist*($newH/$oldH);
+                    $updateCord($key);
+                    break;
+                }
+            }
+            $scale = 0;
+            for($key of appendedObj.keys()){
+                if($key != $mainObj && BaseObjMap.has($key)){
+                    // ˜˜˜˜˜˜˜˜ ˜˜˜˜˜˜ ˜˜˜˜˜˜˜˜˜˜ ˜˜˜˜˜˜
+                    $oldH = $('#'+$key).height();
+                    $oldW = $('#'+$key).width();
+                    $updateObjSize($key);
+                    $newH = $('#'+$key).height();
+                    $newW = $('#'+$key).width();
+                    $keyNewOffsetTop = $('#'+$key).offset().top;
+                    $keyNewOffsetLeft = $('#'+$key).offset().left;
+                    $scale = $newH/$oldH;
+                    $('#'+$key).offset({top:$keyNewOffsetTop*($newH/$oldH),left:$keyNewOffsetLeft*($newW/$oldW)});
+                    // ˜˜˜˜˜˜˜˜ ˜˜˜˜˜ ˜˜˜˜˜˜˜˜˜˜ ˜˜˜˜˜˜
+                    // ˜˜˜˜˜ ˜˜˜˜˜˜ ˜ ˜˜˜˜˜ ˜˜˜˜˜˜˜˜˜˜ ˜˜˜˜˜˜ main ˜˜˜˜˜˜˜, ˜˜˜˜˜˜˜˜˜˜ ˜˜˜˜˜ ˜˜˜˜˜˜˜˜ ˜˜˜˜˜˜ ˜˜˜˜
+                    // ˜˜˜˜˜? ˜˜˜˜˜ ˜˜ ˜˜˜ ˜˜˜˜, ˜˜˜˜˜ ˜˜˜ ˜˜˜˜˜˜˜, ˜˜˜˜˜ ˜˜˜˜˜˜˜˜ ˜˜˜˜˜˜˜ ˜˜˜˜ ˜ ˜˜˜˜˜˜ ˜˜ ˜˜˜˜˜˜˜˜ ˜˜˜˜˜˜˜˜˜˜
+                    $updateCord($key);
+                }
+                else{
+                    $updateObjSize($key);
+                    //$updateCord($key);
+                }
+            }
+            $startConnect();        
+        }
     });
 });

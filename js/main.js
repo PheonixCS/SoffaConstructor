@@ -1124,6 +1124,42 @@ $(document).ready(function(){
 
     $controllFunc = function(){
         if(window.innerWidth > 1250) { // десктоп версия.
+            $('#menu').css({
+                'display': 'flex',
+                'position': 'absolute',
+                'width': '15%',
+                'height': '100%',
+                'right': '0',
+                'bottom': 'auto',
+                'background-color': 'rgb(255, 255, 255)',
+                'flex-wrap': 'nowrap',
+                'align-items': 'center',
+                'justify-content': 'center',
+                'align-content': 'center',
+                'z-index': '999',
+            });
+            $('.menu-container').css({
+                'display': 'flex',
+                'flex-direction': 'column',
+                'justify-content': 'center',
+                'align-items': 'center',
+                'flex-wrap': 'nowrap',
+                'height': '100%',
+                'width': 'auto',
+            });
+            $('.canvas-UI').css({
+                'position': 'absolute',
+                'width': '85%',
+                'height': '100%',
+                'left': '0',
+            });
+            $('.canvas').css({
+                'position': 'relative',
+                'float': 'left',
+                'width': '85%',
+                'height': '100%',
+                'left': '0',
+            });
             //удаляем все прикрепленные события.
             $('*').unbind();
             // функции завязанные на событие клика.
@@ -1793,12 +1829,97 @@ $(document).ready(function(){
             });
         }
         else {
-            if(window.innerWidth <= 1250){ // версия для планшетов и телефонов. здесь нужно учесть и события на клик и события на touch
+            // версия для планшетов и телефонов. здесь нужно учесть и события на клик и события на touch
             // причем вне зависимости от интерфейса пользователя. справа или снизу расположено меню
             // здесь нужно сделать отдельный код для aios и для android.
+
+            // css часть убираем обновление и передвижение страницы на моб устройствах свайпом.
+            $('body').css({
+                'left': '0px',
+                'right': '0px',
+                'position': 'fixed',
+                'overflow': 'hidden'
+            });
+            // код перестройки интерфейса. в зависимости от соотношения ширины и высоты
+            if($('body').width() > $('body').height()){
+                $('#menu').css({
+                    'display': 'flex',
+                    'position': 'absolute',
+                    'width': '15%',
+                    'height': '100%',
+                    'right': '0',
+                    'bottom': 'auto',
+                    'background-color': 'rgb(255, 255, 255)',
+                    'flex-wrap': 'nowrap',
+                    'align-items': 'center',
+                    'justify-content': 'center',
+                    'align-content': 'center',
+                    'z-index': '999',
+                });
+                $('.menu-container').css({
+                    'display': 'flex',
+                    'flex-direction': 'column',
+                    'justify-content': 'center',
+                    'align-items': 'center',
+                    'flex-wrap': 'nowrap',
+                    'height': '100%',
+                    'width': 'auto',
+                });
+                $('.canvas-UI').css({
+                    'position': 'absolute',
+                    'width': '85%',
+                    'height': '100%',
+                    'left': '0',
+                });
+                $('.canvas').css({
+                    'position': 'relative',
+                    'float': 'left',
+                    'width': '85%',
+                    'height': '100%',
+                    'left': '0',
+                });
+            } else {
+                $('#menu').css({
+                    'display': 'flex',
+                    'position': 'absolute',
+                    'width': '100%',
+                    'height': '20%',
+                    'right': '0',
+                    'bottom': '0',
+                    'background-color': 'rgb(255, 255, 255)',
+                    'flex-wrap': 'nowrap',
+                    'align-items': 'center',
+                    'justify-content': 'center',
+                    'align-content': 'center',
+                    'z-index': '999',
+                });
+                $('.menu-container').css({
+                    'display': 'flex',
+                    'flex-direction': 'row',
+                    'justify-content': 'center',
+                    'align-items': 'center',
+                    'flex-wrap': 'nowrap',
+                    'height': '100%',
+                    'width': '100%',
+                });
+                $('.canvas-UI').css({
+                    'position': 'absolute',
+                    'width': '100%',
+                    'height': '80%',
+                    'left': '0',
+                });
+                $('.canvas').css({
+                    'position': 'relative',
+                    'float': 'left',
+                    'width': '100%',
+                    'height': '80%',
+                    'left': '0',
+                });
+            }
+            /////////////////////////////
             $('*').unbind(); // убираем все прикрепленные события.
 
-            }
+        
         }
         ////////////////////////////////////////////////////////
     };
@@ -1806,5 +1927,340 @@ $(document).ready(function(){
     // каждый раз при изменении размера экрана нужно вызывать контрольную функцию, которая перезакрепляет события на всех элементах.
     window.addEventListener('resize', function(event) {
         $controllFunc();
+    });
+
+    $controllFunc2 = function(){
+        if($('body').width() > $('body').height()){
+            $('.scale').css({
+                'top':'50%',
+                'right':'42px'
+            });
+            $('.scale').children('svg').css({
+                'height': '53px',
+                'width': '50px'
+            });
+            if($('body').width()<1000){
+                $('.scale').css({
+                    'top':'50%',
+                    'right':'1px'
+                });
+                $('.scale').children('svg').css({
+                    'height': '40px',
+                    'width': '39px'
+                });
+            }
+            $('.B').css({
+                'width':'50px',
+                'height':'120px',
+                'margin-left': 'auto',
+                'margin-top': 'auto'
+            });
+    
+            $('.BM').css({
+                'width':'50px',
+                'height':'80px',
+                'margin-left': 'auto',
+                'margin-top': 'auto'
+            });
+    
+            $('.C').css({
+                'width':'120px',
+                'height':'81px',
+                'margin-left': 'auto',
+                'margin-top': 'auto'
+            });
+    
+            $('.CM').css({
+                'width':'85px',
+                'height':'85px',
+                'margin-left': 'auto',
+                'margin-top': 'auto'
+            });
+    
+            $('.CB').css({
+                'width':'120px',
+                'height':'120px',
+                'margin-left': 'auto',
+                'margin-top': 'auto'
+            });
+            $('.counter').css({
+                'font-weight': 100,
+                'font-size': '20px'
+            });
+
+            $rectZ = document.getElementsByClassName('CB');
+            $rectZ = $rectZ[0].getBoundingClientRect();
+
+            $rect = document.getElementsByClassName('B');
+            $rect = $rect[0].getBoundingClientRect();
+            $('#countB').offset({top: $rect.top-30,left: 'auto'});
+            $('#countB').css({
+                'width' : '16px',
+                'right':'16px',
+                'left':'auto'
+            });
+
+            $rect = document.getElementsByClassName('BM');
+            $rect = $rect[0].getBoundingClientRect();
+            $('#countBM').offset({top: $rect.top-30,left: 'auto'});
+            $('#countBM').css({
+                'width' : '16px',
+                'right':'16px',
+                'left':'auto'
+            });
+
+            $rect = document.getElementsByClassName('C');
+            $rect = $rect[0].getBoundingClientRect();
+            $('#countC').offset({top: $rect.top-30,left: 'auto'});
+            $('#countC').css({
+                'width' : '16px',
+                'right':'16px',
+                'left':'auto'
+            });
+
+            $rect = document.getElementsByClassName('CM');
+            $rect = $rect[0].getBoundingClientRect();
+            $('#countCM').offset({top: $rect.top-30,left: 'auto'});
+            $('#countCM').css({
+                'width' : '16px',
+                'right':'16px',
+                'left':'auto'
+            });
+
+            $rect = document.getElementsByClassName('CB');
+            $rect = $rect[0].getBoundingClientRect();
+            $('#countCB').offset({top: $rect.top-30,left: 'auto'});
+            $('#countCB').css({
+                'width' : '16px',
+                'right':'16px',
+                'left':'auto',
+                'margin-right': 'auto'
+            });
+            //alert(1);
+            if($('body').height() < 600){
+                $('.B').css({
+                    'width':'35px',
+                    'height':'80px',
+                });
+        
+                $('.BM').css({
+                    'width':'35px',
+                    'height':'60px',
+                });
+        
+                $('.C').css({
+                    'width':'70px',
+                    'height':'55px',
+                });
+        
+                $('.CM').css({
+                    'width':'60px',
+                    'height':'60px',
+                });
+        
+                $('.CB').css({
+                    'width':'80px',
+                    'height':'80px',
+                });
+                $('.counter').css({
+                    'font-weight': 100,
+                    'font-size': '20px'
+                });
+    
+                $rectZ = document.getElementsByClassName('CB');
+                $rectZ = $rectZ[0].getBoundingClientRect();
+
+                $rect = document.getElementsByClassName('B');
+                $rect = $rect[0].getBoundingClientRect();
+                $('#countB').offset({top: $rect.top,left: 'auto'});
+                $('#countB').css({
+                    'width' : '16px',
+                    'right':'16px',
+                    'left': $('#menu').width()-12
+                });
+    
+                $rect = document.getElementsByClassName('BM');
+                $rect = $rect[0].getBoundingClientRect();
+                $('#countBM').offset({top: $rect.top-10,left: 'auto'});
+                $('#countBM').css({
+                    'width' : '16px',
+                    'right':'16px',
+                    'left':$('#menu').width()-12
+                });
+    
+                $rect = document.getElementsByClassName('C');
+                $rect = $rect[0].getBoundingClientRect();
+                $('#countC').offset({top: $rect.top-10,left: 'auto'});
+                $('#countC').css({
+                    'width' : '16px',
+                    'right':'16px',
+                    'left':$('#menu').width()-12
+                });
+    
+                $rect = document.getElementsByClassName('CM');
+                $rect = $rect[0].getBoundingClientRect();
+                $('#countCM').offset({top: $rect.top-10,left: 'auto'});
+                $('#countCM').css({
+                    'width' : '16px',
+                    'right':'16px',
+                    'left':$('#menu').width()-12
+                });
+    
+                $rect = document.getElementsByClassName('CB');
+                $rect = $rect[0].getBoundingClientRect();
+                $('#countCB').offset({top: $rect.top-10,left: $rect.left + $('.CB').width+20});
+                $('#countCB').css({
+                    'width' : '16px',
+                    'right':'16px',
+                    'left':$('#menu').width()-12
+                });
+            }
+        }
+        else {
+
+            $('.scale').css({
+                'top':'83%',
+                'right':'1px'
+            });
+            $('.scale').children('svg').css({
+                'height': '40px',
+                'width': '39px'
+            });
+
+            $('.B').css({
+                'width':'35px',
+                'height':'80px',
+                'margin-left': '13px'
+
+            });
+    
+            $('.BM').css({
+                'width':'35px',
+                'height':'60px',
+            });
+    
+            $('.C').css({
+                'width':'70px',
+                'height':'55px',
+            });
+    
+            $('.CM').css({
+                'width':'60px',
+                'height':'60px',
+            });
+    
+            $('.CB').css({
+                'width':'80px',
+                'height':'80px',
+                'margin-right': '13px'
+            });
+            $('.counter').css({
+                'font-weight': 100,
+                'font-size': '20px'
+            });
+            $rectZ = document.getElementsByClassName('CB');
+            $rectZ = $rectZ[0].getBoundingClientRect();
+    
+            $rect = document.getElementsByClassName('B');
+            $rect = $rect[0].getBoundingClientRect();
+            $('#countB').offset({top: $rectZ.top-10, left: $rect.left+35});
+    
+            $rect = document.getElementsByClassName('BM');
+            $rect = $rect[0].getBoundingClientRect();
+            $('#countBM').offset({top: $rectZ.top-10, left: $rect.left+30});
+    
+            $rect = document.getElementsByClassName('C');
+            $rect = $rect[0].getBoundingClientRect();
+            $('#countC').offset({top: $rectZ.top-10, left: $rect.left+65});
+    
+            $rect = document.getElementsByClassName('CM');
+            $rect = $rect[0].getBoundingClientRect();
+            $('#countCM').offset({top: $rectZ.top-10, left: $rect.left+55});
+    
+            $rect = document.getElementsByClassName('CB');
+            $rect = $rect[0].getBoundingClientRect();
+            $('#countCB').offset({top: $rectZ.top-10, left: $rect.left+80});
+            if($('body').height() < 600){
+                $('.B').css({
+                    'width':'35px',
+                    'height':'80px',
+                });
+        
+                $('.BM').css({
+                    'width':'35px',
+                    'height':'60px',
+                });
+        
+                $('.C').css({
+                    'width':'70px',
+                    'height':'55px',
+                });
+        
+                $('.CM').css({
+                    'width':'60px',
+                    'height':'60px',
+                });
+        
+                $('.CB').css({
+                    'width':'80px',
+                    'height':'80px',
+                });
+                $('.counter').css({
+                    'font-weight': 100,
+                    'font-size': '20px'
+                });
+    
+                $rectZ = document.getElementsByClassName('CB');
+                $rectZ = $rectZ[0].getBoundingClientRect();
+                $rect = document.getElementsByClassName('B');
+                $rect = $rect[0].getBoundingClientRect();
+                $('#countB').offset({top: $rect.top,left: 'auto'});
+                $('#countB').css({
+                    'width' : '16px',
+                    'right':'16px',
+                    'left': $rectZ.right-$rectZ.left+5
+                });
+    
+                $rect = document.getElementsByClassName('BM');
+                $rect = $rect[0].getBoundingClientRect();
+                $('#countBM').offset({top: $rect.top-10,left: 'auto'});
+                $('#countBM').css({
+                    'width' : '16px',
+                    'right':'16px',
+                    'left':$rectZ.right-$rectZ.left+5
+                });
+    
+                $rect = document.getElementsByClassName('C');
+                $rect = $rect[0].getBoundingClientRect();
+                $('#countC').offset({top: $rect.top-10,left: 'auto'});
+                $('#countC').css({
+                    'width' : '16px',
+                    'right':'16px',
+                    'left':$rectZ.right-$rectZ.left+5
+                });
+    
+                $rect = document.getElementsByClassName('CM');
+                $rect = $rect[0].getBoundingClientRect();
+                $('#countCM').offset({top: $rect.top-10,left: 'auto'});
+                $('#countCM').css({
+                    'width' : '16px',
+                    'right':'16px',
+                    'left':$rectZ.right-$rectZ.left+5
+                });
+    
+                $rect = document.getElementsByClassName('CB');
+                $rect = $rect[0].getBoundingClientRect();
+                $('#countCB').offset({top: $rect.top-10,left: $rect.left + $('.CB').width+20});
+                $('#countCB').css({
+                    'width' : '16px',
+                    'right':'16px',
+                    'left':$rectZ.right-$rectZ.left+5
+                });
+            }
+        }
+    };
+    $controllFunc2();
+    window.addEventListener('resize', function() {
+        $controllFunc2();
     });
 });

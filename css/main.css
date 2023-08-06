@@ -128,7 +128,6 @@ body {
     height: 100%;
     right: 0;
     background-color: rgb(255, 255, 255);
-    border-left: medium dashed rgb(136, 136, 136);
     flex-wrap: nowrap;
     align-items: center;
     justify-content: center;

@@ -2862,6 +2862,23 @@ $(document).ready(function(){
     });
     $controllFunc2 = function(){
         if($('body').width() > $('body').height()){
+            $basescale = 0.05; 
+
+            $('.RotAndDel').css({
+                'width':'110px',
+                'height':'50px',
+                'bottom':'20px',
+                'left': '45%'
+            });
+            $('.RotAndDel').children('svg').css({
+                'width':'32px',
+                'height':'61px'
+            });
+            $('.RotAndDel').children('.RotAndDel-Rot').css({
+                'width':'32px',
+                'height':'57px' 
+            });
+
             $('.scale').css({
                 'top':'50%',
                 'right':'42px'
@@ -2912,7 +2929,8 @@ $(document).ready(function(){
                 'width':'120px',
                 'height':'120px',
                 'margin-left': 'auto',
-                'margin-top': 'auto'
+                'margin-top': 'auto',
+                'margin-bottom': 'auto'
             });
             $('.counter').css({
                 'font-weight': 100,
@@ -3048,7 +3066,21 @@ $(document).ready(function(){
             }
         }
         else {
-
+            $basescale = 0.08; 
+            $('.RotAndDel').css({
+                'width':'110px',
+                'height':'50px',
+                'bottom':'-20px',
+                'left': $('.canvas').width()/2 - $('.RotAndDel').width()/2
+            });
+            $('.RotAndDel').children('svg').css({
+                'width':'32px',
+                'height':'61px'
+            });
+            $('.RotAndDel').children('.RotAndDel-Rot').css({
+                'width':'32px',
+                'height':'57px'
+            });
             $('.scale').css({
                 'top':'83%',
                 'right':'1px'
@@ -3057,7 +3089,9 @@ $(document).ready(function(){
                 'height': '40px',
                 'width': '39px'
             });
-
+            $('.menu-container').css({
+                'align-items': 'flex-end'
+            });
             $('.B').css({
                 'width':'35px',
                 'height':'80px',
@@ -3083,7 +3117,8 @@ $(document).ready(function(){
             $('.CB').css({
                 'width':'80px',
                 'height':'80px',
-                'margin-right': '13px'
+                'margin-right': '13px',
+                'margin-bottom': '0'
             });
             $('.counter').css({
                 'font-weight': 100,
@@ -3135,6 +3170,7 @@ $(document).ready(function(){
                 $('.CB').css({
                     'width':'80px',
                     'height':'80px',
+                    'margin-bottom': 'auto'
                 });
                 $('.counter').css({
                     'font-weight': 100,

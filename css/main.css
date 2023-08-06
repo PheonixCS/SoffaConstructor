@@ -165,7 +165,6 @@ body {
 .B{
     height: 120px;
     width: 50px;
-    margin-top: 23px;
 }
 .B-name{ 
     width: 12px;
@@ -173,7 +172,6 @@ body {
 .BM{
     height: 80px;
     width: 50px;
-    margin-top: 23px;
 }
 .BM-name{ 
     width: 28px;
@@ -181,7 +179,6 @@ body {
 .C{
     height: 81px;
     width: 120px;
-    margin-top: 23px;
 }
 .C-name{ 
     width: 12px;
@@ -189,8 +186,6 @@ body {
 .CM{
     height: 85px;
     width: 85px;
-
-    margin-top: 23px;
 }
 .CM-name{ 
     width: 28px;
@@ -198,8 +193,7 @@ body {
 .CB{
     height: 120px;
     width: 120px;
-
-    margin-top: 23px;
+    margin-bottom: auto;
 }
 .CB-name{ 
     width: 28px;

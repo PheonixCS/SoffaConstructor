@@ -7,7 +7,6 @@ $(document).ready(function(){
             'height':document.documentElement.clientHeight
         });
     });
-
     $('.RotAndDel').css({
         'display':'none'
     });

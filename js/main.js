@@ -1829,6 +1829,390 @@ $(document).ready(function(){
             });
         }
         else {
+            $calculateMouseOffset = function($e){
+                if($e.handleObj.type == "mousedown"){
+                    console.log('true');
+                    $mouseD_x = $e.pageX;
+                    $mouseD_y = $e.pageY;
+                    // считываем координаты блока на который нажали
+                    $elemCordX = $e.currentTarget.getBoundingClientRect().left;
+                    $elemCordY = $e.currentTarget.getBoundingClientRect().top;
+                    $elemCordXR = $e.currentTarget.getBoundingClientRect().right;
+                    // вычиляем смещение от позиции мыши для генерации нового объекта
+                    $deltaX = $mouseD_x-$elemCordX;
+                    $deltaY = $mouseD_y-$elemCordY;
+                    return [$deltaX,$deltaY];
+                }
+                else {
+                    $mouseD_x = $e.targetTouches[0].pageX;
+                    $mouseD_y = $e.targetTouches[0].pageY;
+                    if($($e.target).parent().parent().hasClass('modul')){
+                    // считываем координаты блока на который нажали
+                        $elemCordX = $($e.target).parent().parent().offset().left;
+                        $elemCordY = $($e.target).parent().parent().offset().top;
+                    }
+                    if($($e.target).parent().hasClass('modul')){
+                        // считываем координаты блока на который нажали
+                        $elemCordX = $($e.target).parent().offset().left;
+                        $elemCordY = $($e.target).parent().offset().top;
+                    }
+                    // вычиляем смещение от позиции мыши для генерации нового объекта
+                    $deltaX = $mouseD_x-$elemCordX;
+                    $deltaY = $mouseD_y-$elemCordY;
+                    return [$deltaX,$deltaY];
+                }
+            };
+            $calculateMouseOffsetMoovbl = function($e,$tarId){
+                if($e.handleObj.type == "mousedown"){
+                    $mouseD_x = $e.pageX;
+                    $mouseD_y = $e.pageY;
+                    $tar = document.getElementById($tarId);
+                    // считываем координаты блока на который нажали
+                    $elemCordX = $tar.getBoundingClientRect().left;
+                    $elemCordY = $tar.getBoundingClientRect().top;
+                    $elemCordXR = $tar.getBoundingClientRect().right;
+                    // вычиляем смещение от позиции мыши для генерации нового объекта
+                    $deltaX = $mouseD_x-$elemCordX;
+                    $deltaY = $mouseD_y-$elemCordY;
+                    return [$deltaX,$deltaY];
+                }
+                else {
+                    $mouseD_x = $e.targetTouches[0].pageX;
+                    $mouseD_y = $e.targetTouches[0].pageY;
+                    if($($e.target).parent().parent().hasClass('appended-modul')){
+                    // считываем координаты блока на который нажали
+                        $elemCordX = $($e.target).parent().parent().offset().left;
+                        $elemCordY = $($e.target).parent().parent().offset().top;
+                    }
+                    if($($e.target).parent().hasClass('appended-modul')){
+                        // считываем координаты блока на который нажали
+                        $elemCordX = $($e.target).parent().offset().left;
+                        $elemCordY = $($e.target).parent().offset().top;
+                    }
+                    // вычиляем смещение от позиции мыши для генерации нового объекта
+                    $deltaX = $mouseD_x-$elemCordX;
+                    $deltaY = $mouseD_y-$elemCordY;
+                    return [$deltaX,$deltaY];
+                }
+            };
+            $spawnElem = function($numberObj,$id,$e){
+                $offsetClick = $calculateMouseOffset($e);
+                $deltaX = $offsetClick[0];
+                $deltaY = $offsetClick[1]; 
+                // получаем html код модуля
+                $moovObj = $creatModul($id,$numberObj);
+                // добавляем на страницу(он скрыт)
+                $append($('.canvas'),$moovObj)
+                $updateObjSize($id);
+                
+                // получаем добавленный модуль
+                $moovblModul = $('#'+$id);
+                $moovblModul.css({
+                    'cursor': 'grabbing'
+                });
+                // смещаем его так, чтобы он был ровно поверх модуля но который нажали
+                if($e.handleObj.type == "mousedown"){
+                    $moovblModul.offset({top: ($e.pageY-$deltaY)*100/$baseScale, left: ($e.pageX-$deltaX)*100/$baseScale});
+                    // отображаем модуль
+                }
+                else {
+                    $touch = $e.originalEvent.touches[0] || $e.originalEvent.changedTouches[0];
+                    $('#'+idObject).offset({top: ($touch.pageY-$deltaY)*100/$baseScale, left: ($touch.pageX-$deltaX)*100/$baseScale});
+                }
+                $moovblModul.show();
+                
+                $('body').css({
+                    'pointer-events':'none'
+                });
+                $('#container').css({
+                    'pointer-events':'auto'
+                });
+            };
+            /// Основная функция размещения объектов
+            $appendMainFunc = function($numberObj,id,e){
+                if (e.which == 1 && e.handleObj.type == "mousedown"){
+                    $spawnElem($numberObj,id,e);
+                    $offsetClick = $calculateMouseOffset(e);
+                    $deltaX = $offsetClick[0];
+                    $deltaY = $offsetClick[1];
+                    // запускаем логику если мышь начала движение
+                    $(document).mousemove(function (e) {
+                        // пока клавиша зажата и мышь движется меняем динамично смещение модуля
+                        $('#'+idObject).css({
+                            'z-index':'9999'
+                        });
+                        $moovblModul.offset({top: (e.pageY-$deltaY)*100/$baseScale, left: (e.pageX-$deltaX)*100/$baseScale});
+                    }).click(function (e) {
+                        $rightPosModul = $moovblModul.offset().left+$moovblModul.width();
+                        $rightPosUI = $('.canvas').width();
+                        //if( $rightPosModul < $rightPosUI){
+                            // запускаем логику если кнопка отжата
+                            objAdd = document.getElementById(idObject);
+                            topY = objAdd.getBoundingClientRect().top;
+                            topX = objAdd.getBoundingClientRect().left;
+                            dovnY = topY + $('#'+idObject).height();
+                            dovnX = topX + $('#'+idObject).width();
+        
+                            
+                            // условие создание объекта если на доске ничего нет.
+                            if(appendedObj.size == 0){
+                                if($rightPosModul > $rightPosUI){
+                                    $moovblModul.offset({top: $('.canvas').height()/3, left: $rightPosUI/2});
+                                    topY = objAdd.getBoundingClientRect().top;
+                                    topX = objAdd.getBoundingClientRect().left;
+                                    dovnY = topY + $('#'+idObject).height();
+                                    dovnX = topX + $('#'+idObject).width();
+                                }
+                        
+                                // основная логика
+                                // добавляем объект высчитывем координаты его углов
+                                // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
+                                rotationObj.set(idObject,false);
+                                $('#'+idObject).addClass("mainGr");
+                                // добавляем в массив размещенных обхектов id размещенного модуля
+                                appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
+                                BaseObjMap.set(idObject,'1');
+                                $controllerConstruct(0,idObject);
+                                $recountFun(idObject,0);
+                                $counterModuls(idObject,1);
+                                // генерируем новый id для следующего модуля
+                                numberIdObjecy = numberIdObjecy + 1;
+                                idObject = "appended-modul" + numberIdObjecy;
+                                // открепляем событие на клик от текущего модуля
+                                $(this).unbind("click");
+                                
+                            }
+                            // если на доске что-то есть.
+                            else{
+                                /*ну а теперь самое сложно... наверное :D*/
+                                // вычисление расстояний и поиск минимального
+                                // основная логика
+                                $resPosAndIdF = $findMinDistObj(idObject);
+                                //console.log($resPosAndIdF);
+                                $resultPos = $resPosAndIdF[2];
+                                $findeObj = $resPosAndIdF[0];
+                                
+                                $resultDistanse = $getCenterDistanse($findeObj,idObject);
+                                $resMinDist = $minDist($findeObj,idObject);
+                                if($rightPosModul > $rightPosUI){
+                                    $saveGropsPositions($findeObj,idObject,$resultPos);
+                                    $setPositionObetcs(idObject,$findeObj,$resultPos);
+                                    // функция контролирующая принадлежность к группе объекта
+                                    rotationObj.set(idObject,false);
+                                    $controllerConstruct($findeObj,idObject);/////!!!!!!
+                                    $recountFun(idObject,$findeObj);
+                                    $counterModuls(idObject,1);
+                                    numberIdObjecy = numberIdObjecy + 1;
+                                    idObject = "appended-modul" + numberIdObjecy;
+                                    $(this).unbind("click");
+                                }
+                                else{
+                                    if($resultDistanse < $resMinDist){
+                                        //////////////////////////////
+                                        $saveGropsPositions($findeObj,idObject,$resultPos);
+                                        //функция работающая c groupsPositions
+                                        //////////////////////////////
+                                        // далее нужна функция стыковки объектов
+                                        $setPositionObetcs(idObject,$findeObj,$resultPos);
+                                        $controllerConstruct($findeObj,idObject);////!!!!!!!
+                                        $recountFun(idObject,$findeObj);
+                                        $counterModuls(idObject,1);
+                                        // увеличиваем индекс
+                                        numberIdObjecy = numberIdObjecy + 1;
+                                        idObject = "appended-modul" + numberIdObjecy;
+                                        rotationObj.set(idObject,false);
+                                        // открепляем событие на клик от текущего модуля
+                                        $(this).unbind("click");
+                                
+                                        
+                                    }
+                                    else {
+                                        BaseObjMap.set(idObject,'1');
+                                        $updateCord(idObject);
+                                        $controllerConstruct(0,idObject);
+                                        $recountFun(idObject,0);
+                                        $counterModuls(idObject,1);
+                                        numberIdObjecy = numberIdObjecy + 1;
+                                        idObject = "appended-modul" + numberIdObjecy;
+                                        rotationObj.set(idObject,false);
+                                        // открепляем событие на клик от текущего модуля
+                                        $(this).unbind("click");
+                                    }
+                                }
+                                
+                            }
+        
+        
+                            // условия создания объекта если на доске что-то есть.
+                            $(this).unbind("mousemove");
+                            $moovblModul.css({
+                                'z-index':'999'
+                            });
+                            if(selectObj != 0){
+                                $('#'+selectObj).children().children('.modul-border').css({
+                                    'stroke':'black'
+                                });
+                            }
+                            selectObj = $moovblModul.attr('id');
+                            if(selectObj != 0){
+                                $('#'+selectObj).children().children('.modul-border').css({
+                                    'stroke':'red'
+                                });
+                            }
+                            $('.RotAndDel').css({
+                                'display':'block'
+                            });
+                            
+                        //}
+                        // else{
+                            
+                        //     $moovblModul.remove();
+                        //     $(this).unbind("click");
+                        //     $(this).unbind("mousemove");
+                        // }
+                        
+                    });
+                }
+                if (e.handleObj.type == "touchstart") {
+                    
+                    $spawnElem($numberObj,id,e);
+                    $offsetClick = $calculateMouseOffset(e);
+                    $deltaX = $offsetClick[0];
+                    $deltaY = $offsetClick[1];
+                    // запускаем логику если мышь начала движение
+                    $(document).on('touchmove', function (e) {
+                        // пока клавиша зажата и мышь движется меняем динамично смещение модуля
+                        $('#'+idObject).css({
+                            'z-index':'9999'
+                        });
+                        $touch = e.originalEvent.touches[0] || $e.originalEvent.changedTouches[0];
+                        console.log($touch.pageY);
+                        $('#'+idObject).offset({top: ($touch.pageY-$deltaY)*100/$baseScale, left: ($touch.pageX-$deltaX)*100/$baseScale});
+                    
+                    }).on('touchend',function (e) {
+                        e.preventDefault(); // подавляем стандартную реакцию на события мыши
+                        $rightPosModul = $moovblModul.offset().left+$moovblModul.width();
+                        $rightPosUI = $('.canvas').width();
+                        //if( $rightPosModul < $rightPosUI){
+                        // запускаем логику если кнопка отжата
+                        objAdd = document.getElementById(idObject);
+                        topY = objAdd.getBoundingClientRect().top;
+                        topX = objAdd.getBoundingClientRect().left;
+                        dovnY = topY + $('#'+idObject).height();
+                        dovnX = topX + $('#'+idObject).width();
+
+                        if ($('body').width() < $('body').height()) { 
+                            $rightPosModul = $moovblModul.offset().top+$moovblModul.height();
+                            $rightPosUI = $('.canvas').height();
+                        }
+                        if(appendedObj.size == 0){
+                            if($rightPosModul > $rightPosUI){
+                                $moovblModul.offset({top: $('.canvas').height()/3, left: $rightPosUI/2});
+                                topY = objAdd.getBoundingClientRect().top;
+                                topX = objAdd.getBoundingClientRect().left;
+                                dovnY = topY + $('#'+idObject).height();
+                                dovnX = topX + $('#'+idObject).width();
+                            }
+                            // основная логика
+                            // добавляем объект высчитывем координаты его углов
+                            // добавляем id объекта в коллекцию в качестве ключа и добавляем по ключу координаты вершин объекта
+                            rotationObj.set(idObject,false);
+                            $('#'+idObject).addClass("mainGr");
+                            // добавляем в массив размещенных обхектов id размещенного модуля
+                            appendedObj.set(idObject,[topX,topY,dovnX,dovnY]);
+                            BaseObjMap.set(idObject,'1');
+                            $controllerConstruct(0,idObject);
+                            $recountFun(idObject,0);
+                            $counterModuls(idObject,1);
+                            // генерируем новый id для следующего модуля
+                            numberIdObjecy = numberIdObjecy + 1;
+                            idObject = "appended-modul" + numberIdObjecy;
+                            // открепляем событие на клик от текущего модуля
+                            $(this).unbind("touchend");
+                            
+                        }
+                        // если на доске что-то есть.
+                        else{
+                            /*ну а теперь самое сложно... наверное :D*/
+                            // вычисление расстояний и поиск минимального
+                            // основная логика
+                            $resPosAndIdF = $findMinDistObj(idObject);
+                            //console.log($resPosAndIdF);
+                            $resultPos = $resPosAndIdF[2];
+                            $findeObj = $resPosAndIdF[0];
+                            
+                            $resultDistanse = $getCenterDistanse($findeObj,idObject);
+                            $resMinDist = $minDist($findeObj,idObject);
+                            if($rightPosModul > $rightPosUI){
+                                $saveGropsPositions($findeObj,idObject,$resultPos);
+                                $setPositionObetcs(idObject,$findeObj,$resultPos);
+                                // функция контролирующая принадлежность к группе объекта
+                                rotationObj.set(idObject,false);
+                                $controllerConstruct($findeObj,idObject);/////!!!!!!
+                                $recountFun(idObject,$findeObj);
+                                $counterModuls(idObject,1);
+                                numberIdObjecy = numberIdObjecy + 1;
+                                idObject = "appended-modul" + numberIdObjecy;
+                                $(this).unbind("touchend");
+                            }
+                            else{
+                                if($resultDistanse < $resMinDist){
+                                    //////////////////////////////
+                                    $saveGropsPositions($findeObj,idObject,$resultPos);
+                                    //функция работающая c groupsPositions
+                                    //////////////////////////////
+                                    // далее нужна функция стыковки объектов
+                                    $setPositionObetcs(idObject,$findeObj,$resultPos);
+                                    $controllerConstruct($findeObj,idObject);////!!!!!!!
+                                    $recountFun(idObject,$findeObj);
+                                    $counterModuls(idObject,1);
+                                    // увеличиваем индекс
+                                    numberIdObjecy = numberIdObjecy + 1;
+                                    idObject = "appended-modul" + numberIdObjecy;
+                                    rotationObj.set(idObject,false);
+                                    // открепляем событие на клик от текущего модуля
+                                    $(this).unbind("touchend");
+                            
+                                    
+                                }
+                                else {
+                                    BaseObjMap.set(idObject,'1');
+                                    $updateCord(idObject);
+                                    $controllerConstruct(0,idObject);
+                                    $recountFun(idObject,0);
+                                    $counterModuls(idObject,1);
+                                    numberIdObjecy = numberIdObjecy + 1;
+                                    idObject = "appended-modul" + numberIdObjecy;
+                                    rotationObj.set(idObject,false);
+                                    // открепляем событие на клик от текущего модуля
+                                    $(this).unbind("touchend");
+                                }
+                            }
+                            
+                        }
+                        // условия создания объекта если на доске что-то есть.
+                        $(this).unbind("mousemove");
+                        $moovblModul.css({
+                            'z-index':'999'
+                        });
+                        if(selectObj != 0){
+                            $('#'+selectObj).children().children('.modul-border').css({
+                                'stroke':'black'
+                            });
+                        }
+                        selectObj = $moovblModul.attr('id');
+                        if(selectObj != 0){
+                            $('#'+selectObj).children().children('.modul-border').css({
+                                'stroke':'red'
+                            });
+                        }
+                        $('.RotAndDel').css({
+                            'display':'block'
+                        });
+                    });
+                    
+                }
+            };
             // версия для планшетов и телефонов. здесь нужно учесть и события на клик и события на touch
             // причем вне зависимости от интерфейса пользователя. справа или снизу расположено меню
             // здесь нужно сделать отдельный код для aios и для android.
@@ -1919,10 +2303,84 @@ $(document).ready(function(){
             /////////////////////////////
             $('*').unbind(); // убираем все прикрепленные события.
 
+
+            $(".B").on('mousedown touchstart', function(e){
+                $calculateMouseOffset(e);
+            });
+
+            $(".B").on('mousedown touchstart',function(e){
+                $appendMainFunc(1,idObject,e);
+            });
+            $(".B").on('mouseout',function(){
+                $(this).children().children('.modul-border').css({
+                    'stroke':'black'
+                });
+            });
+            $(".B").on('mouseover',function(){
+                $(this).children().children('.modul-border').css({
+                    'stroke':'red'
+                });
+            });
         
+            $(".BM").on('mousedown touchstart',function(e){
+                $appendMainFunc(2,idObject,e);
+            });
+            $(".BM").on('mouseout',function(){
+                $(this).children().children('.modul-border').css({
+                    'stroke':'black'
+                });
+            });
+            $(".BM").on('mouseover',function(){
+                $(this).children().children('.modul-border').css({
+                    'stroke':'red'
+                });
+            });
+        
+            $(".C").on('mousedown touchstart',function(e){
+                $appendMainFunc(3,idObject,e);
+            });
+            $(".C").on('mouseout',function(){
+                $(this).children().children('.modul-border').css({
+                    'stroke':'black'
+                });
+            });
+            $(".C").on('mouseover',function(){
+                $(this).children().children('.modul-border').css({
+                    'stroke':'red'
+                });
+            });
+        
+            $(".CM").on('mousedown touchstart',function(e){
+                $appendMainFunc(4,idObject,e);
+            });
+            $(".CM").on('mouseout',function(){
+                $(this).children().children('.modul-border').css({
+                    'stroke':'black'
+                });
+            });
+            $(".CM").on('mouseover',function(){
+                $(this).children().children('.modul-border').css({
+                    'stroke':'red'
+                });
+            });
+        
+            $(".CB").on('mousedown touchstart',function(e){
+                $appendMainFunc(5,idObject,e);
+            });
+            $(".CB").on('mouseout',function(){
+                $(this).children().children('.modul-border').css({
+                    'stroke':'black'
+                });
+            });
+            $(".CB").on('mouseover',function(){
+                $(this).children().children('.modul-border').css({
+                    'stroke':'red'
+                });
+            });
         }
         ////////////////////////////////////////////////////////
     };
+    // контроль стилей.
     $controllFunc();
     // каждый раз при изменении размера экрана нужно вызывать контрольную функцию, которая перезакрепляет события на всех элементах.
     window.addEventListener('resize', function(event) {

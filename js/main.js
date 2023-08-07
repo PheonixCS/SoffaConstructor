@@ -1711,6 +1711,7 @@ $(document).ready(function(){
                             //console.log(selectObj);
                             //console.log(groupsPositionsStr);
                             //console.log(groupsPositionsRev);
+                            $counterModuls(idObj,0);
                             $('#'+selectObj).remove();
                             $(this).unbind("click");
                             $(this).unbind("mousemove");
@@ -2516,6 +2517,7 @@ $(document).ready(function(){
                             //console.log(selectObj);
                             //console.log(groupsPositionsStr);
                             //console.log(groupsPositionsRev);
+                            $counterModuls(idObj,0);
                             $('#'+selectObj).remove();
                             $(this).unbind("click");
                             $(this).unbind("mousemove");
@@ -2583,6 +2585,7 @@ $(document).ready(function(){
                             appendedObj.delete(idObj);
                             $clearMapsWhenDelete(selectObj);
                             $recountFun(0,0);
+                            $counterModuls(idObj,0);
                             $('#'+selectObj).remove();
                             $(this).off("touchend");
                             $(this).off("touchmove");

@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    window.parent.postMessage('disableScroll', '*'); 
     $('#board').css({
         'height':document.documentElement.clientHeight
     });

@@ -1936,6 +1936,7 @@ $(document).ready(function(){
             };
             /// Основная функция размещения объектов
             $appendMainFunc = function($numberObj,id,e){
+                e.preventDefault();
                 if (e.which == 1 && e.handleObj.type == "mousedown"){
                     $spawnElem($numberObj,id,e);
                     $offsetClick = $calculateMouseOffset(e);
@@ -2311,6 +2312,7 @@ $(document).ready(function(){
 
             //alert(1);
             $(".B").on('mousedown touchstart',function(e){
+                e.preventDefault();
                 //alert(1);
                 $appendMainFunc(1,idObject,e);
             });
@@ -2326,6 +2328,7 @@ $(document).ready(function(){
             });
         
             $(".BM").on('mousedown touchstart',function(e){
+                e.preventDefault();
                 $appendMainFunc(2,idObject,e);
             });
             $(".BM").on('mouseout',function(){
@@ -2340,6 +2343,7 @@ $(document).ready(function(){
             });
         
             $(".C").on('mousedown touchstart',function(e){
+                e.preventDefault();
                 $appendMainFunc(3,idObject,e);
             });
             $(".C").on('mouseout',function(){
@@ -2354,6 +2358,7 @@ $(document).ready(function(){
             });
         
             $(".CM").on('mousedown touchstart',function(e){
+                e.preventDefault();
                 $appendMainFunc(4,idObject,e);
             });
             $(".CM").on('mouseout',function(){
@@ -2368,6 +2373,7 @@ $(document).ready(function(){
             });
         
             $(".CB").on('mousedown touchstart',function(e){
+                e.preventDefault();
                 $appendMainFunc(5,idObject,e);
             });
             $(".CB").on('mouseout',function(){
@@ -2382,6 +2388,7 @@ $(document).ready(function(){
             });
             // функция перемещения по рабочей поверхности
             $(".canvas").on('mousedown touchstart',function(e1){
+                e1.preventDefault();
                 if($(e1.target).hasClass('canvas')){
                     if(e1.handleObj.type == "mousedown"){
                         $cordX0 = e1.pageX;
